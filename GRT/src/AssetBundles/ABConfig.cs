@@ -14,8 +14,10 @@ namespace GRT.AssetBundles
             "Android";
 #elif UNITY_IOS
             "iOS";
+#elif WEBGL
+            "WebGL";
 #else
-            "";
+            "unknown";
 #endif
 
         public const string KEY_SERVER = "Server";
@@ -45,9 +47,9 @@ namespace GRT.AssetBundles
             Application.streamingAssetsPath;
 #elif UNITY_STANDALONE
             Application.streamingAssetsPath;
-#elif UNITY_ANDROID
-            Application.streamingAssetsPath;
 #elif UNITY_IOS
+            Application.streamingAssetsPath;
+#elif WEBGL
             Application.streamingAssetsPath;
 #else
             "Application.streamingAssetsPath";
@@ -55,13 +57,15 @@ namespace GRT.AssetBundles
 
         public static string AssetBundle_Root_Streaming_AsWeb =
 #if UNITY_EDITOR
-            Application.streamingAssetsPath;
+            $"file:///{Application.streamingAssetsPath}";
 #elif UNITY_STANDALONE
-            Application.streamingAssetsPath;
+            $"file:///{Application.streamingAssetsPath}";
 #elif UNITY_ANDROID
             Application.streamingAssetsPath;
 #elif UNITY_IOS
-            Application.streamingAssetsPath;
+            $"file://{Application.streamingAssetsPath}";
+#elif WEBGL
+            $"file://{Application.streamingAssetsPath}";
 #else
             "Application.streamingAssetsPath";
 #endif
@@ -72,6 +76,8 @@ namespace GRT.AssetBundles
 #elif UNITY_ANDROID
             Application.persistentDataPath;
 #elif UNITY_IOS
+            Application.persistentDataPath;
+#elif WEBGL
             Application.persistentDataPath;
 #else
             Application.persistentDataPath;
