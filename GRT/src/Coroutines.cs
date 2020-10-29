@@ -14,9 +14,25 @@ namespace GRT
 {
     public class Coroutines : MonoBehaviour
     {
-        [RuntimeInitializeOnLoadMethod]
-        static void Init() { _instance = RootGameObject.AddComponent<Coroutines>(); }
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        static void Init() 
+        {
+            RootGameObject.OnGRTInitializing += () =>
+            {
+                _instance = RootGameObject.AddComponent<Coroutines>();
+                Debug.Log($"{nameof(Coroutines)} loaded on {_instance.name}");
+            };
+        }
         private static Coroutines _instance;
+
+        private void Awake()
+        {
+            if (_instance!= null && _instance != this)
+            {
+                Debug.LogWarning("Do not init another Coroutines");
+                Destroy(this);
+            }
+        }
 
         public static void StartACoroutineWithCallback(IEnumerator routine, Action callback)
         {

@@ -5,11 +5,14 @@
 
     public class MonoUpdater : MonoBehaviour
     {
-        [RuntimeInitializeOnLoadMethod]
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void Init()
         {
-            _instance = RootGameObject.AddComponent<MonoUpdater>();
-            Debug.Log($"{nameof(MonoUpdater)} loaded on {_instance.name}");
+            RootGameObject.OnGRTInitializing += () =>
+            {
+                _instance = RootGameObject.AddComponent<MonoUpdater>();
+                Debug.Log($"{nameof(MonoUpdater)} loaded on {_instance.name}");
+            };
         }
         private static MonoUpdater _instance;
 

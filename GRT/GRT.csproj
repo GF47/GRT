@@ -44,6 +44,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\3rdScripts\IEnvironment.cs" />
+    <Compile Include="src\3rdScripts\Puerts\PuertsEnv.cs" />
     <Compile Include="src\AssetBundles\ABConfig.cs" />
     <Compile Include="src\AssetBundles\ABDownloader.cs" />
     <Compile Include="src\AssetBundles\ABItem.cs" />
@@ -84,7 +86,6 @@
     <Compile Include="src\Math\GFMath.cs" />
     <Compile Include="src\Math\IPercent.cs" />
     <Compile Include="src\Math\IProjecter01.cs" />
-    <Compile Include="src\MonoCarrier.cs" />
     <Compile Include="src\Pool.cs" />
     <Compile Include="src\RootGameObject.cs" />
     <Compile Include="src\SimpleJSON\SimpleJSON.cs" />
