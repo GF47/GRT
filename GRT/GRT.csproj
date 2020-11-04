@@ -89,6 +89,9 @@
     <Compile Include="src\Pool.cs" />
     <Compile Include="src\RootGameObject.cs" />
     <Compile Include="src\SimpleJSON\SimpleJSON.cs" />
+    <Compile Include="src\SimpleJSON\SimpleJSONBinary.cs" />
+    <Compile Include="src\SimpleJSON\SimpleJSONDotNetTypes.cs" />
+    <Compile Include="src\SimpleJSON\SimpleJSONUnity.cs" />
     <Compile Include="src\Singleton.cs" />
     <Compile Include="src\Tween\CameraTranslater.cs" />
     <Compile Include="src\Tween\Translater.cs" />

@@ -251,7 +251,8 @@ namespace GF47Editor
             {
                 manifestMD5 = FileUtility.GetFileHash(manifestPath);
             }
-            JSONObject jsonManifest = new JSONObject { { ABConfig.MANIFEST_NAME, manifestMD5 } };
+            JSONObject jsonManifest = new JSONObject();
+            jsonManifest.Add(ABConfig.MANIFEST_NAME, manifestMD5);
 
             string[] assetBundleNames = AssetDatabase.GetAllAssetBundleNames();
             JSONObject jsonAssetBundleNames = new JSONObject();
@@ -277,14 +278,12 @@ namespace GF47Editor
                 }
             }
 
-            JSONObject jsonObject = new JSONObject
-            {
-                {ABConfig.KEY_SERVER, ABConfig.SERVER_URL},
-                {ABConfig.KEY_VERSION, ABConfig.VERSION},
-                {ABConfig.KEY_MANIFEST, jsonManifest},
-                {ABConfig.KEY_ASSETBUNDLES, jsonAssetBundleNames},
-                {ABConfig.KEY_ASSETS, jsonAssets}
-            };
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.Add(ABConfig.KEY_SERVER, ABConfig.SERVER_URL);
+            jsonObject.Add(ABConfig.KEY_VERSION, ABConfig.VERSION);
+            jsonObject.Add(ABConfig.KEY_MANIFEST, jsonManifest);
+            jsonObject.Add(ABConfig.KEY_ASSETBUNDLES, jsonAssetBundleNames);
+            jsonObject.Add(ABConfig.KEY_ASSETS, jsonAssets);
 
             string json = jsonObject.ToString();
             string assetsMapFullName = Application.streamingAssetsPath + "/" + ABConfig.ASSETSMAP_NAME;
