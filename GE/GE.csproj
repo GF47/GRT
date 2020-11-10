@@ -72,6 +72,7 @@
     <Compile Include="src\Inspectors\DecoratorEditor.cs" />
     <Compile Include="src\Inspectors\EnumFlagsAttributeDrawer.cs" />
     <Compile Include="src\Inspectors\InheritFromAttributeDrawer.cs" />
+    <Compile Include="src\Inspectors\InspectorDisplayAsDrawer.cs" />
     <Compile Include="src\Inspectors\TweenBaseInspector.cs" />
   </ItemGroup>
   <ItemGroup />

@@ -57,6 +57,7 @@
     <Compile Include="src\Attributes\EnumFlagsAttribute.cs" />
     <Compile Include="src\Attributes\GetAssetNameAttribute.cs" />
     <Compile Include="src\Attributes\InheritFromAttribute.cs" />
+    <Compile Include="src\Attributes\InspectorDisplayAsAttribute.cs" />
     <Compile Include="src\BlackBoard.cs" />
     <Compile Include="src\Components\CameraUtility\BirdsEyeViewCamera.cs" />
     <Compile Include="src\Components\CameraUtility\CameraController.cs" />
