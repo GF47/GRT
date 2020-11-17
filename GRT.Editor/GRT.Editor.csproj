@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{564CC744-6DED-4124-A3DE-54962DB87533}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GRT.Editor</RootNamespace>
+    <AssemblyName>GRT.Editor</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEditor, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\Editor\BuildAB.cs" />
+    <Compile Include="src\Editor\CreateLineRenderFromBezier.cs" />
+    <Compile Include="src\Editor\CreateScriptableObjectAssets.cs" />
+    <Compile Include="src\Editor\CsvBezierConvert.cs" />
+    <Compile Include="src\Editor\EditorObjExporter.cs" />
+    <Compile Include="src\Editor\GF47CameraPathEditor.cs" />
+    <Compile Include="src\Editor\GF47Configuration.cs" />
+    <Compile Include="src\Editor\GF47CopyComponents.cs" />
+    <Compile Include="src\Editor\GF47CopyTransform.cs" />
+    <Compile Include="src\Editor\GF47DeleteComponentHidden.cs" />
+    <Compile Include="src\Editor\GF47Duplicate.cs" />
+    <Compile Include="src\Editor\GF47FindInChildren.cs" />
+    <Compile Include="src\Editor\GF47GatherAssets.cs" />
+    <Compile Include="src\Editor\GF47GetPathToString.cs" />
+    <Compile Include="src\Editor\GF47GetRelativeTransform.cs" />
+    <Compile Include="src\Editor\GF47MakeGroup.cs" />
+    <Compile Include="src\Editor\GF47RenameObject.cs" />
+    <Compile Include="src\Editor\GF47RenderCubeMapEditor.cs" />
+    <Compile Include="src\Editor\GF47ReplaceAssetsAccordingToMetaFile.cs" />
+    <Compile Include="src\Editor\GF47Serialization.cs" />
+    <Compile Include="src\Editor\GF47SkyBoxGenerator.cs" />
+    <Compile Include="src\Editor\GF47SnapSettings.cs" />
+    <Compile Include="src\Editor\GF47SortArray.cs" />
+    <Compile Include="src\Editor\Inspectors\BezierSplineInspector.cs" />
+    <Compile Include="src\Editor\Inspectors\DecoratorEditor.cs" />
+    <Compile Include="src\Editor\Inspectors\EnumFlagsAttributeDrawer.cs" />
+    <Compile Include="src\Editor\Inspectors\InheritFromAttributeDrawer.cs" />
+    <Compile Include="src\Editor\Inspectors\InspectorDisplayAsDrawer.cs" />
+    <Compile Include="src\Editor\Inspectors\TweenBaseInspector.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\GRT\GRT.csproj">
+      <Project>{67ec1af7-92f7-4c8e-8ae9-8f3c8bc8498f}</Project>
+      <Name>GRT</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
