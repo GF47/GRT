@@ -94,6 +94,7 @@
     <Compile Include="src\SimpleJSON\SimpleJSONDotNetTypes.cs" />
     <Compile Include="src\SimpleJSON\SimpleJSONUnity.cs" />
     <Compile Include="src\Singleton.cs" />
+    <Compile Include="src\TContainer.cs" />
     <Compile Include="src\Tween\CameraTranslater.cs" />
     <Compile Include="src\Tween\Translater.cs" />
     <Compile Include="src\Tween\TweenBezierSplinePath.cs" />
