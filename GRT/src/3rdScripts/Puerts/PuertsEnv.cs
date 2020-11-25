@@ -4,15 +4,17 @@
 #if USE_PUERTS
 using Puerts;
 using System;
-using UnityEngine;
 
 namespace GRT._3rdScripts.Puerts
 {
-    public class PuertsEnv : MonoBehaviour, IEnvironment
+    public class PuertsEnv : IEnvironment<JsEnv>
     {
         public JsEnv Env { get; private set; }
 
-        public event Action OnStart;
+        public event Action<JsEnv> OnStart;
+        public event Func<JsEnv> Constructor;
+
+        public bool CanUpdate { get; set; }
 
         public void OnDestroy()
         {
@@ -21,13 +23,14 @@ namespace GRT._3rdScripts.Puerts
 
         public void Start()
         {
-            Env = new JsEnv();
-            OnStart?.Invoke();
+            Env = Constructor();
+            OnStart?.Invoke(Env);
+            OnStart = null;
         }
 
         public void Update()
         {
-            Env.Tick();
+            if (CanUpdate) { Env.Tick(); }
         }
     }
 }
