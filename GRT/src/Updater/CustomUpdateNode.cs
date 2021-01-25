@@ -60,8 +60,8 @@ namespace GRT.Updater
             if (_delta > Duration)
             {
                 OnUpdate?.Invoke(_delta);
+                _delta = 0f;
             }
-            _delta = 0f;
         }
     }
 }

@@ -87,6 +87,8 @@
     <Compile Include="src\Math\GFMath.cs" />
     <Compile Include="src\Math\IPercent.cs" />
     <Compile Include="src\Math\IProjecter01.cs" />
+    <Compile Include="src\Net\TcpStringsReceiver.cs" />
+    <Compile Include="src\Net\TcpStringsSender.cs" />
     <Compile Include="src\Pool.cs" />
     <Compile Include="src\RootGameObject.cs" />
     <Compile Include="src\SimpleJSON\SimpleJSON.cs" />
