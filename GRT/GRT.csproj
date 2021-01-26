@@ -44,8 +44,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\3rdScripts\IEnvironment.cs" />
-    <Compile Include="src\3rdScripts\Puerts\PuertsEnv.cs" />
     <Compile Include="src\AssetBundles\ABConfig.cs" />
     <Compile Include="src\AssetBundles\ABDownloader.cs" />
     <Compile Include="src\AssetBundles\ABItem.cs" />
@@ -63,7 +61,9 @@
     <Compile Include="src\Components\CameraUtility\CameraController.cs" />
     <Compile Include="src\Components\CameraUtility\CameraTargetController.cs" />
     <Compile Include="src\Configuration\Config.cs" />
+    <Compile Include="src\Configuration\Configuration.cs" />
     <Compile Include="src\Configuration\ConstValues.cs" />
+    <Compile Include="src\IBlackBoard.cs" />
     <Compile Include="src\Convert.cs" />
     <Compile Include="src\Coroutines.cs" />
     <Compile Include="src\Coroutine\WaitForEndOfAnimation.cs" />

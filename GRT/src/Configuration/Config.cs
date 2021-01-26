@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using GRT.Data;
+using System.Collections.Generic;
 using System.Xml;
-using GRT.Data;
-using UnityEngine;
 
 namespace GRT.Configuration
 {
-    public class Config
+    public class Config : IBlackBoard
     {
         private Dictionary<string, object> _config;
 
@@ -55,23 +54,22 @@ namespace GRT.Configuration
             }
         }
 
-        public T Get<T>(string name, T defaultValue)
+        public T Get<T>(string name, T @default = default)
         {
-            if (_config == null)
-            {
-                Debug.LogWarningFormat("{0} is not found, use default value {1}", name, defaultValue);
-                return defaultValue;
-            }
-            if (_config.ContainsKey(name))
-            {
-                return (T)_config[name];
-            }
-            return defaultValue;
+            var result = _config != null && _config.ContainsKey(name);
+            return result ? (T)_config[name] : @default;
         }
 
-        public T Get<T>(string name)
+        public bool Get<T>(string name, out T value, T @default = default)
         {
-            return Get(name, default(T));
+            var result = _config != null && _config.ContainsKey(name);
+            value = result ? (T)_config[name] : @default;
+            return result;
+        }
+
+        void IBlackBoard.Set<T>(string name, T value)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

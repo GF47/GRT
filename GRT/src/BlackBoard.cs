@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GRT
 {
-    public class BlackBoard : IEnumerable<KeyValuePair<string, object>>
+    public class BlackBoard : IBlackBoard, IEnumerable<KeyValuePair<string, object>>
     {
         private readonly Dictionary<string, object> _items;
 
@@ -12,23 +12,25 @@ namespace GRT
             _items = new Dictionary<string, object>();
         }
 
-        public void SetValue(string key, object v)
+        public T Get<T>(string name, T @default = default)
         {
-            if (_items.ContainsKey(key)) { _items[key] = v; }
-            else { _items.Add(key, v); }
+            object v = null;
+            var has = _items.ContainsKey(name) && (v = _items[name]) is T;
+            return has ? (T)v : @default;
         }
 
-        public T GetValue<T>(string key, T defaultValue)
+        public bool Get<T>(string name, out T value, T @default = default)
         {
-            if (_items.ContainsKey(key))
-            {
-                object v = _items[key];
-                if (v is T value)
-                {
-                    return value;
-                }
-            }
-            return defaultValue;
+            object v = null;
+            var has = _items.ContainsKey(name) && (v = _items[name]) is T;
+            value = has ? (T)v : @default;
+            return has;
+        }
+
+        public void Set<T>(string name, T value)
+        {
+            if (_items.ContainsKey(name)) { _items[name] = value; }
+            else { _items.Add(name, value); }
         }
 
         public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
@@ -38,7 +40,6 @@ namespace GRT
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            //return _items.GetEnumerator();
             return ((IEnumerable)_items).GetEnumerator();
         }
     }
