@@ -54,7 +54,7 @@ namespace GRT.Net
                 while (IsReceiving)
                 {
                     var buffer = new byte[BUFFER_LENGTH];
-                    var bufferLength =stream.Read(buffer, 0, BUFFER_LENGTH);
+                    var bufferLength = stream.Read(buffer, 0, BUFFER_LENGTH);
 
                     int n = 0, m = 0; // n为小缓冲区当前结束标志的起始位置
                                       // m为小缓冲区上一个结束标志的结束位置
