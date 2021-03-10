@@ -11,7 +11,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-namespace GRT.Editor.Editor
+namespace GRT.Editor
 {
     public class GF47ReplaceAssetsAccordingToMetaFile : ScriptableObject
     {

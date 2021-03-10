@@ -6,6 +6,6 @@ namespace GRT.Updater
     {
         public override UpdateType Type => UpdateType.PerAfterFrame;
 
-        public PerAfterFrameUpdateNode(Action<float> callback) : base(callback) { }
+        public PerAfterFrameUpdateNode(Action<float> updating) : base(updating) { }
     }
 }

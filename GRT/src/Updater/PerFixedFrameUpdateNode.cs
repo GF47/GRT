@@ -6,6 +6,6 @@ namespace GRT.Updater
     {
         public override UpdateType Type => UpdateType.PerFixedFrame;
 
-        public PerFixedFrameUpdateNode(Action<float> callback) : base(callback) { }
+        public PerFixedFrameUpdateNode(Action<float> updating) : base(updating) { }
     }
 }

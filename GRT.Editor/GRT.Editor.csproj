@@ -53,7 +53,6 @@
     <Compile Include="src\Editor\GF47CameraPathEditor.cs" />
     <Compile Include="src\Editor\GF47Configuration.cs" />
     <Compile Include="src\Editor\GF47CopyComponents.cs" />
-    <Compile Include="src\Editor\GF47CopyTransform.cs" />
     <Compile Include="src\Editor\GF47DeleteComponentHidden.cs" />
     <Compile Include="src\Editor\GF47Duplicate.cs" />
     <Compile Include="src\Editor\GF47FindInChildren.cs" />
@@ -68,12 +67,12 @@
     <Compile Include="src\Editor\GF47SkyBoxGenerator.cs" />
     <Compile Include="src\Editor\GF47SnapSettings.cs" />
     <Compile Include="src\Editor\GF47SortArray.cs" />
+    <Compile Include="src\Editor\GF47TransfomCopyPanel.cs" />
     <Compile Include="src\Editor\Inspectors\BezierSplineInspector.cs" />
-    <Compile Include="src\Editor\Inspectors\DecoratorEditor.cs" />
     <Compile Include="src\Editor\Inspectors\EnumFlagsAttributeDrawer.cs" />
     <Compile Include="src\Editor\Inspectors\InheritFromAttributeDrawer.cs" />
     <Compile Include="src\Editor\Inspectors\InspectorDisplayAsDrawer.cs" />
-    <Compile Include="src\Editor\Inspectors\TweenBaseInspector.cs" />
+    <Compile Include="src\Editor\Inspectors\TweenDriverInspector.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

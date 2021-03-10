@@ -8,27 +8,13 @@
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void Init()
         {
-            RootGameObject.OnGRTInitializing += () =>
+            RootGameObject.GRTInitializing += () =>
             {
                 _instance = RootGameObject.AddComponent<MonoUpdater>();
                 Debug.Log($"{nameof(MonoUpdater)} loaded on {_instance.name}");
             };
         }
         private static MonoUpdater _instance;
-
-        public static float RealTime => Application.isPlaying ? Time.realtimeSinceStartup : _realTime;
-        private static float _realTime;
-
-        public static float RealDelta => Application.isPlaying ? _realDelta : 0f;
-        private static float _realDelta;
-
-        public static float RealLateTime => Application.isPlaying ? Time.realtimeSinceStartup : _realLateTime;
-        private static float _realLateTime;
-
-        public static float RealLateDelta => Application.isPlaying ? _realLateDelta : 0f;
-        private static float _realLateDelta;
-
-        public static float CustomTime { get; set; }
 
         private static readonly Dictionary<long, IUpdateNode> _perFrameDict = new Dictionary<long, IUpdateNode>();
         private static readonly Dictionary<long, IUpdateNode> _perFixedFrameDict = new Dictionary<long, IUpdateNode>();
@@ -44,22 +30,20 @@
                 Debug.LogWarning("Do not init another MonoUpdater");
                 Destroy(this);
             }
-            _realTime = Time.realtimeSinceStartup;
         }
 
         private void Update()
         {
-            for (int i = 0; i < _cache.Count; i++)
+            if (_cache.Count > 0)
             {
-                var (isAdd, dict, node) = _cache[i];
-                if (isAdd) { dict.Add(node.ID, node); }
-                else { dict.Remove(node.ID); }
+                for (int i = 0; i < _cache.Count; i++)
+                {
+                    var (isAdd, dict, node) = _cache[i];
+                    if (isAdd) { dict.Add(node.ID, node); }
+                    else { dict.Remove(node.ID); }
+                }
+                _cache.Clear();
             }
-            _cache.Clear();
-
-            float rt = Time.realtimeSinceStartup;
-            _realDelta = rt - _realTime;
-            _realTime = rt;
 
             foreach (var item in _perFrameDict)
             {
@@ -82,10 +66,6 @@
 
         private void LateUpdate()
         {
-            float rt = Time.realtimeSinceStartup;
-            _realLateDelta = rt - _realLateTime;
-            _realLateTime = rt;
-
             foreach (var item in _perAfterFrameDict)
             {
                 item.Value.Update(Time.deltaTime);

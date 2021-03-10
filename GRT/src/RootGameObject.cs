@@ -13,18 +13,18 @@
                     _root = new GameObject("[GRT Root]");
                     Object.DontDestroyOnLoad(_root);
                     Root.hideFlags = HideFlags.HideAndDontSave;
-                    OnGRTInitializing?.Invoke();
-                    OnGRTInitializing = null;
-                    AfterGRTInitialized?.Invoke();
-                    AfterGRTInitialized = null;
+                    GRTInitializing?.Invoke();
+                    GRTInitializing = null;
+                    GRTInitialized?.Invoke();
+                    GRTInitialized = null;
                 }
                 return _root;
             }
         }
         private static GameObject _root;
 
-        public static System.Action OnGRTInitializing;
-        public static System.Action AfterGRTInitialized;
+        public static System.Action GRTInitializing;
+        public static System.Action GRTInitialized;
 
         public static T GetComponent<T>() where T : Component
         {

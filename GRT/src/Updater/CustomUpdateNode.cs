@@ -4,7 +4,7 @@ namespace GRT.Updater
 {
     public class CustomUpdateNode : IUpdateNode
     {
-        public long ID { get; protected set; }
+        public long ID { get; set; }
 
         public UpdateType Type => UpdateType.PerCustomFrame;
 
@@ -26,12 +26,11 @@ namespace GRT.Updater
         public float Duration { get; set; }
         private float _delta;
 
-        public event Action<float> OnUpdate;
+        public event Action<float> Updating;
 
-        public CustomUpdateNode(Action<float> callback) : this(callback, 1f) { }
-        public CustomUpdateNode(Action<float> callback, float duration)
+        public CustomUpdateNode(Action<float> updating, float duration = 1f)
         {
-            OnUpdate = callback;
+            Updating = updating;
             Duration = duration < 0.02f ? 1f : duration;
             ID = DateTime.Now.ToBinary();
         }
@@ -39,7 +38,7 @@ namespace GRT.Updater
         public void Clear()
         {
             Stop();
-            OnUpdate = null;
+            Updating = null;
         }
 
         public void Start()
@@ -57,9 +56,9 @@ namespace GRT.Updater
         public void Update(float delta)
         {
             _delta += delta;
-            if (_delta > Duration)
+            if (_delta >= Duration)
             {
-                OnUpdate?.Invoke(_delta);
+                Updating?.Invoke(_delta);
                 _delta = 0f;
             }
         }

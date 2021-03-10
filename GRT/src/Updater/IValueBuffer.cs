@@ -4,9 +4,11 @@ namespace GRT.Updater
 {
     public interface IValueBuffer<T> : IProjecter01<T>, IPercent
     {
-        Action<T> OnBuffering { get; set; }
-        Action<T> OnStart { get; set; }
-        Action<T> OnStop { get; set; }
+        event Action<T> Buffering;
+
+        event Action<T> Starting;
+
+        event Action<T> Stopping;
 
         bool IsBuffering { get; set; }
 

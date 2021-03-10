@@ -4,7 +4,8 @@ namespace GRT.Updater
 {
     public abstract class NormalUpdateNode : IUpdateNode
     {
-        public long ID { get; protected set; }
+        public long ID { get; set; }
+
         public abstract UpdateType Type { get; }
 
         public bool IsUpdating
@@ -20,20 +21,21 @@ namespace GRT.Updater
                 }
             }
         }
+
         protected bool isUpdating;
 
-        public event Action<float> OnUpdate;
+        public event Action<float> Updating;
 
-        public NormalUpdateNode(Action<float> callback)
+        public NormalUpdateNode(Action<float> updating)
         {
-            OnUpdate = callback;
+            Updating = updating;
             ID = DateTime.Now.ToBinary();
         }
 
         public void Clear()
         {
             Stop();
-            OnUpdate = null;
+            Updating = null;
         }
 
         public void Start()
@@ -50,7 +52,7 @@ namespace GRT.Updater
 
         public void Update(float delta)
         {
-            OnUpdate?.Invoke(delta);
+            Updating?.Invoke(delta);
         }
     }
 }

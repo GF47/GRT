@@ -4,42 +4,36 @@ namespace GRT.Updater
 {
     public abstract class AbstractBuffer<T> : IValueBuffer<T>
     {
-        public Action<T> OnBuffering { get; set; }
-        public Action<T> OnStart { get; set; }
-        public Action<T> OnStop { get; set; }
+        public event Action<T> Buffering;
+
+        public event Action<T> Starting;
+
+        public event Action<T> Stopping;
 
         public bool IsBuffering
         {
-            get => _isBuffering;
+            get => _updateNode.IsUpdating;
             set
             {
-                if (_isBuffering == value) { return; }
+                if (_updateNode.IsUpdating == value) { return; }
 
-
-                _isBuffering = value;
-
-                if (_isBuffering)
+                if (_updateNode.IsUpdating)
                 {
-                    _updateNode.Start();
-                    OnBuffering?.Invoke(Value);
+                    _updateNode.Stop();
+                    Stopping?.Invoke(Value);
                 }
                 else
                 {
-                    _updateNode.Stop();
-                    OnStop?.Invoke(Value);
+                    _updateNode.Start();
+                    Starting?.Invoke(Value);
                 }
             }
         }
-        private bool _isBuffering;
 
-        public T From
+        T IProjecter01<T>.From
         {
             get => _from;
-            set
-            {
-                _from = value;
-                _gap = Subtraction(_to, _from);
-            }
+            set { _from = value; _gap = Subtraction(_to, _from); }
         }
         private T _from;
 
@@ -51,10 +45,10 @@ namespace GRT.Updater
                 _from = _value;
                 _to = value;
                 _gap = Subtraction(_to, _from);
-                _percent = 0f;
-                IsBuffering = IsValueGreaterThanTMin(_gap);
+                IsBuffering = IsValidValue(_gap);
             }
         }
+
         private T _to;
         private T _gap;
 
@@ -63,36 +57,30 @@ namespace GRT.Updater
             get => _value;
             set
             {
-                if (Division(Subtraction(_value, _from), _gap, out float result))
-                {
-                    Percent = result;
-                }
+                _value = value;
+                Buffering?.Invoke(_value);
             }
         }
+
         private T _value;
 
-        public float Duration { get => _duration; set => _duration = Math.Max(value, 0.01f); }
+        public float Duration { get => _duration; set => _duration = Math.Max(value, 0.02f); }
         private float _duration;
 
-        public float Percent 
+        public float Percent
         {
-            get => _percent;
+            get => IsValidValue(_gap) ? Division(Subtraction(_value, _from), _gap) : 1f;
             set
             {
-                _percent = Math.Max(Math.Min(value, 1f), 0f);
-
-                _value = Project01(_percent);
-
-                OnBuffering?.Invoke(_value);
+                Value = Project01(Math.Max(Math.Min(value, 1f), 0f));
 
                 if (value >= 1f) { IsBuffering = false; }
             }
         }
-        private float _percent;
 
         private PerFrameUpdateNode _updateNode;
 
-        protected AbstractBuffer(T from, Action<T> onBuffering, float duration = 1f)
+        protected AbstractBuffer(T from, Action<T> buffering, float duration = 1f)
         {
             _from = from;
             _value = from;
@@ -100,29 +88,40 @@ namespace GRT.Updater
 
             _updateNode = new PerFrameUpdateNode(Update);
 
-            OnBuffering = onBuffering;
+            Buffering = buffering;
             Duration = duration;
         }
 
-        public void Update(float delta) { Percent += delta / _duration; }
+        public void Update(float delta)
+        {
+            Percent += delta / _duration;
+        }
 
         public void Clear()
         {
-            OnBuffering = null;
-            OnStart = null;
-            OnStop = null;
+            Buffering = null;
+            Starting = null;
+            Stopping = null;
         }
 
         T IProjecter01<T>.Project(float percent)
         {
             return Project01(percent);
         }
-        protected T Project01(float percent) { return Addition(Multiplication(percent, _gap), _from); }
+
+        protected T Project01(float percent)
+        {
+            return Addition(Multiplication(percent, _gap), _from);
+        }
 
         protected abstract T Addition(T a, T b);
+
         protected abstract T Subtraction(T a, T b);
+
         protected abstract T Multiplication(float m, T v);
-        protected abstract bool Division(T v, T d, out float result);
-        protected abstract bool IsValueGreaterThanTMin(T v);
+
+        protected abstract float Division(T v, T d);
+
+        protected abstract bool IsValidValue(T v);
     }
 }

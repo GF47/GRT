@@ -41,6 +41,8 @@ namespace GRT.Editor
         private Vector3 _previewTargetPos;
         private Vector2 _scrollViewPos;
 
+        private static bool _showHandles;
+
         [MenuItem("Tools/GF47 Editor/Camera Path Editor")]
         private static void Init()
         {
@@ -231,6 +233,13 @@ namespace GRT.Editor
 
             EditorGUILayout.EndHorizontal();
 
+            var showHandles = GUILayout.Toggle(_showHandles, _showHandles ? "Hide Control Handles" : "Show Control Handles", EditorStyles.toolbarButton);
+            if (_showHandles != showHandles)
+            {
+                _showHandles = showHandles;
+                refreshSv = true;
+            }
+
             EditorGUILayout.Space();
 
             if (GUILayout.Button("Save", EditorStyles.miniButton, GUILayout.MinWidth(20f)))
@@ -248,14 +257,7 @@ namespace GRT.Editor
                 EditorGUILayout.BeginHorizontal();
                 _previewDuration = EditorGUILayout.FloatField(_previewDuration, EditorStyles.toolbarTextField);
                 if (_previewDuration <= 0f) { _previewDuration = 1f; }
-                if (_autoPreview)
-                {
-                    if (GUILayout.Button("Stop", EditorStyles.toolbarButton)) { _autoPreview = false; }
-                }
-                else
-                {
-                    if (GUILayout.Button("Go", EditorStyles.toolbarButton)) { _autoPreview = true; }
-                }
+                _autoPreview = GUILayout.Toggle(_autoPreview, _autoPreview ? "Stop" : "Go", EditorStyles.toolbarButton);
                 _percent = EditorGUILayout.Slider(_percent, 0f, 1f);
                 EditorGUILayout.EndHorizontal();
                 EditorGUI.DrawPreviewTexture(GUILayoutUtility.GetRect(PREVIEW_WIDTH, PREVIEW_HEIGHT), _previewRenderTexture, null, ScaleMode.ScaleToFit);
@@ -350,11 +352,14 @@ namespace GRT.Editor
                 refreshInspector = true;
             }
 
-            Handles.color = Color.gray;
-            if (Handles.Button(point.HandleL, Quaternion.identity, size * HANDLE_SIZE, size * PICK_SIZE, Handles.DotHandleCap) || Handles.Button(point.HandleR, Quaternion.identity, size * HANDLE_SIZE, size * PICK_SIZE, Handles.DotHandleCap))
+            if (_showHandles)
             {
-                selectedIndex = index;
-                refreshInspector = true;
+                Handles.color = Color.gray;
+                if (Handles.Button(point.HandleL, Quaternion.identity, size * HANDLE_SIZE, size * PICK_SIZE, Handles.DotHandleCap) || Handles.Button(point.HandleR, Quaternion.identity, size * HANDLE_SIZE, size * PICK_SIZE, Handles.DotHandleCap))
+                {
+                    selectedIndex = index;
+                    refreshInspector = true;
+                }
             }
 
             if (selectedIndex == index)
@@ -364,8 +369,11 @@ namespace GRT.Editor
                 Vector3 pr = point.HandleR;
 
                 p = Handles.PositionHandle(p, Quaternion.identity);
-                pl = Handles.PositionHandle(pl, Quaternion.identity);
-                pr = Handles.PositionHandle(pr, Quaternion.identity);
+                if (_showHandles)
+                {
+                    pl = Handles.PositionHandle(pl, Quaternion.identity);
+                    pr = Handles.PositionHandle(pr, Quaternion.identity);
+                }
 
                 if (p != point.Point)
                 {
@@ -389,8 +397,11 @@ namespace GRT.Editor
                     refreshInspector = true;
                 }
             }
-            Handles.DrawLine(point.Point, point.HandleL);
-            Handles.DrawLine(point.Point, point.HandleR);
+            if (_showHandles)
+            {
+                Handles.DrawLine(point.Point, point.HandleL);
+                Handles.DrawLine(point.Point, point.HandleR);
+            }
             return refreshInspector;
         }
 
@@ -431,6 +442,7 @@ namespace GRT.Editor
                 {
                     if (GUILayout.Button("Select", EditorStyles.miniButtonLeft)) { selectedID = index; refreshSv = true; }
                 }
+                if (GUILayout.Button("Focus", EditorStyles.miniButtonMid)) { SceneView.lastActiveSceneView.LookAt(pos); }
                 if (GUILayout.Button("Insert", EditorStyles.miniButtonMid)) { insertID = index; refreshSv = true; }
                 if (GUILayout.Button("Remove", EditorStyles.miniButtonRight)) { removeID = index; refreshSv = true; }
                 EditorGUILayout.EndHorizontal();

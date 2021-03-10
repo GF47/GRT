@@ -70,10 +70,7 @@ namespace GRT
         public static void Log(object o)
         {
             _current++;
-            if (_current >= Capacity)
-            {
-                _current = 0;
-            }
+            if (_current >= Capacity) { _current = 0; }
 
             _infos[_current] = o.ToString();
             _instance.enabled = true;
@@ -83,33 +80,32 @@ namespace GRT
         public static float FPSRefreshDelta = 2f;
         public static bool ShowFPS
         {
-            get { return _instance._showFPS; }
+            get { return _showFPS; }
             set
             {
-                if (_instance._showFPS != value)
+                if (_showFPS != value)
                 {
-                    _instance._showFPS = value;
-                    if (_instance._showFPS)
+                    _showFPS = value;
+                    if (_showFPS)
                     {
-                        _instance._duration = 0f;
-                        _instance._frameCount = 0;
+                        _duration = 0f;
+                        _frameCount = 0;
                     }
                 }
             }
         }
 
-        private bool _showFPS = true;
-
-        private float _duration;
-        private int _frameCount;
-        private float _fps;
+        private static bool _showFPS = true;
+        private static float _duration;
+        private static int _frameCount;
+        private static float _fps;
 
         void Update()
         {
             if (_showFPS)
             {
                 _frameCount += 1;
-                _duration += Time.deltaTime;
+                _duration += Time.unscaledDeltaTime;
 
                 if (_duration > FPSRefreshDelta)
                 {
@@ -126,7 +122,10 @@ namespace GRT
             Rect r = new Rect(Pos.x, Pos.y, Size.x, Size.y);
             for (int i = 0, cursor = _current; i < Count; i++, cursor = GetPrevious(cursor), r = new Rect(r.x, r.y + Size.y, r.width, r.height))
             {
-                if (!string.IsNullOrEmpty(_infos[cursor])) { GUI.Label(r, _infos[cursor]); }
+                if (_infos != null)
+                {
+                    if (!string.IsNullOrEmpty(_infos[cursor])) { GUI.Label(r, _infos[cursor]); }
+                }
             }
             if (_showFPS)
             {

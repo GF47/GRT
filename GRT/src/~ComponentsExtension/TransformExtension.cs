@@ -58,5 +58,10 @@ namespace GRT
             }
             return root;
         }
+
+        public static Transform GetChildByIndexList(this Transform root, bool isChildToRoot, params int[] index)
+        {
+            return root.GetChildByIndexList(index, isChildToRoot);
+        }
     }
 }

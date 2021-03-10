@@ -29,6 +29,8 @@ namespace GRT.Editor.Inspectors
         private const float HANDLE_SIZE = 0.04f;
         private const float PICK_SIZE = 0.06f;
 
+        private bool _showHandles = false;
+
         // private bool _smooth;
 
         private int _selectedIndex = -1;
@@ -116,6 +118,10 @@ namespace GRT.Editor.Inspectors
                         RepaintSceneView();
                     }
                 }
+                if (GUILayout.Button("Focus", EditorStyles.miniButtonMid))
+                {
+                    SceneView.lastActiveSceneView.LookAt(position);
+                }
                 if (GUILayout.Button("Insert", EditorStyles.miniButtonMid))
                 {
                     insertId = i;
@@ -156,12 +162,37 @@ namespace GRT.Editor.Inspectors
                 EditorUtility.SetDirty(_target);
                 RepaintSceneView();
             }
-            if (GUILayout.Button("Save", EditorStyles.miniButtonRight))
+            if (_selectedIndex > -1)
             {
-                // AssetDatabase.SaveAssets();
-                AssetDatabase.SaveAssets();
+                if (GUILayout.Button("Align With View", EditorStyles.miniButtonMid, GUILayout.MinWidth(20)))
+                {
+                    Undo.RecordObject(_target, "change pos");
+                    _target[_selectedIndex].Point = SceneView.lastActiveSceneView.camera.transform.position;
+                    EditorUtility.SetDirty(_target);
+                    RepaintSceneView();
+                }
+                if (GUILayout.Button("Move To View" , EditorStyles.miniButtonMid, GUILayout.MinWidth(20)))
+                {
+                    Undo.RecordObject(_target, "change pos");
+                    _target[_selectedIndex].Point = SceneView.lastActiveSceneView.pivot;
+                    EditorUtility.SetDirty(_target);
+                    RepaintSceneView();
+                }
+
             }
             EditorGUILayout.EndHorizontal();
+
+            var showHandles = GUILayout.Toggle(_showHandles, _showHandles ? "Hide Control Handles" : "Show Control Handles", EditorStyles.toolbarButton);
+            if (_showHandles != showHandles)
+            {
+                _showHandles = showHandles;
+                RepaintSceneView();
+            }
+
+            if (GUILayout.Button("Save", EditorStyles.miniButtonRight))
+            {
+                AssetDatabase.SaveAssets();
+            }
 
             // 粒子
             // if (GUILayout.Button("Apply", EditorStyles.miniButton))
@@ -214,11 +245,14 @@ namespace GRT.Editor.Inspectors
                 Repaint();
             }
 
-            Handles.color = Color.gray;
-            if (Handles.Button(point.HandleL, Quaternion.identity, size * HANDLE_SIZE, size * PICK_SIZE, Handles.DotHandleCap) || Handles.Button(point.HandleR, Quaternion.identity, size * HANDLE_SIZE, size * PICK_SIZE, Handles.DotHandleCap))
+            if (_showHandles)
             {
-                _selectedIndex = index;
-                Repaint();
+                Handles.color = Color.gray;
+                if (Handles.Button(point.HandleL, Quaternion.identity, size * HANDLE_SIZE, size * PICK_SIZE, Handles.DotHandleCap) || Handles.Button(point.HandleR, Quaternion.identity, size * HANDLE_SIZE, size * PICK_SIZE, Handles.DotHandleCap))
+                {
+                    _selectedIndex = index;
+                    Repaint();
+                }
             }
 
             if (_selectedIndex == index)
@@ -228,8 +262,11 @@ namespace GRT.Editor.Inspectors
                 Vector3 pr = point.HandleR;
 
                 p = Handles.PositionHandle(p, Quaternion.identity);
-                pl = Handles.PositionHandle(pl, Quaternion.identity);
-                pr = Handles.PositionHandle(pr, Quaternion.identity);
+                if (_showHandles)
+                {
+                    pl = Handles.PositionHandle(pl, Quaternion.identity);
+                    pr = Handles.PositionHandle(pr, Quaternion.identity);
+                }
 
                 if (p != point.Point)
                 {
@@ -250,8 +287,11 @@ namespace GRT.Editor.Inspectors
                     EditorUtility.SetDirty(_target);
                 }
             }
-            Handles.DrawLine(point.Point, point.HandleL);
-            Handles.DrawLine(point.Point, point.HandleR);
+            if (_showHandles)
+            {
+                Handles.DrawLine(point.Point, point.HandleL);
+                Handles.DrawLine(point.Point, point.HandleR);
+            }
         }
 
         // 重新绘制Scene视图

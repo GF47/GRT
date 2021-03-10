@@ -6,10 +6,10 @@
 
     public interface IUpdateNode
     {
-        long ID { get; }
+        long ID { get; set; }
         UpdateType Type { get; }
         bool IsUpdating { get; set; }
-        event Action<float> OnUpdate;
+        event Action<float> Updating;
 
         void Start();
         void Update(float delta);

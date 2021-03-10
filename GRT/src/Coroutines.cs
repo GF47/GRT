@@ -17,7 +17,7 @@ namespace GRT
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void Init() 
         {
-            RootGameObject.OnGRTInitializing += () =>
+            RootGameObject.GRTInitializing += () =>
             {
                 _instance = RootGameObject.AddComponent<Coroutines>();
                 Debug.Log($"{nameof(Coroutines)} loaded on {_instance.name}");
