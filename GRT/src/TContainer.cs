@@ -7,22 +7,22 @@ namespace GRT
     {
         public T Content { get; set; }
 
-        public event Action OnAwake;
-        public event Action OnStart;
-        public event Action OnEnable_;
-        public event Action OnUpdate;
-        public event Action OnLateUpdate;
-        public event Action OnFixedUpdate;
-        public event Action OnDisable_;
-        public event Action OnDestroy_;
+        public event Action Awaking;
+        public event Action Starting;
+        public event Action Enabling;
+        public event Action Updating;
+        public event Action LateUpdating;
+        public event Action FixedUpdating;
+        public event Action Disabling;
+        public event Action Destroying;
 
-        private void Awake() { OnAwake?.Invoke(); }
-        private void Start() { OnStart?.Invoke(); }
-        private void OnEnable() { OnEnable_?.Invoke(); }
-        private void Update() { OnUpdate?.Invoke(); }
-        private void LateUpdate() { OnLateUpdate?.Invoke(); }
-        private void FixedUpdate() { OnFixedUpdate?.Invoke(); }
-        private void OnDisable() { OnDisable_?.Invoke(); }
-        private void OnDestroy() { OnDestroy_?.Invoke(); }
+        private void Awake() { Awaking?.Invoke(); }
+        private void Start() { Starting?.Invoke(); }
+        private void OnEnable() { Enabling?.Invoke(); }
+        private void Update() { Updating?.Invoke(); }
+        private void LateUpdate() { LateUpdating?.Invoke(); }
+        private void FixedUpdate() { FixedUpdating?.Invoke(); }
+        private void OnDisable() { Disabling?.Invoke(); }
+        private void OnDestroy() { Destroying?.Invoke(); }
     }
 }

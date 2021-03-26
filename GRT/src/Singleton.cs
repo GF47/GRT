@@ -21,7 +21,7 @@ namespace GRT
                 {
                     if (ConstructFunc == null)
                     {
-                        throw new NullReferenceException(typeof(Singleton<T>) + "的ConstructFunc为空，请先指定构造方法");
+                        throw new NullReferenceException(nameof(T) + "的ConstructFunc为空，请先指定构造方法");
                     }
                     instance = ConstructFunc();
                 }
@@ -43,7 +43,7 @@ namespace GRT
                 {
                     if (ConstructFunc == null)
                     {
-                        throw new NullReferenceException(typeof(MonoSingleton<T>) + "的ConstructFunc为空，请先指定构造方法");
+                        throw new NullReferenceException(nameof(T) + "的ConstructFunc为空，请先指定构造方法");
                     }
                     instance = ConstructFunc();
                 }

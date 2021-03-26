@@ -4,6 +4,7 @@
 //      Edited      :       2014/5/15 星期四 16:34:17
 //************************************************************//
 
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace GRT.Components.CameraUtility
@@ -13,27 +14,40 @@ namespace GRT.Components.CameraUtility
     /// DataTime        :2014/5/15 星期四 16:34:17
     /// [Panorama] Introduction  :鸟瞰相机
     /// </summary>
+    [RequireComponent(typeof(Camera))]
     public class BirdsEyeViewCamera : MonoBehaviour
     {
-        public Transform target; // 焦点
-        public float minDistance = 10f; // 最小距离
-        public float maxDistance = 200f; // 最大距离
-        public float wheelSpeed = 20f; // 滚轮速度
-        public float minOrthographicSize = 0.01f;
-        public float maxOrthographicSize = 50f;
+        [InspectorDisplayAs("相机焦点")]
+        public Transform target;
+        [InspectorDisplayAs("相机最小距离")]
+        public float minDistance = 10f;
+        [InspectorDisplayAs("相机最大距离")]
+        public float maxDistance = 200f;
+        [InspectorDisplayAs("滚轮速度")]
+        public float wheelSpeed = 20f;
+        [InspectorDisplayAs("鼠标拖拽旋转按钮", "0-鼠标左键/1-鼠标右键/2-鼠标中键（滚轮按下）")]
         [Range(0, 2)]
-        public int rotateButton = 1; // 旋转的按钮
-        public float rotateSpeedX = 1f; // x轴旋转的速度
-        public float rotateSpeedY = 1f; // y轴旋转的速度
-        public float rotateLimitMinY = 10f; // y轴最小值
-        public float rotateLimitMaxY = 80f; // y轴最大值
-        public float smoothTime = 0.5f; // 旋转插值时间
-        public float smoothDampMaxSpeed = 10000f; // 旋转插值
+        public int rotateButton = 1;
+        [InspectorDisplayAs("水平旋转的速度")]
+        public float rotateSpeedX = 1f;
+        [InspectorDisplayAs("垂直旋转的速度")]
+        public float rotateSpeedY = 1f;
+        [InspectorDisplayAs("相机竖直方向最小夹角")]
+        public float rotateLimitMinY = 10f;
+        [InspectorDisplayAs("相机竖直方向最大夹角")]
+        public float rotateLimitMaxY = 80f;
+        [InspectorDisplayAs("缓动持续时间")]
+        public float smoothTime = 0.5f;
+        [InspectorDisplayAs("缓动倍率")]
+        public float smoothDampMaxSpeed = 10000f;
 
+        [InspectorDisplayAs("鼠标拖拽焦点移动按钮", "0-鼠标左键/1-鼠标右键/2-鼠标中键（滚轮按下）")]
         [Range(0, 2)]
-        public int moveButton = 2; // 位移的按钮
-        public float moveSpeedX = 0.25f; // x轴位移的速度
-        public float moveSpeedY = 0.25f; // y轴位移的速度
+        public int moveButton = 2;
+        [InspectorDisplayAs("焦点水平位移速度")]
+        public float moveSpeedX = 0.25f;
+        [InspectorDisplayAs("焦点竖直位移速度")]
+        public float moveSpeedY = 0.25f;
 
         private float _distance = 100f;
         private Vector3 _lastMousePos;
@@ -50,29 +64,20 @@ namespace GRT.Components.CameraUtility
         private Vector3 _saveMousePos2;
         private Vector3 _posWhenButtonDown;
 
+        private List<Vector4> _blockAreas;
         /// <summary>
-        /// 响应鼠标消息的X轴最小值
+        /// <para>...............(z,w)</para>
+        /// <para>...............</para>
+        /// <para>...............</para>
+        /// <para>...............</para>
+        /// <para>...............</para>
+        /// <para>...............</para>
+        /// <para>...............</para>
+        /// <para>(x,y)</para>
         /// </summary>
-        [HideInInspector]
-        public float ActivatedRectXMin;
-
-        /// <summary>
-        /// 响应鼠标消息的X轴最大值
-        /// </summary>
-        [HideInInspector]
-        public float ActivatedRectXMax;
-
-        /// <summary>
-        /// 响应鼠标消息的Y轴最小值
-        /// </summary>
-        [HideInInspector]
-        public float ActivatedRectYMin;
-
-        /// <summary>
-        /// 响应鼠标消息的Y轴最大值
-        /// </summary>
-        [HideInInspector]
-        public float ActivatedRectYMax;
+        public void AppendBlockArea(Vector4 v) { _blockAreas?.Add(v); }
+        public void RemoveBlockArea(Vector4 v) { _blockAreas?.Remove(v); }
+        public void ClearBlockAreas() { _blockAreas.Clear(); }
 
         void OnEnable()
         {
@@ -83,11 +88,17 @@ namespace GRT.Components.CameraUtility
 
         void LateUpdate()
         {
-            // 拦截Rect外的鼠标消息
-            float percent = Input.mousePosition.x / Screen.width;
-            if (percent < ActivatedRectXMin || percent > ActivatedRectXMax) return;
-            percent = Input.mousePosition.y / Screen.height;
-            if (percent < ActivatedRectYMin || percent > ActivatedRectYMax) return;
+            // 拦截BlockArea内的鼠标消息
+            for (int i = 0; i < _blockAreas.Count; i++)
+            {
+                Vector4 area = _blockAreas[i];
+                float px = Input.mousePosition.x / Screen.width;
+                float py = Input.mousePosition.y / Screen.height;
+                if (px > area.x && py > area.y && px < area.z && py < area.w)
+                {
+                    return;
+                }
+            }
 
             // 移动
             if (Input.GetMouseButton(moveButton))
