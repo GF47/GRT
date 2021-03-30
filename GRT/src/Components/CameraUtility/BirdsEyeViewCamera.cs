@@ -79,6 +79,9 @@ namespace GRT.Components.CameraUtility
         public void RemoveBlockArea(Vector4 v) { _blockAreas?.Remove(v); }
         public void ClearBlockAreas() { _blockAreas.Clear(); }
 
+        public int BlockCount { get => _blockCount; set { _blockCount = System.Math.Max(0, value); } }
+        private int _blockCount;
+
         void OnEnable()
         {
             _camera = GetComponent<Camera>();
