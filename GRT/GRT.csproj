@@ -58,7 +58,6 @@
     <Compile Include="src\Attributes\InspectorDisplayAsAttribute.cs" />
     <Compile Include="src\BlackBoard.cs" />
     <Compile Include="src\Components\ArcRotateCamera.cs" />
-    <Compile Include="src\Components\CameraUtility\BirdsEyeViewCamera.cs" />
     <Compile Include="src\Configuration\Config.cs" />
     <Compile Include="src\Configuration\Configuration.cs" />
     <Compile Include="src\Configuration\ConstValues.cs" />
