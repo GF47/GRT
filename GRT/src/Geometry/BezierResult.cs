@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace GRT.Geometry.Bezier
+namespace GRT.Geometry
 {
     [Serializable]
     public struct BezierResult

@@ -6,7 +6,6 @@
  * @Edit            : none
  **************************************************************/
 
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -32,8 +31,8 @@ namespace GRT.AssetBundles
         {
             // Debug.Log(AssetsMap.Instance.manifest.Key);
             string abPath = (AssetsMap.Instance.IsStreamingAssets
-                ? ABConfig.AssetBundle_Root_Streaming_AsFile
-                : ABConfig.AssetBundle_Root_Hotfix)
+                ? ABConfig.RootPath_FileStreaming
+                : ABConfig.RootPath_HotFix)
                 + "/" + AssetsMap.Instance.manifest.Key;
             AssetBundle ab = AssetBundle.LoadFromFile(abPath);
             _manifest = ab.LoadAsset<AssetBundleManifest>("AssetBundleManifest");

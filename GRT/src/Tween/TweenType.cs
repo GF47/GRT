@@ -6,6 +6,9 @@
         QuadIn, QuadOut, QuadInOut,
         CubicIn, CubicOut, CubicInOut,
         QuartIn, QuartOut, QuartInOut,
+        BackIn, BackOut, BackInOut,
+        BounceIn, BounceOut, BounceInOut,
+        // ElasticIn, ElasticOut, ElasticInOut,
     }
 
     public enum Loop

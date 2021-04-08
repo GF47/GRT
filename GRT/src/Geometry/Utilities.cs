@@ -1,12 +1,4 @@
-﻿/* ****************************************************************
- * @File Name   :   Utilities
- * @Author      :   GF47
- * @Date        :   2015/3/11 13:34:56
- * @Description :   [Geometry]的一些辅助方法
- * @Edit        :   2015/3/11 13:34:56
- * ***************************************************************/
-
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace GRT.Geometry
 {
@@ -29,30 +21,30 @@ namespace GRT.Geometry
             return n * vLine + line.A;
         }
 
-        public static Vector3 GetPointProjection(Vector3 p, Vector3 a, Vector3 b, Vector3 c)
-        {
-//          float fa =
-//              p.x * a.x +
-//              p.y * a.y +
-//              p.z * a.z;
-//          float fb =
-//              p.x * b.x +
-//              p.y * b.y +
-//              p.z * b.z;
-//          float fc =
-//              p.x * c.x +
-//              p.y * c.y +
-//              p.z * c.z;
-//          Matrix4x4 m = new Matrix4x4();
-//          m.SetRow(0, new Vector4(a.x - b.x, a.y - b.y, a.z - b.z, 0f));
-//          m.SetRow(1, new Vector4(a.x - c.x, a.y - c.y, a.z - c.z, 0f));
-//          m.SetRow(2, new Vector4(b.x - c.x, b.y - c.y, b.z - c.z, 0f));
-//          m.SetRow(3, new Vector4(0f, 0f, 0f, 0f));
-//          Matrix4x4 mt = m.inverse;
-//          Vector4 v = mt * new Vector4(fa - fb, fa - fc, fb - fc, 0f);
-//          return new Vector3(v.x, v.y, v.z);
-            return a;
-        }
+        //        public static Vector3 GetPointProjection(Vector3 p, Vector3 a, Vector3 b, Vector3 c)
+        //        {
+        //            float fa =
+        //                p.x * a.x +
+        //                p.y * a.y +
+        //                p.z * a.z;
+        //            float fb =
+        //                p.x * b.x +
+        //                p.y * b.y +
+        //                p.z * b.z;
+        //            float fc =
+        //                p.x * c.x +
+        //                p.y * c.y +
+        //                p.z * c.z;
+        //            Matrix4x4 m = new Matrix4x4();
+        //            m.SetRow(0, new Vector4(a.x - b.x, a.y - b.y, a.z - b.z, 0f));
+        //            m.SetRow(1, new Vector4(a.x - c.x, a.y - c.y, a.z - c.z, 0f));
+        //            m.SetRow(2, new Vector4(b.x - c.x, b.y - c.y, b.z - c.z, 0f));
+        //            m.SetRow(3, new Vector4(0f, 0f, 0f, 0f));
+        //            Matrix4x4 mt = m.inverse;
+        //            Vector4 v = mt * new Vector4(fa - fb, fa - fc, fb - fc, 0f);
+        //            return new Vector3(v.x, v.y, v.z);
+        //            return a;
+        //        }
 
         /// <summary>
         /// 获取两条直线之间的公垂线
@@ -81,7 +73,7 @@ namespace GRT.Geometry
             float denominator = f4 * f1 - f8 * f5;
             if (Mathf.Abs(denominator) < Mathf.Epsilon)
             {
-                c = new Line(Line.LineType.Segment, a.A, b.A);
+                c = new Line(a.A, b.A);
                 return 0;
             }
             float m = (f8 * f6 + f4 * f3 - f4 * f2 - f8 * f7) / denominator;
@@ -90,10 +82,10 @@ namespace GRT.Geometry
             Vector3 pN = n * vB + b.A;
             if (pM == pN)
             {
-                c = new Line(Line.LineType.Segment, pM, Vector3.Normalize(pM + Vector3.Cross(vA, vB)));
+                c = new Line(pM, Vector3.Normalize(pM + Vector3.Cross(vA, vB)));
                 return 1;
             }
-            c = new Line(Line.LineType.Segment, pM, pN);
+            c = new Line(pM, pN);
             return 2;
         }
 
@@ -147,10 +139,9 @@ namespace GRT.Geometry
             Vector3 nac = Vector3.Cross(vac, normal);
             Vector3 mpac = (a + c) / 2f;
 
-            Line lab = new Line(Line.LineType.Straight, mpab, mpab + nab);
-            Line lac = new Line(Line.LineType.Straight, mpac, mpac + nac);
-            Line line;
-            int i = GetCommonPerpendicular(lab, lac, out line);
+            Line lab = new Line(mpab, mpab + nab);
+            Line lac = new Line(mpac, mpac + nac);
+            int i = GetCommonPerpendicular(lab, lac, out Line line);
             if (i == 0)
             {
                 return Vector3.zero;

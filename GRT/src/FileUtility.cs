@@ -2,7 +2,6 @@
  * @File Name       : FileUtility
  * @Author          : GF47
  * @Description     : 文件工具
- * 当前包含获取文件的md5值
  * @Date            : 2017/8/1/星期二 11:50:56
  * @Edit            : none
  **************************************************************/
@@ -14,8 +13,16 @@ using UnityEngine;
 
 namespace GRT
 {
+    /// <summary>
+    /// 文件帮助类，基本上只能在 Windows 上工作
+    /// </summary>
     public static class FileUtility
     {
+        /// <summary>
+        /// 获取文件的md5值
+        /// </summary>
+        /// <param name="path">文件路径</param>
+        /// <returns>md5字符串</returns>
         public static string GetFileHash(string path)
         {
             string fileMD5;

@@ -20,7 +20,7 @@ namespace GRT.FSM
         {
             _states = new SortedList<int, IState<T>>();
 
-#if USE_ANY_STATE 
+#if USE_ANY_STATE
             _anyStateID = FSMUtility.NullStateID;
 #endif
         }
@@ -35,7 +35,8 @@ namespace GRT.FSM
             }
         }
 
-#if USE_ANY_STATE 
+#if USE_ANY_STATE
+
         public void SetAnyStateID(int id)
         {
             if (_states.ContainsKey(id))
@@ -47,11 +48,20 @@ namespace GRT.FSM
 
 #endif
 
-        public void Add(IState<T> state) { _states.Add(state.ID, state); }
+        public void Add(IState<T> state)
+        {
+            _states.Add(state.ID, state);
+        }
 
-        public void Remove(int stateID) { _states.Remove(stateID); }
+        public void Remove(int stateID)
+        {
+            _states.Remove(stateID);
+        }
 
-        public void Remove(IState<T> state) { _states.Remove(state.ID); }
+        public void Remove(IState<T> state)
+        {
+            _states.Remove(state.ID);
+        }
 
         public void Update()
         {
@@ -60,7 +70,7 @@ namespace GRT.FSM
             int tempStateID = _currentState.GetNextStateID();
 
 #if USE_ANY_STATE
-            if (FSMUtility.IsLogicalStateID(_anyStateID))
+            if (FSMUtility.Validated(_anyStateID))
             {
                 int tempAnyStateID = _anyState.GetNextStateID();
                 if (_anyStateID != tempAnyStateID)
@@ -87,8 +97,8 @@ namespace GRT.FSM
 
         public void GetInput(T input)
         {
-#if USE_ANY_STATE 
-            if (FSMUtility.IsLogicalStateID(_anyStateID))
+#if USE_ANY_STATE
+            if (FSMUtility.Validated(_anyStateID))
             {
                 _anyState.GetInput(input);
                 if (_anyStateID != _anyState.GetNextStateID())

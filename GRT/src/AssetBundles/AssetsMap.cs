@@ -1,34 +1,33 @@
-﻿using System.Collections;
+﻿using SimpleJSON;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using SimpleJSON;
-using System;
 using UnityEngine.Networking;
 
 namespace GRT.AssetBundles
 {
-    public class AssetsMap  : CustomYieldInstruction
+    public class AssetsMap : CustomYieldInstruction
     {
         public static AssetsMap Instance { get { return _instance; } }
         private static AssetsMap _instance;
 
-        public string serverAddress;
-        public int version;
-        public KeyValuePair<string, string> manifest;
         public KeyValuePair<string, string>[] assetbundles;
         public Dictionary<string, int> assets;
+        public KeyValuePair<string, string> manifest;
+        public string serverAddress;
+        public int version;
+
+        public bool IsStreamingAssets { get; private set; }
 
         public override bool keepWaiting { get { return !_isDone; } }
         private bool _isDone;
-
-        public bool IsStreamingAssets { get; private set; }
 
         public AssetsMap()
         {
             _instance = this;
 
-            string nativePath = ABConfig.AssetBundle_Root_Hotfix + "/" + ABConfig.ASSETSMAP_NAME; // 首先读取PersistentData文件夹，是否有map文件
+            string nativePath = $"{ABConfig.RootPath_HotFix}/{ABConfig.NAME_ASSETSMAP}"; // 首先读取PersistentData文件夹，是否有map文件
 
             if (File.Exists(nativePath))
             {
@@ -39,7 +38,7 @@ namespace GRT.AssetBundles
             {
                 IsStreamingAssets = true;
 
-                nativePath = ABConfig.AssetBundle_Root_Streaming_AsWeb + "/" + ABConfig.ASSETSMAP_NAME; // 尝试读取StreamingAssets文件夹
+                nativePath = $"{ABConfig.RootPath_WebStreaming}/{ABConfig.NAME_ASSETSMAP}"; // 尝试读取StreamingAssets文件夹
                 Coroutines.StartACoroutine(GetJson(nativePath));
             }
         }

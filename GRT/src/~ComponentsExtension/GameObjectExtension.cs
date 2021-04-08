@@ -1,7 +1,6 @@
-using System;
-
 namespace GRT
 {
+    using System;
     using UnityEngine;
 
     public static class GameObjectExtension
@@ -49,7 +48,7 @@ namespace GRT
         /// <returns>×ÓÎïÌå</returns>
         public static GameObject AddChild(this GameObject parent, GameObject prefab)
         {
-            GameObject go = Object.Instantiate(prefab);
+            GameObject go = UnityEngine.Object.Instantiate(prefab);
 
             if (go != null && parent != null)
             {
@@ -121,14 +120,15 @@ namespace GRT
             {
                 for (int i = 0; i < scripts.Length; i++)
                 {
-                    if (scripts[i] is T)
+                    if (scripts[i] is T temp)
                     {
-                        return scripts[i] as T;
+                        return temp;
                     }
                 }
             }
             return null;
         }
+
         public static T[] GetInterfaces<T>(this GameObject target) where T : class
         {
             MonoBehaviour[] scripts = target.GetComponents<MonoBehaviour>();
@@ -138,8 +138,7 @@ namespace GRT
                 int n = 0;
                 for (int i = 0; i < scripts.Length; i++)
                 {
-                    T tmp = scripts[i] as T;
-                    if (tmp != null)
+                    if (scripts[i] is T tmp)
                     {
                         results[n] = tmp;
                         n++;

@@ -4,8 +4,14 @@ using UnityEngine;
 
 namespace GRT
 {
+    /// <summary>
+    /// 将字符串和具体类型互相转化，以及将结构类型与byte数组互相转化
+    /// </summary>
     public static class Convert
     {
+        /// <summary>
+        /// 结构类型
+        /// </summary>
         public enum UnityStructs
         {
             String,
@@ -146,18 +152,19 @@ namespace GRT
             return obj;
         }
 
+        /// <summary>
+        /// 提取小括号内的字符串，可以自定义
+        /// </summary>
+        /// <param name="s">被提取的字符串</param>
+        /// <param name="leftBracket">左括号</param>
+        /// <param name="rightBracket">右括号</param>
+        /// <returns></returns>
         public static string StringInBrackets(string s, char leftBracket = '(', char rightBracket = ')')
         {
             int left = s.IndexOf(leftBracket) + 1;
             int right = s.LastIndexOf(rightBracket);
             right = right > -1 ? right : s.Length;
             return s.Substring(left, right - left);
-
-            // string tmp = s.Substring(s.IndexOf("(", StringComparison.Ordinal) + 1);
-            // int last = tmp.LastIndexOf(")", StringComparison.Ordinal);
-            // last = last > -1 ? last : tmp.Length;
-            // tmp = tmp.Substring(0, last);
-            // return tmp;
         }
 
         public static T[] StringToArray<T>(string s, char splitChar = ',')
@@ -211,49 +218,49 @@ namespace GRT
         public const string RectType2 = "UnityEngine.Rect";
 
         public static UnityStructs ToUnityStructsEnum(Type type)
-        { 
+        {
             UnityStructs t = UnityStructs.String;
-            if (type == typeof (string))
+            if (type == typeof(string))
             {
                 t = UnityStructs.String;
             }
-            else if (type == typeof (bool))
+            else if (type == typeof(bool))
             {
                 t = UnityStructs.Boolean;
             }
-            else if (type == typeof (int))
+            else if (type == typeof(int))
             {
                 t = UnityStructs.Int32;
             }
-            else if (type == typeof (float))
+            else if (type == typeof(float))
             {
                 t = UnityStructs.Single;
             }
-            else if (type == typeof (double))
+            else if (type == typeof(double))
             {
                 t = UnityStructs.Double;
             }
-            else if (type == typeof (Vector2))
+            else if (type == typeof(Vector2))
             {
                 t = UnityStructs.Vector2;
             }
-            else if (type == typeof (Vector3))
+            else if (type == typeof(Vector3))
             {
                 t = UnityStructs.Vector3;
             }
-            else if (type == typeof (Vector4))
+            else if (type == typeof(Vector4))
             {
                 t = UnityStructs.Vector4;
             }
-            else if (type == typeof (Color))
+            else if (type == typeof(Color))
             {
                 t = UnityStructs.Color;
             }
-            else if (type == typeof (Color32))
+            else if (type == typeof(Color32))
             {
                 t = UnityStructs.Color32;
             }
-            else if (type == typeof (Rect))
+            else if (type == typeof(Rect))
             {
                 t = UnityStructs.Rect;
             }
@@ -446,19 +453,19 @@ namespace GRT
                 result = value;
             }
             else if (type == typeof(bool))
-            { 
+            {
                 result = bool.Parse(value);
             }
             else if (type == typeof(int))
-            { 
+            {
                 result = int.Parse(value);
             }
             else if (type == typeof(float))
-            { 
+            {
                 result = float.Parse(value);
             }
             else if (type == typeof(double))
-            { 
+            {
                 result = double.Parse(value);
             }
             else if (type == typeof(Vector2))
@@ -636,48 +643,99 @@ namespace GRT
 
         public static string FormatToString(UnityStructs type, object value)
         {
+            string result;
+
+            switch (type)
+            {
+                case UnityStructs.String:
+                    result = (string)value;
+                    break;
+                case UnityStructs.Boolean:
+                    result = ((bool)value).ToString();
+                    break;
+                case UnityStructs.Int32:
+                    result = ((int)value).ToString();
+                    break;
+                case UnityStructs.Single:
+                    result = ((float)value).ToString("F4");
+                    break;
+                case UnityStructs.Double:
+                    result = ((double)value).ToString("F4");
+                    break;
+                case UnityStructs.Vector2:
+                    Vector2 vector2 = (Vector2)value;
+                    result = vector2.ToString("F4");
+                    break;
+                case UnityStructs.Vector3:
+                    Vector3 vector3 = (Vector3)value;
+                    result = vector3.ToString("F4");
+                    break;
+                case UnityStructs.Vector4:
+                    Vector4 vector4 = (Vector4)value;
+                    result = vector4.ToString("F4");
+                    break;
+                case UnityStructs.Color:
+                    Color32 color = (Color)value;
+                    result = color.ToString();
+                    break;
+                case UnityStructs.Color32:
+                    Color32 color32 = (Color32)value;
+                    result = color32.ToString();
+                    break;
+                case UnityStructs.Rect:
+                    Rect rect = (Rect)value;
+                    result = rect.ToString();
+                    break;
+                default:
+                    return value.ToString();
+            }
+            return result;
+        }
+
+        public static string FormatToString(UnityStructs type, object value, string format)
+        {
             string result = string.Empty;
 
             switch (type)
             {
                 case UnityStructs.String:
-                    result = (string) value;
+                    result = (string)value;
                     break;
                 case UnityStructs.Boolean:
-                    result = ((bool) value).ToString();
+                    result = ((bool)value).ToString();
                     break;
                 case UnityStructs.Int32:
-                    result = ((int) value).ToString();
+                    result = ((int)value).ToString();
                     break;
                 case UnityStructs.Single:
-                    result = ((float) value).ToString("F4");
+                    result = ((float)value).ToString(format);
                     break;
                 case UnityStructs.Double:
-                    result = ((double) value).ToString("F4");
+                    result = ((double)value).ToString(format);
                     break;
                 case UnityStructs.Vector2:
-                    Vector2 vector2 = (Vector2) value;
-                    result = vector2.ToString("F4");
+                    Vector2 vector2 = (Vector2)value;
+                    result = vector2.ToString(format);
                     break;
                 case UnityStructs.Vector3:
-                    Vector3 vector3 = (Vector3) value;
-                    result = vector3.ToString("F4");
+                    Vector3 vector3 = (Vector3)value;
+                    result = vector3.ToString(format);
                     break;
                 case UnityStructs.Vector4:
-                    Vector4 vector4 = (Vector4) value;
-                    result = vector4.ToString("F4");
+                    Vector4 vector4 = (Vector4)value;
+                    result = vector4.ToString(format);
                     break;
                 case UnityStructs.Color:
-                    Color32 color = (Color) value;
-                    result = color.ToString();
+                    Color32 color = (Color)value;
+                    result = color.ToString(format);
                     break;
                 case UnityStructs.Color32:
-                    Color32 color32 = (Color32) value;
-                    result = color32.ToString();
+                    Color32 color32 = (Color32)value;
+                    result = color32.ToString(format);
                     break;
                 case UnityStructs.Rect:
-                    Rect rect = (Rect) value;
-                    result = rect.ToString();
+                    Rect rect = (Rect)value;
+                    result = rect.ToString(format);
                     break;
             }
             return result;

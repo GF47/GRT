@@ -1,4 +1,4 @@
-﻿using GRT.Geometry.Bezier;
+﻿using GRT.Geometry;
 using UnityEngine;
 
 namespace GRT.Tween

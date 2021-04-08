@@ -1,7 +1,6 @@
-using System.Collections.Generic;
-
 namespace GRT
 {
+    using System.Collections.Generic;
     using UnityEngine;
 
     public static class TransformExtension
@@ -44,7 +43,7 @@ namespace GRT
         {
             if (isChildToRoot)
             {
-                for (int i = index.Count -1; i > -1; i--)
+                for (int i = index.Count - 1; i > -1; i--)
                 {
                     root = root.GetChild(index[i]);
                 }

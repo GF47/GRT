@@ -10,7 +10,7 @@ namespace GRT.Updater
 
         public bool IsUpdating
         {
-            get { return isUpdating; }
+            get => isUpdating;
             set
             {
                 if (isUpdating != value)

@@ -2,9 +2,9 @@
 using System.IO;
 using System.Text;
 
-namespace GRT.Data.CSV
+namespace GRT.Data
 {
-    public class CSVHelper
+    public static class CSVTools
     {
         public const char CSVS_EPARATOR = ',';
 

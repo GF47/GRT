@@ -8,7 +8,7 @@
 #define LAST_ACTIVE_SCENE_VIEW
 // #undef LAST_ACTIVE_SCENE_VIEW
 
-using GRT.Geometry.Bezier;
+using GRT.Geometry;
 using UnityEditor;
 using UnityEngine;
 
@@ -43,13 +43,13 @@ namespace GRT.Editor.Inspectors
         private void OnEnable()
         {
             _target = (BezierSpline)target;
-            SceneView.onSceneGUIDelegate += Draw;
+            SceneView.duringSceneGui += Draw;
         }
 
         private void OnDisable()
         {
             AssetDatabase.SaveAssets();
-            SceneView.onSceneGUIDelegate -= Draw;
+            SceneView.duringSceneGui -= Draw;
         }
 
         public override void OnInspectorGUI()

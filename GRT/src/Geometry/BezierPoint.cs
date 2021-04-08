@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace GRT.Geometry.Bezier
+namespace GRT.Geometry
 {
     /// <summary>
     /// 贝塞尔曲线的节点
@@ -20,7 +20,7 @@ namespace GRT.Geometry.Bezier
 
         public Vector3 Point
         {
-            get { return _point; }
+            get => _point;
             set
             {
                 Vector3 offset = value - _point;
@@ -31,9 +31,10 @@ namespace GRT.Geometry.Bezier
         }
         [SerializeField]
         private Vector3 _point;
+
         public Vector3 HandleL
         {
-            get { return _handleL; }
+            get => _handleL;
             set
             {
                 switch (type)
@@ -54,7 +55,7 @@ namespace GRT.Geometry.Bezier
                         Vector3 v = _handleL - _point;
                         if (lengthL > 0f)
                         {
-                            _handleR = _point - (lengthR / lengthL) * v;
+                            _handleR = _point - lengthR / lengthL * v;
                         }
                         break;
                 }
@@ -62,9 +63,10 @@ namespace GRT.Geometry.Bezier
         }
         [SerializeField]
         private Vector3 _handleL;
+
         public Vector3 HandleR
         {
-            get { return _handleR; }
+            get => _handleR;
             set
             {
                 switch (type)
@@ -85,7 +87,7 @@ namespace GRT.Geometry.Bezier
                         Vector3 v = _handleR - _point;
                         if (lengthR > 0f)
                         {
-                            _handleL = _point - (lengthL / lengthR) * v;
+                            _handleL = _point - lengthL / lengthR * v;
                         }
                         break;
                 }

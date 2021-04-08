@@ -2,30 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GRT.Geometry.Bezier 
+namespace GRT.Geometry
 {
     [CreateAssetMenu]
     [Serializable]
     public class BezierSpline : ScriptableObject
     {
         public List<BezierPoint> points;
-        public void Add(BezierPoint item)
-        {
-            points.Add(item);
-        }
 
-        public int Count { get { return points.Count; } }
+        public int Count => points.Count;
 
-        public void Insert(int index, BezierPoint item) { points.Insert(index, item); }
+        public void Add(BezierPoint item) => points.Add(item);
 
-        public void RemoveAt(int index) { points.RemoveAt(index); }
+        public void Insert(int index, BezierPoint item) => points.Insert(index, item);
+
+        public void RemoveAt(int index) => points.RemoveAt(index);
 
         public BezierPoint this[int index]
         {
-            get { return points[index]; }
+            get => points[index];
             set
             {
-                if (index < points.Count)
+                if (index > -1 && index < points.Count)
                 {
                     points[index] = value;
                 }
@@ -33,10 +31,8 @@ namespace GRT.Geometry.Bezier
         }
 
         public BezierSpline() : this(4) { }
-        public BezierSpline(int capacity)
-        {
-            points = new List<BezierPoint>(capacity);
-        }
+
+        public BezierSpline(int capacity) => points = new List<BezierPoint>(capacity);
 
         public BezierResult GetResult(float t)
         {
@@ -48,9 +44,9 @@ namespace GRT.Geometry.Bezier
             {
                 return new BezierResult(points[0].Point, points[0].HandleR - points[0].Point);
             }
+
             t = Mathf.Clamp01(t);
-            float step = 1f / (points.Count - 1);
-            t = t / step;
+            t *= points.Count - 1;
             int i = Mathf.FloorToInt(t);
             if (i == points.Count - 1)
             {

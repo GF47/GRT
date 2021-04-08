@@ -1,86 +1,138 @@
 ﻿using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace GRT.AssetBundles
 {
-    public class ABConfig
+    [CreateAssetMenu]
+    public class ABConfig : ScriptableObject
     {
-        /// <summary>
-        /// 运行平台
-        /// </summary>
-        public const string PLATFORM =
-#if UNITY_STANDALONE
-            "Windows";
-#elif UNITY_ANDROID
-            "Android";
-#elif UNITY_IOS
-            "iOS";
-#elif WEBGL
-            "WebGL";
+        #region Singleton
+
+        private static ABConfig _instance;
+
+        public static ABConfig Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+#if UNITY_EDITOR
+                    _instance = AssetDatabase.LoadAssetAtPath<ABConfig>("Assets/Resources/ABConfig.asset");
+                    if (_instance == null)
+                    {
+                        var abc = CreateInstance(typeof(ABConfig));
+                        if (!System.IO.Directory.Exists($"{Application.dataPath}/Resources"))
+                        {
+                            AssetDatabase.CreateFolder("Assets", "Resources");
+                        }
+                        AssetDatabase.CreateAsset(abc, "Assets/Resources/ABConfig.asset");
+                        AssetDatabase.Refresh();
+                        _instance = AssetDatabase.LoadAssetAtPath<ABConfig>("Assets/Resources/ABConfig.asset");
+                    }
 #else
-            "unknown";
+                    _instance = Resources.Load<ABConfig>("ABConfig");
 #endif
+                }
+                return _instance;
+            }
+        }
 
-        public const string KEY_SERVER = "Server";
-        public const string SERVER_URL = "http://127.0.0.1:8088";
-
-        public const string KEY_VERSION = "Version";
-        public const int VERSION = 1;
-
-        public const string KEY_MANIFEST = "Manifest";
-        /// <summary>
-        /// Manifest文件的ab包名，通常与平台名相同
-        /// </summary>
-        public const string MANIFEST_NAME = PLATFORM;
+        #endregion Singleton
 
         public const string KEY_ASSETBUNDLES = "AssetBundles";
+
         public const string KEY_ASSETS = "Assets";
 
-        public const string ASSETSMAP_NAME = "AssetsMap.json";
+        public const string KEY_MANIFEST = "Manifest";
 
-        // TODO 修改为本机AB文件根目录
+        public const string KEY_SERVER = "ServerURL";
+
+        public const string KEY_VERSION = "Version";
+
+        public const string NAME_ASSETSMAP = "AssetsMap.json";
+
+        public static string Manifest => Platform;
+
+        public static string Platform
+        {
+            get
+            {
 #if UNITY_EDITOR
-        public const string LOCAL_PATH = "TODO 修改为本机AB文件根目录";
+                return EditorUserBuildSettings.activeBuildTarget.ToString();
+#elif UNITY_STANDALONE_WIN
+#if UNITY_64
+            return "StandaloneWindows64";
+#else
+            return "StandaloneWindows";
+#endif
+#elif UNITY_ANDROID
+            return "Android";
+#elif UNITY_IOS
+            return "iOS";
+#elif UNITY_WEBGL
+            return "WebGL";
+#else
+            return "unknown";
+#endif
+            }
+        }
+
+        [SerializeField] private string _serverURL = "http://127.0.0.1:8088";
+        [SerializeField] private int _version = 1;
+
+#if UNITY_EDITOR
+        public static string RootPath_Editor => $"{Application.dataPath}/../../UnityAssetBundles";
 #endif
 
-        public static string AssetBundle_Root_Streaming_AsFile =
+        public static string RootPath_FileStreaming =>
 #if UNITY_EDITOR
             Application.streamingAssetsPath;
-#elif UNITY_STANDALONE
+#elif UNITY_STANDLONE
+            Application.streamingAssetsPath;
+#elif UNITY_ANDROID
             Application.streamingAssetsPath;
 #elif UNITY_IOS
             Application.streamingAssetsPath;
-#elif WEBGL
-            Application.streamingAssetsPath;
+#elif UNITY_WEBGL
+            null;
 #else
-            "Application.streamingAssetsPath";
+            Application.streamingAssetsPath;
 #endif
 
-        public static string AssetBundle_Root_Streaming_AsWeb =
+        public static string RootPath_WebStreaming =>
 #if UNITY_EDITOR
             $"file:///{Application.streamingAssetsPath}";
-#elif UNITY_STANDALONE
+#elif UNITY_STANDLONE
             $"file:///{Application.streamingAssetsPath}";
 #elif UNITY_ANDROID
             Application.streamingAssetsPath;
 #elif UNITY_IOS
             $"file://{Application.streamingAssetsPath}";
-#elif WEBGL
-            $"file://{Application.streamingAssetsPath}";
+#elif UNITY_WEBGL
+            null;
 #else
-            "Application.streamingAssetsPath";
+            $"file://{Application.streamingAssetsPath}";
 #endif
 
-        public static string AssetBundle_Root_Hotfix =
-#if UNITY_STANDALONE
-            Application.persistentDataPath;
+        public static string RootPath_HotFix =>
+#if UNITY_EDITOR
+            Application.persistentDataPath; // %userprofile%\AppData\LocalLow\<companyname>\<productname>
+#elif UNITY_STANDLONE
+            Application.persistentDataPath; // %userprofile%\AppData\LocalLow\<companyname>\<productname>
 #elif UNITY_ANDROID
-            Application.persistentDataPath;
+            Application.persistentDataPath; // points to /storage/emulated/0/Android/data/<packagename>/files on most devices (some older phones might point to location on SD card if present)
 #elif UNITY_IOS
-            Application.persistentDataPath;
-#elif WEBGL
-            Application.persistentDataPath;
+            Application.persistentDataPath; // /var/mobile/Containers/Data/Application/<guid>/Documents
+#elif UNITY_WEBGL
+            Application.persistentDataPath; // points to /idbfs/<md5 hash of data path> where the data path is the URL stripped of everything including and after the last '/' before any '?' components.
 #else
             Application.persistentDataPath;
 #endif
+
+        public static string ServerURL => Instance._serverURL;
+        public static int Version => Instance._version;
     }
 }

@@ -3,8 +3,15 @@ using System;
 
 namespace GRT
 {
+    /// <summary>
+    /// 承载普通.net类的Unity容器
+    /// </summary>
+    /// <typeparam name="T">普通的类</typeparam>
     public class TContainer<T> : MonoBehaviour
     {
+        /// <summary>
+        /// 普通的类实例
+        /// </summary>
         public T Content { get; set; }
 
         public event Action Awaking;

@@ -8,7 +8,7 @@
 
 #define LAST_ACTIVE_SCENE_VIEW
 
-using GRT.Geometry.Bezier;
+using GRT.Geometry;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
@@ -53,7 +53,7 @@ namespace GRT.Editor
 
         private void OnEnable()
         {
-            SceneView.onSceneGUIDelegate += Draw;
+            SceneView.duringSceneGui += Draw;
             GameObject cam = new GameObject("__PreviewCamera") { hideFlags = HideFlags.HideAndDontSave };
             _previewCamera = cam.AddComponent<Camera>();
             _previewRenderTexture = new RenderTexture(400, 300, 16) { hideFlags = HideFlags.DontSave };
@@ -68,7 +68,7 @@ namespace GRT.Editor
             if (_previewRenderTexture != null) DestroyImmediate(_previewRenderTexture);
             if (_previewTarget != null) DestroyImmediate(_previewTarget.gameObject);
             AssetDatabase.SaveAssets();
-            SceneView.onSceneGUIDelegate -= Draw;
+            SceneView.duringSceneGui -= Draw;
             GetSceneView().Repaint();
         }
 

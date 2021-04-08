@@ -23,9 +23,9 @@ namespace GRT.AssetBundles
                 return _downloader.Percent;
             }
         }
+
         public override bool keepWaiting { get { return !_isDone; } }
         private bool _isDone;
-
 
         private HttpDownloader _downloader;
         private int _retryNumber;
@@ -35,8 +35,8 @@ namespace GRT.AssetBundles
 
         public ABDownloader(string abPath)
         {
-            _url = ABConfig.SERVER_URL + "/" + ABConfig.PLATFORM + "/" + abPath;
-            _nativePath = ABConfig.AssetBundle_Root_Hotfix + "/" + abPath;
+            _url = $"{ABConfig.ServerURL}/{ABConfig.Platform}/{abPath}";
+            _nativePath = $"{ABConfig.RootPath_HotFix}/{abPath}";
 
             Start();
         }

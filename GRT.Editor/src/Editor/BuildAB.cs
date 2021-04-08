@@ -38,7 +38,7 @@ namespace GRT.Editor
         /// <summary>
         /// 设置包名
         /// </summary>
-        [MenuItem("AssetBundles/Set AssetBundle Name")]
+        [MenuItem("AssetBundles/Set AssetBundle Name", false, 0)]
         private static void SetABName()
         {
             Object[] objects = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets);
@@ -53,7 +53,7 @@ namespace GRT.Editor
         /// <summary>
         /// 设置包名，连同依赖资源一起
         /// </summary>
-        [MenuItem("AssetBundles/Set AssetBundle Name With Dependencies")]
+        [MenuItem("AssetBundles/Set AssetBundle Name With Dependencies", false, 1)]
         private static void SetABNameWithDependencies()
         {
             Object[] objects = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets);
@@ -114,7 +114,7 @@ namespace GRT.Editor
         /// <summary>
         /// 忽略掉选中的资源
         /// </summary>
-        [MenuItem("AssetBundles/Ignore")]
+        [MenuItem("AssetBundles/Ignore", false, 20)]
         private static void IgnoreSelected()
         {
             Object[] objects = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets);
@@ -129,7 +129,7 @@ namespace GRT.Editor
         /// <summary>
         /// 忽略掉选中的资源，连同依赖资源一起
         /// </summary>
-        [MenuItem("AssetBundles/Ignore With Dependencies")]
+        [MenuItem("AssetBundles/Ignore With Dependencies", false, 21)]
         private static void IgnoreSelectedWithDependencies()
         {
             Object[] objects = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets);
@@ -151,22 +151,44 @@ namespace GRT.Editor
             importer.assetBundleName = string.Empty;
         }
 
-        /// <summary>
-        /// 创建安卓平台的AB包
-        /// </summary>
-        [MenuItem("AssetBundles/Build Android")]
+        [MenuItem("AssetBundles/Build Windows x86", false, 40)]
+        private static void BuildAll_Windows_x86()
+        {
+            BuildAll(BuildTarget.StandaloneWindows);
+        }
+
+        [MenuItem("AssetBundles/Build Windows x86_64", false, 41)]
+        private static void BuildAll_Windows_x86_64()
+        {
+            BuildAll(BuildTarget.StandaloneWindows64);
+        }
+
+        [MenuItem("AssetBundles/Build Android", false, 42)]
         private static void BuildAll_Android()
         {
-            BuildAll(RuntimePlatform.Android, BuildTarget.Android);
+            BuildAll(BuildTarget.Android);
         }
 
-        [MenuItem("AssetBundles/Build Windows")]
-        private static void BuildAll_Windows()
+        [MenuItem("AssetBundles/Build iOS", false, 43)]
+        private static void BuildAll_iOS()
         {
-            BuildAll(RuntimePlatform.WindowsPlayer, BuildTarget.StandaloneWindows);
+            if (BuildPipeline.IsBuildTargetSupported(BuildTargetGroup.iOS, BuildTarget.iOS))
+            {
+                BuildAll(BuildTarget.iOS);
+            }
+            else
+            {
+                Debug.LogWarning("iOS not supported at current platform");
+            }
         }
 
-        private static void BuildAll(RuntimePlatform platform, BuildTarget target)
+        [MenuItem("AssetBundles/Build WebGL", false, 44)]
+        private static void BuildAll_WebGL()
+        {
+            BuildAll(BuildTarget.WebGL);
+        }
+
+        private static void BuildAll(BuildTarget target)
         {
             Caching.ClearCache();
 
@@ -184,11 +206,11 @@ namespace GRT.Editor
                 abBuilds[i] = build;
             }
 
-            string outputPath = CreateABDirectory(platform, Application.dataPath.Substring(0, Application.dataPath.Length - 7) + "/" + ASSETBUNDLES_ROOT_DIRECTORY);
-            BuildPipeline.BuildAssetBundles(outputPath, abBuilds, BuildAssetBundleOptions.DeterministicAssetBundle, target);
+            string outputPath = CreateABDirectory(target, Application.dataPath.Substring(0, Application.dataPath.Length - 7) + "/" + ASSETBUNDLES_ROOT_DIRECTORY);
+            BuildPipeline.BuildAssetBundles(outputPath, abBuilds, BuildAssetBundleOptions.ChunkBasedCompression, target);
             AssetDatabase.Refresh();
 
-            CopyAssetsMapFileTo(outputPath);
+            CopyAssetsMapFileTo(outputPath, target);
         }
 
         /// <summary>
@@ -197,9 +219,9 @@ namespace GRT.Editor
         /// <param name="platform">具体的平台</param>
         /// <param name="exportDirectory">输出目录，为空时则认为是输出到 [StreamingAssets] 目录下的指定平台目录</param>
         /// <returns>输出目录</returns>
-        private static string CreateABDirectory(RuntimePlatform platform, string exportDirectory = null)
+        private static string CreateABDirectory(BuildTarget platform, string exportDirectory = null)
         {
-            string platformDir = GetPlatformName(platform);
+            string platformDir = platform.ToString();
 
             if (string.IsNullOrEmpty(exportDirectory)) // 没有指定导出位置，则生成位置为 StreamingAssets 内
             {
@@ -216,44 +238,19 @@ namespace GRT.Editor
             return exportDirectory;
         }
 
-        private static string GetPlatformName(RuntimePlatform platform)
-        {
-            string platformDir = string.Empty;
-            switch (platform)
-            {
-                case RuntimePlatform.WindowsPlayer:
-                    platformDir = "Windows";
-                    break;
-
-                case RuntimePlatform.OSXPlayer:
-                    platformDir = "Mac";
-                    break;
-
-                case RuntimePlatform.Android:
-                    platformDir = "Android";
-                    break;
-
-                case RuntimePlatform.IPhonePlayer:
-                    platformDir = "iOS";
-                    break;
-            }
-
-            return platformDir;
-        }
-
         // [MenuItem("AssetBundles/Create Assets Map")]
-        private static string CreateAssetsMap(string outputPath)
+        private static string CreateAssetsMap(string outputPath, BuildTarget target)
         {
             AssetDatabase.RemoveUnusedAssetBundleNames();
 
-            string manifestPath = string.Format("{0}/{1}", outputPath, ABConfig.MANIFEST_NAME); // manifest文件自动生成的，没有后缀名
+            string manifestPath = string.Format("{0}/{1}", outputPath, target.ToString()); // manifest文件自动生成的，没有后缀名
             string manifestMD5 = string.Empty;
             if (File.Exists(manifestPath))
             {
                 manifestMD5 = FileUtility.GetFileHash(manifestPath);
             }
             JSONObject jsonManifest = new JSONObject();
-            jsonManifest.Add(ABConfig.MANIFEST_NAME, manifestMD5);
+            jsonManifest.Add(target.ToString(), manifestMD5);
 
             string[] assetBundleNames = AssetDatabase.GetAllAssetBundleNames();
             JSONObject jsonAssetBundleNames = new JSONObject();
@@ -280,14 +277,14 @@ namespace GRT.Editor
             }
 
             JSONObject jsonObject = new JSONObject();
-            jsonObject.Add(ABConfig.KEY_SERVER, ABConfig.SERVER_URL);
-            jsonObject.Add(ABConfig.KEY_VERSION, ABConfig.VERSION);
+            jsonObject.Add(ABConfig.KEY_SERVER, ABConfig.ServerURL);
+            jsonObject.Add(ABConfig.KEY_VERSION, ABConfig.Version);
             jsonObject.Add(ABConfig.KEY_MANIFEST, jsonManifest);
             jsonObject.Add(ABConfig.KEY_ASSETBUNDLES, jsonAssetBundleNames);
             jsonObject.Add(ABConfig.KEY_ASSETS, jsonAssets);
 
             string json = jsonObject.ToString();
-            string assetsMapFullName = Application.streamingAssetsPath + "/" + ABConfig.ASSETSMAP_NAME;
+            string assetsMapFullName = Application.streamingAssetsPath + "/" + ABConfig.NAME_ASSETSMAP;
 
             if (!Directory.Exists(Application.streamingAssetsPath))
             {
@@ -311,16 +308,16 @@ namespace GRT.Editor
             return assetsMapFullName;
         }
 
-        private static void CopyAssetsMapFileTo(string outPutPath)
+        private static void CopyAssetsMapFileTo(string outPutPath, BuildTarget target)
         {
-            string fileName = CreateAssetsMap(outPutPath);
+            string fileName = CreateAssetsMap(outPutPath, target);
             if (File.Exists(fileName))
             {
-                File.Copy(fileName, outPutPath + "/" + ABConfig.ASSETSMAP_NAME, true);
+                File.Copy(fileName, outPutPath + "/" + ABConfig.NAME_ASSETSMAP, true);
             }
         }
 
-        [MenuItem("AssetBundles/Clean AssetBundles Name")]
+        [MenuItem("AssetBundles/Clean AssetBundles Name", false, 60)]
         private static void CleanABName()
         {
             string[] assetbundleNames = AssetDatabase.GetAllAssetBundleNames();
@@ -344,7 +341,7 @@ namespace GRT.Editor
         /// <summary>
         /// 删除旧的AB包，包括缓存中的
         /// </summary>
-        [MenuItem("AssetBundles/Clean Cache")]
+        [MenuItem("AssetBundles/Clean Cache", false, 61)]
         private static void CleanCache()
         {
             Caching.ClearCache();
@@ -353,7 +350,7 @@ namespace GRT.Editor
         /// <summary>
         /// 清理 StreamingAssets 目录
         /// </summary>
-        [MenuItem("AssetBundles/Clean StreamingAssets")]
+        [MenuItem("AssetBundles/Clean StreamingAssets", false, 62)]
         private static void CleanStreamingAssets()
         {
             if (Directory.Exists(Application.streamingAssetsPath))

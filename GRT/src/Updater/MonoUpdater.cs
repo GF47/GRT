@@ -6,7 +6,7 @@
     public class MonoUpdater : MonoBehaviour
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        static void Init()
+        private static void Init()
         {
             RootGameObject.GRTInitializing += () =>
             {
@@ -14,6 +14,7 @@
                 Debug.Log($"{nameof(MonoUpdater)} loaded on {_instance.name}");
             };
         }
+
         private static MonoUpdater _instance;
 
         private static readonly Dictionary<long, IUpdateNode> _perFrameDict = new Dictionary<long, IUpdateNode>();
@@ -80,12 +81,15 @@
                 case UpdateType.PerFixedFrame:
                     dict = _perFixedFrameDict;
                     break;
+
                 case UpdateType.PerAfterFrame:
                     dict = _perAfterFrameDict;
                     break;
+
                 case UpdateType.PerCustomFrame:
                     dict = _perCustomFrameDict;
                     break;
+
                 case UpdateType.PerFrame:
                 default:
                     dict = _perFrameDict;
@@ -106,12 +110,15 @@
                 case UpdateType.PerFixedFrame:
                     dict = _perFixedFrameDict;
                     break;
+
                 case UpdateType.PerAfterFrame:
                     dict = _perAfterFrameDict;
                     break;
+
                 case UpdateType.PerCustomFrame:
                     dict = _perCustomFrameDict;
                     break;
+
                 case UpdateType.PerFrame:
                 default:
                     dict = _perFrameDict;

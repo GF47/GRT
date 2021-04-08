@@ -142,6 +142,15 @@ namespace GRT.Tween
                 case Ease.QuartIn: _tpEase = new TweenQuartEaseIn(); break;
                 case Ease.QuartOut: _tpEase = new TweenQuartEaseOut(); break;
                 case Ease.QuartInOut: _tpEase = new TweenQuartEaseInOut(); break;
+                case Ease.BackIn: _tpEase = new TweenBackEaseIn(); break;
+                case Ease.BackOut: _tpEase = new TweenBackEaseOut(); break;
+                case Ease.BackInOut: _tpEase = new TweenBackEaseInOut(); break;
+                case Ease.BounceIn: _tpEase = new TweenBounceEaseIn(); break;
+                case Ease.BounceOut: _tpEase = new TweenBounceEaseOut(); break;
+                case Ease.BounceInOut: _tpEase = new TweenBounceEaseInOut(); break;
+                // case Ease.ElasticIn: _tpEase = new TweenElasticEaseIn(); break;
+                // case Ease.ElasticOut: _tpEase = new TweenElasticEaseOut(); break;
+                // case Ease.ElasticInOut: _tpEase = new TweenElasticEaseInOut(); break;
                 default: _tpEase = new TweenLinear(); break;
             }
         }

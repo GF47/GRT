@@ -1,79 +1,29 @@
-﻿/* ****************************************************************
- * @File Name   :   Line
- * @Author      :   GF47
- * @Date        :   2015/3/11 10:56:59
- * @Description :   定义了一条[直线、射线、线段]
- * @Edit        :   2015/3/11 10:56:59
- * ***************************************************************/
-
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace GRT.Geometry
 {
-    /// <summary>
-    /// 定义了一条[直线、射线、线段]
-    /// </summary>
     public struct Line
     {
-        public enum LineType { Straight = 0, Ray = 1, Segment = 2 }
-        public LineType type;
+        private Vector3 a;
+        private Vector3 b;
+        private Vector3 n;
 
-        public bool Logical
+        public Vector3 A { get => a; set { a = value; n = Vector3.Normalize(b - a); } }
+        public Vector3 B { get => b; set { b = value; n = Vector3.Normalize(b - a); } }
+
+        public Vector3 Normal => n;
+        public bool Logical => a != b;
+
+        public Line(Vector3 a, Vector3 b)
         {
-            get
-            {
-                if (_points == null) return false;
-                return _points[0] != _points[1];
-            }
+            this.a = a;
+            this.b = b;
+
+            n = Vector3.Normalize(b - a);
         }
 
-        public Vector3 A
-        {
-            get
-            {
-                if (_points == null) return Vector3.zero;
-                return _points[0];
-            }
-            set
-            {
-                if (_points == null) return;
-                _points[0] = value;
-            }
-        }
+        public Vector3 GetPoint(float distance) => a + distance * n;
 
-        public Vector3 B
-        {
-            get
-            {
-                if (_points == null) return Vector3.zero;
-                return _points[1];
-            }
-            set
-            {
-                if (_points == null) return;
-                _points[1] = value;
-            }
-        }
-        private Vector3[] _points;
-
-        public Vector3 Normal { get { return Vector3.Normalize(_points[1] - _points[0]); } }
-
-        public Line(LineType type, Vector3 a, Vector3 b)
-        {
-            this.type = type;
-            _points = new Vector3[2];
-            _points[0] = a;
-            _points[1] = b;
-        }
-
-        public Vector3 GetPoint(float distance)
-        {
-            return A + distance * Normal;
-        }
-
-        public static Vector3 GetPoint(Line a, float distance)
-        {
-            return a.A + distance * a.Normal;
-        }
+        public Vector3 Lerp(float f) => Vector3.Lerp(a, b, f);
     }
 }

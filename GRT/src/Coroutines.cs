@@ -12,6 +12,9 @@ using UnityEngine;
 
 namespace GRT
 {
+    /// <summary>
+    /// 执行Unity携程的公共类
+    /// </summary>
     public class Coroutines : MonoBehaviour
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -34,26 +37,41 @@ namespace GRT
             }
         }
 
+        /// <summary>
+        /// 在一段携程执行完成后，执行指定的回调
+        /// </summary>
         public static void StartACoroutineWithCallback(IEnumerator routine, Action callback)
         {
             _instance.StartCoroutine(__startACoroutineWithCallback(routine, callback));
         }
 
+        /// <summary>
+        /// 执行一段携程
+        /// </summary>
         public static void StartACoroutine(IEnumerator routine)
         {
             _instance.StartCoroutine(routine);
         }
 
+        /// <summary>
+        /// 等待指定时间（秒）后，执行指定的回调
+        /// </summary>
         public static void DelayInvoke(Action action, float delay)
         {
             _instance.StartCoroutine(__startACoroutineWithCallback(new WaitForSecondsRealtime(delay), action));
         }
 
+        /// <summary>
+        /// 停止一个正在执行的携程
+        /// </summary>
         public static void StopACoroutine(IEnumerator routine)
         {
             _instance.StopCoroutine(routine);
         }
 
+        /// <summary>
+        /// 停止所有的携程
+        /// </summary>
         public static void StopAll()
         {
             _instance.StopAllCoroutines();

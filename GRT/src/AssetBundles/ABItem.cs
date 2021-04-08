@@ -1,26 +1,25 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.IO;
 using UnityEngine;
 
-namespace GRT.AssetBundles 
+namespace GRT.AssetBundles
 {
     public class ABItem
     {
-        public string path;
         public AssetBundle ab;
+        public string path;
         public int referenceCount;
 
-        public ABItem(string path, bool isAsync = false, Action<AssetBundle> callback = null)
+        public ABItem(string path, bool isAsync = false/*, Action<AssetBundle> callback = null*/)
         {
             this.path = path;
 
-            var nativePath = $"{ABConfig.AssetBundle_Root_Hotfix}/{this.path}";
-            if (!File.Exists(nativePath)) { nativePath = $"{ABConfig.AssetBundle_Root_Streaming_AsFile}/{this.path}"; }
+            var nativePath = $"{ABConfig.RootPath_HotFix}/{this.path}";
+            if (!File.Exists(nativePath)) { nativePath = $"{ABConfig.RootPath_FileStreaming}/{this.path}"; }
 
             if (isAsync)
             {
-                Coroutines.StartACoroutine(GetABAsync(nativePath));
+                Coroutines.StartACoroutine(__GetABAsync(nativePath));
             }
             else
             {
@@ -28,7 +27,7 @@ namespace GRT.AssetBundles
             }
         }
 
-        private IEnumerator GetABAsync(string path)
+        private IEnumerator __GetABAsync(string path)
         {
             var request = AssetBundle.LoadFromFileAsync(path);
             yield return request;

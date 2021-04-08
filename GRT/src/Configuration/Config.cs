@@ -1,75 +1,30 @@
-﻿using GRT.Data;
-using System.Collections.Generic;
-using System.Xml;
+﻿using UnityEngine;
 
 namespace GRT.Configuration
 {
-    public class Config : IBlackBoard
+    public static class Config
     {
-        private Dictionary<string, object> _config;
+        public const string configPath = "application.config";
+        private static readonly XmlConfig _config;
 
-        public void Initialize_XmlString(string xmlString)
+        static Config()
         {
-            _config = new Dictionary<string, object>();
-
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(xmlString);
-            XmlNode root = doc.LastChild;
-
-            Initialize(root);
-        }
-        public void Initialize_XmlFileName(string configPath)
-        {
-            _config = new Dictionary<string, object>();
-
-            XmlDocument doc = new XmlDocument();
-            doc.Load(configPath);
-            XmlNode root = doc.LastChild;
-
-            Initialize(root);
+            (_config = new XmlConfig()).Initialize_XmlFileName($"{Application.streamingAssetsPath}/{configPath}");
         }
 
-        public void Initialize(XmlNode root)
+        public static T Get<T>(string name, T @default = default)
         {
-            if (root != null)
-            {
-                XmlNodeList list = root.SelectNodes(ConstValues.NODE);
-                if (list != null)
-                {
-                    for (int i = 0; i < list.Count; i++)
-                    {
-                        string name = string.Empty;
-                        if (!list[i].HasAttribute(ConstValues.NAME, ref name)) { continue; }
-
-                        string type = string.Empty;
-                        if (!list[i].HasAttribute(ConstValues.TYPE, ref type)) { continue; }
-
-                        string valueStr = string.Empty;
-                        if (!list[i].HasAttribute(ConstValues.VALUE, ref valueStr)) { continue; }
-                        object value = Convert.ConvertTo(type, valueStr);
-
-                        _config.Add(name, value);
-                    }
-                }
-            }
+            return _config.Get(name, @default);
         }
 
-        public T Get<T>(string name, T @default = default)
+        public static bool Get<T>(string name, out T value, T @default = default)
         {
-            var result = _config != null && _config.ContainsKey(name);
-            return result ? (T)_config[name] : @default;
+            return _config.Get(name, out value, @default);
         }
 
-        public bool Get<T>(string name, out T value, T @default = default)
+        public static void Set<T>(string name, T value)
         {
-            var result = _config != null && _config.ContainsKey(name);
-            value = result ? (T)_config[name] : @default;
-            return result;
-        }
-
-        void IBlackBoard.Set<T>(string name, T value)
-        {
-            throw new System.NotImplementedException();
+            _config.Set(name, value);
         }
     }
 }

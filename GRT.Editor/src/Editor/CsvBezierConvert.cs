@@ -1,5 +1,5 @@
-﻿using GRT.Data.CSV;
-using GRT.Geometry.Bezier;
+﻿using GRT.Data;
+using GRT.Geometry;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -19,7 +19,7 @@ namespace GRT.Editor
                 return;
             }
 
-            var data = CSVHelper.Read(AssetDatabase.GetAssetPath(Selection.objects[0]), Encoding.UTF8);
+            var data = CSVTools.Read(AssetDatabase.GetAssetPath(Selection.objects[0]), Encoding.UTF8);
             var bezier = CreateInstance<BezierSpline>();
             for (int i = 0; i < data.Count; i++)
             {
@@ -72,7 +72,7 @@ namespace GRT.Editor
                 }
                 var path = Path.GetFullPath(AssetDatabase.GetAssetPath(Selection.objects[0]));
                 path = Path.ChangeExtension(path, "csv");
-                CSVHelper.Write(path, Encoding.UTF8, map);
+                CSVTools.Write(path, Encoding.UTF8, map);
                 Debug.Log(path);
                 AssetDatabase.Refresh();
             }

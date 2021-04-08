@@ -12,7 +12,7 @@
         public static int ExitStateID = -2;
         #endregion
 
-        public static bool IsLogicalStateID(int id)
+        public static bool Validated(int id)
         {
             return id != NullStateID;
         }

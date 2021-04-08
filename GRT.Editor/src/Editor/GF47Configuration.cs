@@ -294,18 +294,11 @@ namespace GRT.Editor
                 {
                     for (int i = 0; i < list.Count; i++)
                     {
-                        string nameStr = string.Empty;
-                        if (!list[i].HasAttribute(ConstValues.NAME, ref nameStr)) { continue; }
+                        if (!list[i].HasAttribute(ConstValues.NAME, out string nameStr)) { continue; }
+                        if (!list[i].HasAttribute(ConstValues.TYPE, out string typeStr)) { continue; }
+                        if (!list[i].HasAttribute(ConstValues.VALUE, out string valueStr)) { continue; }
 
-                        string typeStr = string.Empty;
-                        if (!list[i].HasAttribute(ConstValues.TYPE, ref typeStr)) { continue; }
-                        Convert.UnityStructs type = Convert.ToUnityStructsEnum(typeStr);
-
-                        string valueStr = string.Empty;
-                        if (!list[i].HasAttribute(ConstValues.VALUE, ref valueStr)) { continue; }
-                        object value = Convert.ConvertTo(typeStr, valueStr);
-
-                        _config.Add(new Item(nameStr, type, value));
+                        _config.Add(new Item(nameStr, Convert.ToUnityStructsEnum(typeStr), Convert.ConvertTo(typeStr, valueStr)));
                     }
                 }
             }

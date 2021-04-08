@@ -4,7 +4,7 @@
 
     public static class CameraExtension
     {
-        public static bool GetCurrentHitAtMousePosition(this Camera camera, out RaycastHit hit, float distance = -1f)
+        public static bool Raycast(this Camera camera, out RaycastHit hit, float distance = -1f)
         {
             if (camera != null)
             {
