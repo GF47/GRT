@@ -83,6 +83,9 @@ namespace GRT.AssetBundles
         [SerializeField] private string _serverURL = "http://127.0.0.1:8088";
         [SerializeField] private int _version = 1;
 
+        public static string ServerURL => Instance._serverURL;
+        public static int Version => Instance._version;
+
 #if UNITY_EDITOR
         public static string RootPath_Editor => $"{Application.dataPath}/../../UnityAssetBundles";
 #endif
@@ -131,8 +134,5 @@ namespace GRT.AssetBundles
 #else
             Application.persistentDataPath;
 #endif
-
-        public static string ServerURL => Instance._serverURL;
-        public static int Version => Instance._version;
     }
 }

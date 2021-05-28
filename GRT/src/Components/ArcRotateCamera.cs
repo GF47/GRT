@@ -10,6 +10,8 @@ namespace GRT.Components
 
         #region serialized field
 
+        [SerializeField] [InspectorDisplayAs("是否为局部坐标")] private bool _isLocal;
+
         [SerializeField] [InspectorDisplayAs("相机焦点")] private Transform _target;
 
         [SerializeField] [InspectorDisplayAs("半径最小值")] private float _lowerRadius = 10f;
@@ -121,6 +123,27 @@ namespace GRT.Components
         public void RemoveBlockArea(Vector4 a) { _blockAreas.Remove(a); }
         public void ClearBlockArea() { _blockAreas.Clear(); }
 
+        private Vector3 TransformPosition
+        {
+            get => _isLocal ? transform.localPosition : transform.position;
+            set { if (_isLocal) { transform.localPosition = value; } else { transform.position = value; } }
+        }
+        private Quaternion TransformRotation
+        {
+            get => _isLocal ? transform.localRotation : transform.rotation;
+            set { if (_isLocal) { transform.localRotation = value; } else { transform.rotation = value; } }
+        }
+        private Vector3 TransformEulerAngles
+        {
+            get => _isLocal ? transform.localEulerAngles : transform.eulerAngles;
+            set { if (_isLocal) { transform.localEulerAngles = value; } else { transform.eulerAngles = value; } }
+        }
+        private Vector3 TargetPosition
+        {
+            get => _isLocal ? _target.localPosition : _target.position;
+            set { if (_isLocal) { _target.localPosition = value; } else { _target.position = value; } }
+        }
+
         private void OnEnable()
         {
             ResetCamera();
@@ -161,7 +184,7 @@ namespace GRT.Components
             #endregion 鼠标响应
 
             _currentAngle = Vector2.SmoothDamp(_currentAngle, _angle, ref _palstance, _inertialDuration, _inertialFactor, Time.deltaTime);
-            transform.rotation = Quaternion.Euler(_currentAngle);
+            TransformRotation = Quaternion.Euler(_currentAngle);
 
             if (_target != null)
             {
@@ -179,12 +202,12 @@ namespace GRT.Components
                 _radius = Mathf.Clamp(_radius, _lowerRadius, _upperRadius);
 
                 _currentRadius = Mathf.SmoothDamp(_currentRadius, _radius, ref _zoomInVelocity, _inertialDuration, _inertialFactor, Time.deltaTime);
-                _target.position = _position;
-                transform.position = transform.rotation * new Vector3(0f, 0f, -_currentRadius) + _target.position;
+                TargetPosition = _position;
+                TransformPosition = TransformRotation * new Vector3(0f, 0f, -_currentRadius) + TargetPosition;
             }
             else
             {
-                transform.position = _position;
+                TransformPosition = _position;
             }
 
             _lastScreenPoint = Input.mousePosition;
@@ -196,26 +219,26 @@ namespace GRT.Components
             _camera = GetComponent<Camera>();
 
             _angle = new Vector3(
-                Mathf.Clamp(transform.eulerAngles.x, _lowerLatitude, _upperLatitude),
-                transform.eulerAngles.y);
+                Mathf.Clamp(TransformEulerAngles.x, _lowerLatitude, _upperLatitude),
+                TransformEulerAngles.y);
             _currentAngle = _angle;
-            transform.rotation = Quaternion.Euler(_angle);
+            TransformRotation = Quaternion.Euler(_angle);
 
 
             if (_target != null)
             {
-                _radius = Vector3.Distance(transform.position, _target.position);
+                _radius = Vector3.Distance(TransformPosition, TargetPosition);
                 _currentRadius = _radius;
-                transform.position = transform.rotation * new Vector3(0f, 0f, -_currentRadius) + _target.position;
+                TransformPosition = TransformRotation * new Vector3(0f, 0f, -_currentRadius) + TargetPosition;
 
-                _position = _target.position;
+                _position = TargetPosition;
             }
             else
             {
                 _radius = 0f;
                 _currentRadius = _radius;
 
-                _position = transform.position;
+                _position = TransformPosition;
             }
 
             _screenPointOffset = Vector2.zero;
@@ -229,7 +252,10 @@ namespace GRT.Components
         {
             _screenPointOffset = Vector2.zero;
 
-            _angle = new Vector2(Mathf.Clamp(transform.eulerAngles.x, _lowerLatitude, _upperLatitude), transform.eulerAngles.y);
+            var x = TransformEulerAngles.x;
+            x = x >= 180f ? x - 360f : x;
+
+            _angle = new Vector2(Mathf.Clamp(x, _lowerLatitude, _upperLatitude), TransformEulerAngles.y);
             _currentAngle = _angle;
 
             onRotatingStart?.Invoke();
@@ -257,7 +283,7 @@ namespace GRT.Components
         {
             _screenPointOffset = Vector2.zero;
 
-            _position = (_target == null ? transform : _target).position;
+            _position = _target == null ? TransformPosition : TargetPosition;
 
             onPanningStart?.Invoke();
         }

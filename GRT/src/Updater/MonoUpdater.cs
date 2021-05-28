@@ -1,4 +1,5 @@
-﻿namespace GRT.Updater
+﻿// TODO 考虑将持续时间很短的node单独存放，node自身去标记持续时间的长短
+namespace GRT.Updater
 {
     using System.Collections.Generic;
     using UnityEngine;
@@ -17,12 +18,12 @@
 
         private static MonoUpdater _instance;
 
-        private static readonly Dictionary<long, IUpdateNode> _perFrameDict = new Dictionary<long, IUpdateNode>();
-        private static readonly Dictionary<long, IUpdateNode> _perFixedFrameDict = new Dictionary<long, IUpdateNode>();
-        private static readonly Dictionary<long, IUpdateNode> _perAfterFrameDict = new Dictionary<long, IUpdateNode>();
-        private static readonly Dictionary<long, IUpdateNode> _perCustomFrameDict = new Dictionary<long, IUpdateNode>();
+        private static readonly List<IUpdateNode> _perFrameList = new List<IUpdateNode>();
+        private static readonly List<IUpdateNode> _perFixedFrameList = new List<IUpdateNode>();
+        private static readonly List<IUpdateNode> _perAfterFrameList = new List<IUpdateNode>();
+        private static readonly List<IUpdateNode> _perCustomFrameList = new List<IUpdateNode>();
 
-        private static readonly List<(bool, Dictionary<long, IUpdateNode>, IUpdateNode)> _cache = new List<(bool, Dictionary<long, IUpdateNode>, IUpdateNode)>();
+        private static readonly List<(bool, List<IUpdateNode>, IUpdateNode)> _cache = new List<(bool, List<IUpdateNode>, IUpdateNode)>();
 
         private void Awake()
         {
@@ -40,94 +41,90 @@
                 for (int i = 0; i < _cache.Count; i++)
                 {
                     var (isAdd, dict, node) = _cache[i];
-                    if (isAdd) { dict.Add(node.ID, node); }
-                    else { dict.Remove(node.ID); }
+                    if (isAdd) { dict.Add(node); }
+                    else { dict.Remove(node); }
                 }
                 _cache.Clear();
             }
 
-            foreach (var item in _perFrameDict)
-            {
-                item.Value.Update(Time.deltaTime);
-            }
+            foreach (var item in _perFrameList) { item.Update(Time.deltaTime); }
 
-            foreach (var item in _perCustomFrameDict)
-            {
-                item.Value.Update(Time.deltaTime);
-            }
+            foreach (var item in _perCustomFrameList) { item.Update(Time.deltaTime); }
         }
 
         private void FixedUpdate()
         {
-            foreach (var item in _perFixedFrameDict)
-            {
-                item.Value.Update(Time.fixedDeltaTime);
-            }
+            foreach (var item in _perFixedFrameList) { item.Update(Time.fixedDeltaTime); }
         }
 
         private void LateUpdate()
         {
-            foreach (var item in _perAfterFrameDict)
-            {
-                item.Value.Update(Time.deltaTime);
-            }
+            foreach (var item in _perAfterFrameList) { item.Update(Time.deltaTime); }
         }
 
-        public static void Add(IUpdateNode node)
+        public static bool Add(IUpdateNode node)
         {
-            Dictionary<long, IUpdateNode> dict;
+            List<IUpdateNode> list;
             switch (node.Type)
             {
                 case UpdateType.PerFixedFrame:
-                    dict = _perFixedFrameDict;
+                    list = _perFixedFrameList;
                     break;
 
                 case UpdateType.PerAfterFrame:
-                    dict = _perAfterFrameDict;
+                    list = _perAfterFrameList;
                     break;
 
                 case UpdateType.PerCustomFrame:
-                    dict = _perCustomFrameDict;
+                    list = _perCustomFrameList;
                     break;
 
                 case UpdateType.PerFrame:
                 default:
-                    dict = _perFrameDict;
+                    list = _perFrameList;
                     break;
             }
 
-            if (!dict.ContainsKey(node.ID))
+            if (!list.Contains(node))
             {
-                _cache.Add((true, dict, node));
+                if (_cache.FindIndex(n => n.Item1 == true && n.Item2 == list && n.Item3 == node) < 0)
+                {
+                    _cache.Add((true, list, node));
+                }
             }
+            return true;
         }
 
-        public static void Remove(IUpdateNode node)
+        public static bool Remove(IUpdateNode node)
         {
-            Dictionary<long, IUpdateNode> dict;
+            List<IUpdateNode> list;
             switch (node.Type)
             {
                 case UpdateType.PerFixedFrame:
-                    dict = _perFixedFrameDict;
+                    list = _perFixedFrameList;
                     break;
 
                 case UpdateType.PerAfterFrame:
-                    dict = _perAfterFrameDict;
+                    list = _perAfterFrameList;
                     break;
 
                 case UpdateType.PerCustomFrame:
-                    dict = _perCustomFrameDict;
+                    list = _perCustomFrameList;
                     break;
 
                 case UpdateType.PerFrame:
                 default:
-                    dict = _perFrameDict;
+                    list = _perFrameList;
                     break;
             }
-            if (dict.ContainsKey(node.ID))
+            if (list.Contains(node))
             {
-                _cache.Add((false, dict, node));
+                if (_cache.FindIndex(n => n.Item1 == false && n.Item2 == list && n.Item3 == node) < 0)
+                {
+                    _cache.Add((false, list, node));
+                }
             }
+            return false;
         }
     }
 }

@@ -83,7 +83,7 @@ namespace GRT
         /// </summary>
         /// <param name="targets">被释放的实例集合</param>
         /// <param name="callback">实例被返还回池时对其进行必要的处理</param>
-        public void Reset(ICollection<T> targets, Action<T> callback = null)
+        public void Release(ICollection<T> targets, Action<T> callback = null)
         {
             foreach (T target in targets)
             {

@@ -24,7 +24,7 @@ namespace GRT.AssetBundles
             }
         }
 
-        public override bool keepWaiting { get { return !_isDone; } }
+        public override bool keepWaiting => !_isDone;
         private bool _isDone;
 
         private HttpDownloader _downloader;

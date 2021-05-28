@@ -10,10 +10,12 @@ namespace GRT.AssetBundles
         /// 正在下载
         /// </summary>
         public const int STATE_DOWNLOADING = 0;
+
         /// <summary>
         /// 下载完毕
         /// </summary>
         public const int STATE_COMPLETED = 1;
+
         /// <summary>
         /// 下载失败
         /// </summary>
@@ -27,6 +29,7 @@ namespace GRT.AssetBundles
         /// 超时阈值
         /// </summary>
         public static int TimeOutThreshold = TIME_OUT_THRESHOLD;
+
         /// <summary>
         /// 读写超时阈值
         /// </summary>
@@ -95,7 +98,7 @@ namespace GRT.AssetBundles
         public void Dispose()
         {
             if (_fileStream != null) { _fileStream.Close(); _fileStream = null; }
-            if (_response != null) { _response.Close();_response = null; }
+            if (_response != null) { _response.Close(); _response = null; }
             if (_request != null) { _request.Abort(); _request = null; }
         }
 

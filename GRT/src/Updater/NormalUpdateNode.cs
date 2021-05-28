@@ -4,53 +4,47 @@ namespace GRT.Updater
 {
     public abstract class NormalUpdateNode : IUpdateNode
     {
-        public long ID { get; set; }
-
         public abstract UpdateType Type { get; }
 
-        public bool IsUpdating
+        public bool IsActive
         {
-            get => isUpdating;
+            get => isAlive;
             set
             {
-                if (isUpdating != value)
+                if (isAlive != value)
                 {
-                    isUpdating = value;
-                    if (isUpdating) { Start(); }
+                    if (value) { Start(); }
                     else { Stop(); }
                 }
             }
         }
 
-        protected bool isUpdating;
+        protected bool isAlive;
 
         public event Action<float> Updating;
 
         public NormalUpdateNode(Action<float> updating)
         {
             Updating = updating;
-            ID = DateTime.Now.ToBinary();
         }
 
-        public void Clear()
+        public virtual void Clear()
         {
             Stop();
             Updating = null;
         }
 
-        public void Start()
+        public virtual void Start()
         {
-            MonoUpdater.Add(this);
-            isUpdating = true;
+            isAlive = MonoUpdater.Add(this);
         }
 
-        public void Stop()
+        public virtual void Stop()
         {
-            MonoUpdater.Remove(this);
-            isUpdating = false;
+            isAlive = MonoUpdater.Remove(this);
         }
 
-        public void Update(float delta)
+        public virtual void Update(float delta)
         {
             Updating?.Invoke(delta);
         }

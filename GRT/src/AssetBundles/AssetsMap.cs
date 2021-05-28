@@ -20,7 +20,7 @@ namespace GRT.AssetBundles
 
         public bool IsStreamingAssets { get; private set; }
 
-        public override bool keepWaiting { get { return !_isDone; } }
+        public override bool keepWaiting => !_isDone;
         private bool _isDone;
 
         public AssetsMap()

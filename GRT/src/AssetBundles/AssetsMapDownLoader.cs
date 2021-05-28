@@ -14,7 +14,7 @@ namespace GRT.AssetBundles
 
         public AssetsMapDownLoader() { Start(); }
 
-        public override bool keepWaiting { get { return !_isDone; } }
+        public override bool keepWaiting => !_isDone;
         public int Progress { get { return _downLoader.Percent; } }
 
         private void ErrorCallback(Exception e)

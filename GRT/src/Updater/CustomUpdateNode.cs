@@ -4,24 +4,22 @@ namespace GRT.Updater
 {
     public class CustomUpdateNode : IUpdateNode
     {
-        public long ID { get; set; }
-
         public UpdateType Type => UpdateType.PerCustomFrame;
 
-        public bool IsUpdating
+        public bool IsActive
         {
-            get => isUpdating;
+            get => isAlive;
             set
             {
-                if (isUpdating != value)
+                if (isAlive != value)
                 {
-                    isUpdating = value;
-                    if (isUpdating) { Start(); }
+                    if (value) { Start(); }
                     else { Stop(); }
                 }
             }
         }
-        protected bool isUpdating;
+
+        protected bool isAlive;
 
         public float Duration { get; set; }
         private float _delta;
@@ -32,28 +30,25 @@ namespace GRT.Updater
         {
             Updating = updating;
             Duration = duration < 0.02f ? 1f : duration;
-            ID = DateTime.Now.ToBinary();
         }
 
-        public void Clear()
+        public virtual void Clear()
         {
             Stop();
             Updating = null;
         }
 
-        public void Start()
+        public virtual void Start()
         {
-            MonoUpdater.Add(this);
-            isUpdating = true;
+            isAlive = MonoUpdater.Add(this);
         }
 
-        public void Stop()
+        public virtual void Stop()
         {
-            MonoUpdater.Remove(this);
-            isUpdating = false;
+            isAlive = MonoUpdater.Remove(this);
         }
 
-        public void Update(float delta)
+        public virtual void Update(float delta)
         {
             _delta += delta;
             if (_delta >= Duration)

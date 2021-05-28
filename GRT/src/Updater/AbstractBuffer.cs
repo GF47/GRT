@@ -10,31 +10,43 @@ namespace GRT.Updater
 
         public event Action<T> Stopping;
 
-        public bool IsBuffering
+        protected event Action<float> updating;
+
+        event Action<float> IUpdateNode.Updating
         {
-            get => _updateNode.IsUpdating;
+            add { updating += value; }
+            remove { updating -= value; }
+        }
+
+        UpdateType IUpdateNode.Type => UpdateType.PerFrame;
+
+        public bool IsActive
+        {
+            get => isActive;
             set
             {
-                if (_updateNode.IsUpdating == value) { return; }
-
-                if (_updateNode.IsUpdating)
+                if (isActive != value)
                 {
-                    _updateNode.Stop();
-                    Stopping?.Invoke(Value);
+                    if (value) { Start(); }
+                    else { Stop(); }
                 }
+#if UNITY_EDITOR
                 else
                 {
-                    _updateNode.Start();
-                    Starting?.Invoke(Value);
+                    UnityEngine.Debug.LogWarning($"{GetType()} is {(isActive ? "updating" : "stopped")}, Start failed");
                 }
+#endif
             }
         }
+
+        protected bool isActive;
 
         T IProjecter01<T>.From
         {
             get => _from;
-            set { _from = value; _gap = Subtraction(_to, _from); }
+            set { _from = value; _difference = Subtraction(_to, _from); }
         }
+
         private T _from;
 
         public T To
@@ -44,13 +56,14 @@ namespace GRT.Updater
             {
                 _from = _value;
                 _to = value;
-                _gap = Subtraction(_to, _from);
-                IsBuffering = IsValidValue(_gap);
+                _difference = Subtraction(_to, _from);
+                Update(0f);
+                IsActive = IsValidValue(_difference);
             }
         }
 
         private T _to;
-        private T _gap;
+        private T _difference;
 
         public T Value
         {
@@ -69,50 +82,57 @@ namespace GRT.Updater
 
         public float Percent
         {
-            get => IsValidValue(_gap) ? Division(Subtraction(_value, _from), _gap) : 1f;
+            get => IsValidValue(_difference) ? Division(Subtraction(_value, _from), _difference) : 1f;
             set
             {
                 Value = Project01(Math.Max(Math.Min(value, 1f), 0f));
 
-                if (value >= 1f) { IsBuffering = false; }
+                if (value >= 1f) { IsActive = false; }
             }
         }
-
-        private PerFrameUpdateNode _updateNode;
 
         protected AbstractBuffer(T from, Action<T> buffering, float duration = 1f)
         {
             _from = from;
-            _value = from;
-            To = from;
-
-            _updateNode = new PerFrameUpdateNode(Update);
+            _to = from;
+            _difference = Subtraction(_to, _from);
 
             Buffering = buffering;
             Duration = duration;
         }
 
+        public virtual void Start()
+        {
+            isActive = MonoUpdater.Add(this);
+            Starting?.Invoke(_value);
+        }
+
         public void Update(float delta)
         {
+            updating?.Invoke(delta);
             Percent += delta / _duration;
+        }
+
+        public virtual void Stop()
+        {
+            isActive = MonoUpdater.Remove(this);
+            Stopping?.Invoke(_value);
         }
 
         public void Clear()
         {
+            Stop();
+
             Buffering = null;
             Starting = null;
             Stopping = null;
+
+            updating = null;
         }
 
-        T IProjecter01<T>.Project(float percent)
-        {
-            return Project01(percent);
-        }
+        T IProjecter01<T>.Project(float percent) => Project01(percent);
 
-        protected T Project01(float percent)
-        {
-            return Addition(Multiplication(percent, _gap), _from);
-        }
+        protected T Project01(float percent) => Addition(Multiplication(percent, _difference), _from);
 
         protected abstract T Addition(T a, T b);
 

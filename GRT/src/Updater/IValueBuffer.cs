@@ -2,7 +2,7 @@
 
 namespace GRT.Updater
 {
-    public interface IValueBuffer<T> : IProjecter01<T>, IPercent
+    public interface IValueBuffer<T> : IUpdateNode, IProjecter01<T>, IPercent
     {
         event Action<T> Buffering;
 
@@ -10,12 +10,8 @@ namespace GRT.Updater
 
         event Action<T> Stopping;
 
-        bool IsBuffering { get; set; }
-
         T Value { get; set; }
 
         float Duration { get; set; }
-
-        void Clear();
     }
 }

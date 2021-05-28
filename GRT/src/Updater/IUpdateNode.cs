@@ -6,9 +6,9 @@
 
     public interface IUpdateNode
     {
-        long ID { get; set; }
         UpdateType Type { get; }
-        bool IsUpdating { get; set; }
+        bool IsActive { get; set; }
+        // TODO bool IsOneMoment { get; set; }
         event Action<float> Updating;
 
         void Start();
