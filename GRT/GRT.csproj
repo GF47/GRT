@@ -62,6 +62,8 @@
     <Compile Include="src\Configuration\XmlConfig.cs" />
     <Compile Include="src\Configuration\Config.cs" />
     <Compile Include="src\Configuration\ConstValues.cs" />
+    <Compile Include="src\Geometry\Point.cs" />
+    <Compile Include="src\GRandom.cs" />
     <Compile Include="src\IBlackBoard.cs" />
     <Compile Include="src\Convert.cs" />
     <Compile Include="src\Coroutines.cs" />
@@ -78,7 +80,6 @@
     <Compile Include="src\FSM\FSMUtility.cs" />
     <Compile Include="src\FSM\IState.cs" />
     <Compile Include="src\Geometry\BezierPoint.cs" />
-    <Compile Include="src\Geometry\BezierResult.cs" />
     <Compile Include="src\Geometry\BezierSpline.cs" />
     <Compile Include="src\Geometry\Line.cs" />
     <Compile Include="src\Geometry\Utilities.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="src\Updater\AbstractBuffer.cs" />
     <Compile Include="src\Updater\CustomUpdateNode.cs" />
     <Compile Include="src\Updater\FloatBuffer.cs" />
+    <Compile Include="src\Updater\IntBuffer.cs" />
     <Compile Include="src\Updater\IUpdateNode.cs" />
     <Compile Include="src\Updater\IValueBuffer.cs" />
     <Compile Include="src\Updater\MonoUpdater.cs" />

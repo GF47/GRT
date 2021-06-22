@@ -56,6 +56,7 @@
     <Compile Include="src\Editor\GF47DeleteComponentHidden.cs" />
     <Compile Include="src\Editor\GF47Duplicate.cs" />
     <Compile Include="src\Editor\GF47FindInChildren.cs" />
+    <Compile Include="src\Editor\GF47FindReferencesInScene.cs" />
     <Compile Include="src\Editor\GF47GatherAssets.cs" />
     <Compile Include="src\Editor\GF47GetPathToString.cs" />
     <Compile Include="src\Editor\GF47GetRelativeTransform.cs" />
