@@ -33,7 +33,8 @@ namespace GRT.Editor.Inspectors
 
         // private bool _smooth;
 
-        private int _selectedIndex = -1;
+        // private int _selectedIndex = -1;
+        private BezierPoint _selected;
 
         private BezierSpline _target;
         // private readonly Vector3[] _points = new Vector3[DRAW_POINTS_COUNT + 1];
@@ -84,7 +85,8 @@ namespace GRT.Editor.Inspectors
             Color bg = GUI.backgroundColor;
             for (int i = 0; i < _target.Count; i++)
             {
-                GUI.backgroundColor = i == _selectedIndex ? Color.yellow : Color.cyan;
+                var selected = _target[i] == _selected;
+                GUI.backgroundColor = selected ? Color.yellow : Color.cyan;
                 EditorGUILayout.BeginVertical(EditorStyles.textField);
                 BezierPoint point = _target[i];
                 if (point == null)
@@ -94,19 +96,22 @@ namespace GRT.Editor.Inspectors
                     EditorUtility.SetDirty(_target);
                     point = _target[i];
                 }
-                Vector3 position = point.Point;
+                Vector3 position = point.Position;
                 position = EditorGUILayout.Vector3Field("Postion", position);
-                if (point.Point != position)
+                if (point.Position != position)
                 {
-                    point.Point = position;
+                    point.Position = position;
                 }
-                point.type = (BezierPoint.PointType)EditorGUILayout.EnumPopup("Type", point.type);
                 EditorGUILayout.BeginHorizontal();
-                if (_selectedIndex == i)
+                point.type = (BezierPoint.PointType)EditorGUILayout.EnumPopup("Type", point.type);
+                point.Percent = EditorGUILayout.FloatField("Percent", point.Percent);
+                EditorGUILayout.EndHorizontal();
+                EditorGUILayout.BeginHorizontal();
+                if (selected)
                 {
                     if (GUILayout.Button("UnSelect", EditorStyles.miniButtonLeft))
                     {
-                        _selectedIndex = -1;
+                        _selected = null;
                         RepaintSceneView();
                     }
                 }
@@ -114,7 +119,7 @@ namespace GRT.Editor.Inspectors
                 {
                     if (GUILayout.Button("Select", EditorStyles.miniButtonLeft))
                     {
-                        _selectedIndex = i;
+                        _selected = _target[i];
                         RepaintSceneView();
                     }
                 }
@@ -137,10 +142,11 @@ namespace GRT.Editor.Inspectors
             }
             if (insertId > -1)
             {
-                float percent = (insertId - 0.5f) / (_target.Count - 1);
-                BezierResult result = _target.GetResult(percent);
+                Point result = _target.GetResult((insertId - 0.5f) / (_target.Count - 1));
                 Undo.RecordObject(_target, "insert bezier point");
-                _target.Insert(insertId, new BezierPoint(result.position, 1f, BezierPoint.PointType.Bezier));
+                Vector3 p = result.position;
+                Vector3 n = result.velocity.normalized;
+                _target.Insert(insertId, new BezierPoint(p, p - n, p + n, BezierPoint.PointType.Smooth));
                 EditorUtility.SetDirty(_target);
                 RepaintSceneView();
             }
@@ -158,23 +164,23 @@ namespace GRT.Editor.Inspectors
             if (GUILayout.Button("Add", EditorStyles.miniButtonLeft))
             {
                 Undo.RecordObject(_target, "add bezier point");
-                _target.Add(new BezierPoint());
+                _target.Insert(_target.Count, new BezierPoint());
                 EditorUtility.SetDirty(_target);
                 RepaintSceneView();
             }
-            if (_selectedIndex > -1)
+            if (_selected != null)
             {
                 if (GUILayout.Button("Align With View", EditorStyles.miniButtonMid, GUILayout.MinWidth(20)))
                 {
                     Undo.RecordObject(_target, "change pos");
-                    _target[_selectedIndex].Point = SceneView.lastActiveSceneView.camera.transform.position;
+                    _selected.Position = SceneView.lastActiveSceneView.camera.transform.position;
                     EditorUtility.SetDirty(_target);
                     RepaintSceneView();
                 }
                 if (GUILayout.Button("Move To View" , EditorStyles.miniButtonMid, GUILayout.MinWidth(20)))
                 {
                     Undo.RecordObject(_target, "change pos");
-                    _target[_selectedIndex].Point = SceneView.lastActiveSceneView.pivot;
+                    _selected.Position = SceneView.lastActiveSceneView.pivot;
                     EditorUtility.SetDirty(_target);
                     RepaintSceneView();
                 }
@@ -189,8 +195,14 @@ namespace GRT.Editor.Inspectors
                 RepaintSceneView();
             }
 
-            if (GUILayout.Button("Save", EditorStyles.miniButtonRight))
+            if (GUILayout.Button("Sort", EditorStyles.miniButtonRight))
             {
+                _target.Sort();
+                if (_target.Count > 0)
+                {
+                    _target[0].Percent = 0f;
+                    _target[_target.Count - 1].Percent = 1f;
+                }
                 AssetDatabase.SaveAssets();
             }
 
@@ -206,7 +218,7 @@ namespace GRT.Editor.Inspectors
             for (int i = 0; i < _target.Count - 1; i++)
             {
                 DrawPoint(i);
-                Handles.DrawBezier(_target[i].Point, _target[i + 1].Point, _target[i].HandleR, _target[i + 1].HandleL, Color.green, null, 2f);
+                Handles.DrawBezier(_target[i].Position, _target[i + 1].Position, _target[i].HandleR, _target[i + 1].HandleL, Color.green, null, 2f);
                 // if (_smooth)
                 // {
                 //     Handles.DrawBezier(_target[i].Point, _target[i + 1].Point, _target[i].HandleR, _target[i + 1].HandleL, Color.green, null, 2f);
@@ -236,12 +248,12 @@ namespace GRT.Editor.Inspectors
             }
             BezierPoint point = _target[index];
 
-            float size = HandleUtility.GetHandleSize(point.Point);
+            float size = HandleUtility.GetHandleSize(point.Position);
 
             Handles.color = Color.blue;
-            if (Handles.Button(point.Point, Quaternion.identity, size * HANDLE_SIZE, size * PICK_SIZE, Handles.DotHandleCap))
+            if (Handles.Button(point.Position, Quaternion.identity, size * HANDLE_SIZE, size * PICK_SIZE, Handles.DotHandleCap))
             {
-                _selectedIndex = index;
+                _selected = point;
                 Repaint();
             }
 
@@ -250,14 +262,14 @@ namespace GRT.Editor.Inspectors
                 Handles.color = Color.gray;
                 if (Handles.Button(point.HandleL, Quaternion.identity, size * HANDLE_SIZE, size * PICK_SIZE, Handles.DotHandleCap) || Handles.Button(point.HandleR, Quaternion.identity, size * HANDLE_SIZE, size * PICK_SIZE, Handles.DotHandleCap))
                 {
-                    _selectedIndex = index;
+                    _selected = point;
                     Repaint();
                 }
             }
 
-            if (_selectedIndex == index)
+            if (_selected == point)
             {
-                Vector3 p = point.Point;
+                Vector3 p = point.Position;
                 Vector3 pl = point.HandleL;
                 Vector3 pr = point.HandleR;
 
@@ -268,10 +280,10 @@ namespace GRT.Editor.Inspectors
                     pr = Handles.PositionHandle(pr, Quaternion.identity);
                 }
 
-                if (p != point.Point)
+                if (p != point.Position)
                 {
                     Undo.RecordObject(_target, "change pos");
-                    point.Point = p;
+                    point.Position = p;
                     EditorUtility.SetDirty(_target);
                 }
                 else if (pl != point.HandleL)
@@ -289,8 +301,8 @@ namespace GRT.Editor.Inspectors
             }
             if (_showHandles)
             {
-                Handles.DrawLine(point.Point, point.HandleL);
-                Handles.DrawLine(point.Point, point.HandleR);
+                Handles.DrawLine(point.Position, point.HandleL);
+                Handles.DrawLine(point.Position, point.HandleR);
             }
         }
 

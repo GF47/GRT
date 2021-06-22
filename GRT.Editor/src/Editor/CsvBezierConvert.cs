@@ -32,7 +32,8 @@ namespace GRT.Editor
                     Convert.ToFloat(data[i][3]),
                     Convert.ToFloat(data[i][4]),
                     Convert.ToFloat(data[i][5])
-                    ) + p.Point;
+                    ) + p.Position;
+                p.Percent = Convert.ToFloat(data[i][6]);
                 bezier.Add(p);
             }
             var path = AssetDatabase.GetAssetPath(Selection.objects[0]);
@@ -58,15 +59,17 @@ namespace GRT.Editor
                 for (int i = 0; i < bezier.Count; i++)
                 {
                     var p = bezier[i];
-                    var pd = p.HandleR - p.Point;
+                    var pd = p.HandleR - p.Position;
+                    var pt = p.Percent;
                     var row = new string[]
                     {
-                        p.Point.x.ToString(),
-                        p.Point.y.ToString(),
-                        p.Point.z.ToString(),
+                        p.Position.x.ToString(),
+                        p.Position.y.ToString(),
+                        p.Position.z.ToString(),
                         pd.x.ToString(),
                         pd.y.ToString(),
                         pd.z.ToString(),
+                        pt.ToString(),
                     };
                     map.Add(row);
                 }

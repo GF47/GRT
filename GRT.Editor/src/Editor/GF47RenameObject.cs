@@ -138,7 +138,7 @@ namespace GRT.Editor
                 {
                     for (int j = 0, jMax = iMax - i; j < jMax; j++)
                     {
-                        if (string.CompareOrdinal(_list[j + 1].name, _list[j].name) < 0)
+                        if (_list[j + 1].transform.GetSiblingIndex() - _list[j].transform.GetSiblingIndex() < 0)
                         {
                             GameObject temp = _list[j + 1];
                             _list[j + 1] = _list[j];
