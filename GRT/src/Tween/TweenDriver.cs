@@ -59,6 +59,7 @@ namespace GRT.Tween
         private List<IPercent> _targets;
 
         public event Action<TweenDriver> Stopping;
+        public Action<TweenDriver> StoppingOneShot;
         public UnityEvent StoppingUEvent;
 
         float IPercent.Percent { get => _percent; set => _percent = Mathf.Clamp(value, 0f, 1f); }
@@ -121,6 +122,8 @@ namespace GRT.Tween
             _targets.ForEach(t => { if (t != null) { t.Percent = percent; } });
             if (stopped)
             {
+                StoppingOneShot?.Invoke(this);
+                if (StoppingOneShot != null) { StoppingOneShot = null; }
                 Stopping?.Invoke(this);
                 StoppingUEvent.Invoke();
 
@@ -220,6 +223,7 @@ namespace GRT.Tween
             td.ResetDirection(td._direction);
             td.Reset();
             td.Stopping = null;
+            td.StoppingOneShot = null;
             td.enabled = true;
             return td;
         }

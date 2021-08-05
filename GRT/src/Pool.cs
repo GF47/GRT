@@ -12,6 +12,10 @@ namespace GRT
         private Queue<T> _queue;
         private Func<T> _createNewFunc;
 
+        public event Action<T> Creating;
+        public event Action<T> Getting;
+        public event Action<T> Releasing;
+
         /// <summary>
         /// 池初始化，根据传入的实例化方法来生成新的实例
         /// </summary>
@@ -25,6 +29,8 @@ namespace GRT
             {
                 T item = _createNewFunc();
                 _queue.Enqueue(item);
+
+                Creating?.Invoke(item);
             }
         }
 
@@ -38,10 +44,14 @@ namespace GRT
             if (_queue.Count == 0)
             {
                 item = _createNewFunc();
-                callback?.Invoke(item); return item;
+                callback?.Invoke(item);
+                Getting?.Invoke(item);
+                return item;
             }
             item = _queue.Dequeue();
-            callback?.Invoke(item); return item;
+            callback?.Invoke(item);
+            Getting?.Invoke(item);
+            return item;
         }
 
         /// <summary>
@@ -75,7 +85,9 @@ namespace GRT
                 return;
 #endif
             }
-            callback?.Invoke(target); _queue.Enqueue(target);
+            callback?.Invoke(target);
+            Releasing?.Invoke(target);
+            _queue.Enqueue(target);
         }
 
         /// <summary>

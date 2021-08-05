@@ -1,5 +1,4 @@
-﻿// TODO 考虑将持续时间很短的node单独存放，node自身去标记持续时间的长短
-namespace GRT.Updater
+﻿namespace GRT.Updater
 {
     using System.Collections.Generic;
     using UnityEngine;

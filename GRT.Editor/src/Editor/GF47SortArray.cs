@@ -69,7 +69,7 @@ namespace GRT.Editor
                         //*/
                         infos[_index].SetValue(_component, Sort((IList)infos[_index].GetValue(_component)));
                         /*/
-                        // TODO 可以使用其他的排序方法
+                        // 可以使用自定义的排序方法
                         //*/
                     }
                     catch (Exception e)

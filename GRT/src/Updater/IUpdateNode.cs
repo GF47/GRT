@@ -8,7 +8,7 @@
     {
         UpdateType Type { get; }
         bool IsActive { get; set; }
-        // TODO bool IsOneMoment { get; set; }
+
         event Action<float> Updating;
 
         void Start();

@@ -59,7 +59,7 @@ namespace GRT.Editor
             EditorGUIUtility.systemCopyBuffer = pathString;
         }
 
-        [MenuItem("Assets/GF47 Editor/Get AssetPath #c", false, 0)]
+        [MenuItem("Assets/GF47 Editor/Get AssetPath #&c", false, 0)]
         private static void CopyAssetPath()
         {
             Object selected = GetSelectedObject();

@@ -8,10 +8,10 @@ namespace GRT.Updater
 
         public bool IsActive
         {
-            get => isAlive;
+            get => isActive;
             set
             {
-                if (isAlive != value)
+                if (isActive != value)
                 {
                     if (value) { Start(); }
                     else { Stop(); }
@@ -19,7 +19,7 @@ namespace GRT.Updater
             }
         }
 
-        protected bool isAlive;
+        protected bool isActive;
 
         public float Duration { get; set; }
         private float _delta;
@@ -40,12 +40,12 @@ namespace GRT.Updater
 
         public virtual void Start()
         {
-            isAlive = MonoUpdater.Add(this);
+            isActive = MonoUpdater.Add(this);
         }
 
         public virtual void Stop()
         {
-            isAlive = MonoUpdater.Remove(this);
+            isActive = MonoUpdater.Remove(this);
         }
 
         public virtual void Update(float delta)

@@ -52,7 +52,6 @@
     <Compile Include="src\AssetBundles\AssetsMap.cs" />
     <Compile Include="src\AssetBundles\AssetsMapDownLoader.cs" />
     <Compile Include="src\AssetBundles\HttpDownloader.cs" />
-    <Compile Include="src\AssetBundles\Re\ABConfig.cs" />
     <Compile Include="src\Attributes\EnumFlagsAttribute.cs" />
     <Compile Include="src\Attributes\GetAssetNameAttribute.cs" />
     <Compile Include="src\Attributes\InheritFromAttribute.cs" />
@@ -131,6 +130,9 @@
     <Compile Include="src\~ValueTypesExtension\QuaternionExtension.cs" />
     <Compile Include="src\~ValueTypesExtension\SingleExtension.cs" />
     <Compile Include="src\~ValueTypesExtension\Vector3Extension.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\AssetBundles\Re\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
