@@ -2,7 +2,7 @@
 using System.IO;
 using System.Net;
 
-namespace GRT.AssetBundles
+namespace GRT.AssetBundles_Old
 {
     public class HttpDownloader : IDisposable
     {

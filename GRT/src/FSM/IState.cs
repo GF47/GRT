@@ -1,23 +1,26 @@
-﻿namespace GRT.FSM
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GRT.FSM
 {
-    public interface IState<T>
+    public interface IState
     {
         int ID { get; }
+        string Name { get; }
 
-        void GetInput(T input);
-
-        int GetNextStateID();
+        int GetNext();
 
         void OnEnter(int lastID);
-
         void OnExit(int nextID);
-
-        void Reset();
 
         void Update();
 
-        void AddNextState(T input, int stateID);
+        void Reset();
 
-        void RemoveNextState(T input);
+        void AddNext(ITransition transition, int targetID);
+        void RemoveNext(int targetID);
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace GRT.FSM
+﻿namespace GRT.FSM_Old
 {
     public class EmptyState<T> : BaseState<T>
     {

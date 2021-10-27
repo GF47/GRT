@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-namespace GRT.FSM
+namespace GRT.FSM_Old
 {
     public class FiniStateMachine<T>
     {

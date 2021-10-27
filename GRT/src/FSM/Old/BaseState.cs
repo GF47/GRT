@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GRT.FSM
+namespace GRT.FSM_Old
 {
     public abstract class BaseState<T> : IState<T>
     {

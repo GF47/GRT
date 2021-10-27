@@ -5,7 +5,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace GRT.AssetBundles
+namespace GRT.AssetBundles_Old
 {
     public class AssetsMap : CustomYieldInstruction
     {

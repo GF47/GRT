@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-namespace GRT.AssetBundles
+namespace GRT.AssetBundles_Old
 {
     public class ABUpdater : CustomYieldInstruction
     {

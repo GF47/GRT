@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-namespace GRT.AssetBundles
+namespace GRT.AssetBundles_Old
 {
     public class AssetBundlesManager : Singleton<AssetBundlesManager>
     {
