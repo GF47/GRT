@@ -125,7 +125,7 @@ namespace GRT.Tween
                 StoppingOneShot?.Invoke(this);
                 if (StoppingOneShot != null) { StoppingOneShot = null; }
                 Stopping?.Invoke(this);
-                StoppingUEvent.Invoke();
+                StoppingUEvent?.Invoke();
 
                 enabled = false;
             }
@@ -214,9 +214,12 @@ namespace GRT.Tween
         public TweenDriver Play(int direction) => Play((Direction)direction);
         public TweenDriver Play(bool direction) => Play(direction ? Direction.Forward : Direction.Backward);
 
+        public void TogglePlay(bool direction) => Play(direction ? Direction.Forward : Direction.Backward);
+
         public static TweenDriver Play(GameObject go, float duration)
         {
-            var td = go.GetComponent<TweenDriver>() ?? go.AddComponent<TweenDriver>();
+            var td = go.GetComponent<TweenDriver>();
+            if (td == null) { td = go.AddComponent<TweenDriver>(); }
             td.Duration = duration;
             td.ResetEase(td._ease);
             td.ResetLoop(td._loop);

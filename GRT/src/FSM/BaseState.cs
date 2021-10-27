@@ -9,11 +9,12 @@ namespace GRT.FSM
         public Action Updating;
         public Action Exiting;
 
-        private readonly int _id;
-        private readonly SortedList<T, KeyValuePair<int, Action>> _nextStates;
-        private int _nextStateID;
+        protected readonly int id;
+        protected int nextStateID;
 
-        public int ID { get { return _id; } }
+        protected readonly SortedList<T, KeyValuePair<int, Action>> nextStates;
+
+        public int ID { get { return id; } }
 
         public virtual bool CanExitSafely { get => true; protected set { } }
 
@@ -23,25 +24,25 @@ namespace GRT.FSM
             {
                 throw new ArgumentException($"请将 [ID] 设置为一个非 [{FSMUtility.NullStateID}] 的数值", "id");
             }
-            _id = id;
-            _nextStates = new SortedList<T, KeyValuePair<int, Action>>();
-            _nextStateID = _id;
+            this.id = id;
+            nextStates = new SortedList<T, KeyValuePair<int, Action>>();
+            nextStateID = this.id;
         }
 
         public virtual void GetInput(T input)
         {
             if (CanExitSafely)
             {
-                if (_nextStates.ContainsKey(input))
+                if (nextStates.ContainsKey(input))
                 {
-                    _nextStateID = _nextStates[input].Key;
+                    nextStateID = nextStates[input].Key;
                 }
             }
         }
 
         public int GetNextStateID()
         {
-            return _nextStateID;
+            return nextStateID;
         }
 
         public virtual void OnEnter(int lastID)
@@ -57,7 +58,7 @@ namespace GRT.FSM
         public virtual void OnExit(int nextID)
         {
             Exiting?.Invoke();
-            foreach (var pair in _nextStates)
+            foreach (var pair in nextStates)
             {
                 if (pair.Value.Key == nextID)
                 {
@@ -69,22 +70,22 @@ namespace GRT.FSM
         public virtual void Reset()
         {
             CanExitSafely = true;
-            _nextStateID = _id;
+            nextStateID = id;
         }
 
         public void AddNextState(T input, int stateID, Action action)
         {
-            _nextStates.Add(input, new KeyValuePair<int, Action>(stateID, action));
+            nextStates.Add(input, new KeyValuePair<int, Action>(stateID, action));
         }
 
         public void AddNextState(T input, int stateID)
         {
-            _nextStates.Add(input, new KeyValuePair<int, Action>(stateID, null));
+            nextStates.Add(input, new KeyValuePair<int, Action>(stateID, null));
         }
 
         public void RemoveNextState(T input)
         {
-            _nextStates.Remove(input);
+            nextStates.Remove(input);
         }
     }
 }

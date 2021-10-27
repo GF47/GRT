@@ -58,9 +58,13 @@
     <Compile Include="src\Attributes\InspectorDisplayAsAttribute.cs" />
     <Compile Include="src\BlackBoard.cs" />
     <Compile Include="src\Components\ArcRotateCamera.cs" />
+    <Compile Include="src\Components\RotateTransform.cs" />
     <Compile Include="src\Configuration\XmlConfig.cs" />
     <Compile Include="src\Configuration\Config.cs" />
     <Compile Include="src\Configuration\ConstValues.cs" />
+    <Compile Include="src\Events\EventSystem3D.cs" />
+    <Compile Include="src\Events\EventTrigger3D.cs" />
+    <Compile Include="src\Events\IEvents.cs" />
     <Compile Include="src\Geometry\Point.cs" />
     <Compile Include="src\GRandom.cs" />
     <Compile Include="src\IBlackBoard.cs" />
@@ -107,19 +111,21 @@
     <Compile Include="src\Tween\~Tweens\TweenIdle.cs" />
     <Compile Include="src\Tween\~Tweens\TweenLocalScale.cs" />
     <Compile Include="src\Tween\~Tweens\TweenPosition.cs" />
+    <Compile Include="src\Tween\~Tweens\TweenRectPosition.cs" />
+    <Compile Include="src\Tween\~Tweens\TweenRectSize.cs" />
     <Compile Include="src\Tween\~Tweens\TweenRotation.cs" />
     <Compile Include="src\Tween\~Tweens\TweenTransform.cs" />
-    <Compile Include="src\Updater\AbstractBuffer.cs" />
-    <Compile Include="src\Updater\CustomUpdateNode.cs" />
+    <Compile Include="src\Updater\AbstractValueBuffer.cs" />
+    <Compile Include="src\Updater\AfterFrameUpdater.cs" />
+    <Compile Include="src\Updater\CustomUpdater.cs" />
+    <Compile Include="src\Updater\FixedFrameUpdater.cs" />
     <Compile Include="src\Updater\FloatBuffer.cs" />
+    <Compile Include="src\Updater\FrameUpdater.cs" />
     <Compile Include="src\Updater\IntBuffer.cs" />
-    <Compile Include="src\Updater\IUpdateNode.cs" />
+    <Compile Include="src\Updater\IUpdater.cs" />
     <Compile Include="src\Updater\IValueBuffer.cs" />
-    <Compile Include="src\Updater\MonoUpdater.cs" />
-    <Compile Include="src\Updater\NormalUpdateNode.cs" />
-    <Compile Include="src\Updater\PerAfterFrameUpdateNode.cs" />
-    <Compile Include="src\Updater\PerFixedFrameUpdateNode.cs" />
-    <Compile Include="src\Updater\PerFrameUpdateNode.cs" />
+    <Compile Include="src\Updater\NormalUpdater.cs" />
+    <Compile Include="src\Updater\UpdateDriver.cs" />
     <Compile Include="src\Updater\Vector3Buffer.cs" />
     <Compile Include="src\GLog.cs" />
     <Compile Include="src\~ComponentsExtension\CameraExtension.cs" />
@@ -133,6 +139,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\AssetBundles\Re\" />
+    <Folder Include="src\Components\UI\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -33,7 +33,11 @@ namespace GRT.Editor
         {
             Handles.BeginGUI();
 
-            if (GUILayout.Button("Delete Ruler", GUILayout.Width(200f))) { SceneView.duringSceneGui -= SceneView_duringSceneGui; }
+            if (GUILayout.Button("Delete Ruler", GUILayout.Width(200f)))
+            {
+                SceneView.duringSceneGui -= SceneView_duringSceneGui;
+                isActive = false;
+            }
 
             if (GUILayout.Button("Put A", GUILayout.Width(200f))) { a = view.pivot; }
 

@@ -2,21 +2,18 @@
 
 namespace GRT.Updater
 {
-    public class FloatBuffer : AbstractBuffer<float>
+    public class FloatBuffer : AbstractValueBuffer<float>
     {
-        public FloatBuffer(float from, Action<float> buffering, float duration = 1f) : base(from, buffering, duration) { }
+        public FloatBuffer(float from, Action<float> updating, float duration = 1) : base(from, updating, duration)
+        {
+        }
 
         protected override float Addition(float a, float b)
         {
             return a + b;
         }
 
-        protected override float Division(float v, float d)
-        {
-            return v / d;
-        }
-
-        protected override bool IsValidValue(float v)
+        protected override bool IsValid(float v)
         {
             return Math.Abs(v) > 1e-6f;
         }

@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GRT.Updater
 {
-    public class IntBuffer : AbstractBuffer<int>
+    public class IntBuffer : AbstractValueBuffer<int>
     {
-        public IntBuffer(int from, Action<int> buffering, float duration = 1) : base(from, buffering, duration)
+        public IntBuffer(int from,Action<int> updating, float duration = 1) : base(from, updating, duration)
         {
         }
 
@@ -17,12 +13,7 @@ namespace GRT.Updater
             return a + b;
         }
 
-        protected override float Division(int v, int d)
-        {
-            return v / d;
-        }
-
-        protected override bool IsValidValue(int v)
+        protected override bool IsValid(int v)
         {
             return v != 0;
         }

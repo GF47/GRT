@@ -44,18 +44,17 @@ namespace GRT.Configuration
 
         public static T Get<T>(string name, T @default = default)
         {
-            return _config == null ? @default : _config.Get(name, @default);
+            return _config.Get(name, @default);
         }
 
         public static bool Get<T>(string name, out T value, T @default = default)
         {
-            value = @default;
-            return _config == null ? false : _config.Get(name, out value, @default);
+            return _config.Get(name, out value, @default);
         }
 
         public static void Set<T>(string name, T value)
         {
-            _config?.Set(name, value);
+            _config.Set(name, value);
         }
     }
 }

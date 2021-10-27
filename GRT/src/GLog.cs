@@ -17,47 +17,36 @@ namespace GRT
 {
     public class GLog : MonoBehaviour
     {
-        [RuntimeInitializeOnLoadMethod]
-        private static void Init()
-        {
-            _instance = RootGameObject.AddComponent<GLog>();
-            _infos = new string[4];
-        }
-
         private static GLog _instance;
-
-        private static string[] _infos;
-        private static int _current;
 
         public static Vector2 Size = new Vector2(Screen.width / 2f, Screen.height / 16f);
         public static Vector2 Pos = new Vector2(16f, 16f);
 
+        public static void Init()
+        {
+            _instance = RootGameObject.AddComponent<GLog>();
+            _instance._infos = new string[4];
+        }
+
         public static int Capacity
         {
-            get => _infos.Length;
+            get => _instance._infos.Length;
             set
             {
-                if (value == 0 || value == _infos.Length) { return; }
+                if (value == 0 || value == _instance._infos.Length) { return; }
 
-                Array.Resize(ref _infos, value);
+                Array.Resize(ref _instance._infos, value);
             }
         }
 
         public static bool Enabled { get => _instance.enabled; set => _instance.enabled = value; }
 
-        public static void Log(object o, float time = -1f)
+        public static void Log(object msg, float time = -1)
         {
-            _current++;
-            if (_current >= Capacity) { _current = 0; }
-
-            _infos[_current] = o.ToString();
-            Enabled = true;
-
-            if (time > 0f)
-            {
-                _instance.StartCoroutine(__Timer(time, () => Enabled = false));
-            }
+            if (_instance != null) _instance.Log__(msg, time);
         }
+
+        #region Helper
 
         private static IEnumerator __Timer(float time, Action action)
         {
@@ -65,29 +54,42 @@ namespace GRT
             action?.Invoke();
         }
 
-#if FPS
+        private static int GetPrevious(int index)
+        {
+            index--;
+            if (index < 0)
+            {
+                index += Capacity;
+            }
+            return index;
+        }
 
-        private static bool _showFPS = true;
-        private static float _duration;
-        private static int _frameCount;
-        private static float _fps;
+        #endregion Helper
+
+#if FPS
+        private bool _showFPS = true;
+        private float _duration;
+        private int _frameCount;
+        private float _fps;
 
         public static float FPSRefreshDelta = 2f;
         public static Vector2 FPSSize = new Vector2(Screen.width / 4f, Screen.height / 16f);
 
         public static bool ShowFPS
         {
-            get => _showFPS;
-            set
+            get => _instance._showFPS;
+            set => _instance.SetShowFPS(value);
+        }
+
+        private void SetShowFPS(bool value)
+        {
+            if (_showFPS != value)
             {
-                if (_showFPS != value)
+                _showFPS = value;
+                if (_showFPS)
                 {
-                    _showFPS = value;
-                    if (_showFPS)
-                    {
-                        _duration = 0f;
-                        _frameCount = 0;
-                    }
+                    _duration = 0f;
+                    _frameCount = 0;
                 }
             }
         }
@@ -110,15 +112,8 @@ namespace GRT
 
 #endif
 
-        private static int GetPrevious(int index)
-        {
-            index--;
-            if (index < 0)
-            {
-                index += Capacity;
-            }
-            return index;
-        }
+        private string[] _infos;
+        private int _current;
 
         private void Awake()
         {
@@ -145,6 +140,20 @@ namespace GRT
                 GUI.Label(new Rect(Screen.width - FPSSize.x - Pos.x, Pos.y, FPSSize.x, FPSSize.y), _fps.ToString("F2"));
             }
 #endif
+        }
+
+        private void Log__(object msg, float time = -1f)
+        {
+            _current++;
+            if (_current >= Capacity) { _current = 0; }
+
+            _infos[_current] = msg.ToString();
+            Enabled = true;
+
+            if (time > 0f)
+            {
+                StartCoroutine(__Timer(time, () => Enabled = false));
+            }
         }
     }
 }
