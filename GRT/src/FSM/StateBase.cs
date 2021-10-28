@@ -1,50 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GRT.FSM
 {
     public abstract class StateBase : IState
     {
-        public int ID => throw new NotImplementedException();
+        public Action Entering;
+        public Action Updating;
+        public Action Exiting;
 
-        public string Name => throw new NotImplementedException();
+        protected ICollection<ITransition> transitions;
 
-        public void AddNext(ITransition transition, int targetID)
+        public int ID { get; protected set; }
+
+        ICollection<ITransition> IState.Transitions => transitions;
+
+        public StateBase(int id)
         {
-            throw new NotImplementedException();
+            if (!Util.IsValid(id))
+            {
+                throw new ArgumentException($"请将 [ID] 设置为一个非 [{Util.NullStateID}] 的数值", "id");
+            }
+            ID = id;
+
+            transitions = new List<ITransition>();
         }
 
-        public int GetNext()
+        public virtual int GetNext()
         {
-            throw new NotImplementedException();
+            foreach (var transition in transitions)
+            {
+                if (transition.OK)
+                {
+                    return transition.TargetID;
+                }
+            }
+            return ID;
         }
 
-        public void OnEnter(int lastID)
+        public virtual void OnEnter(int lastID) => Entering?.Invoke();
+
+        public virtual void OnExit(int nextID) => Exiting?.Invoke();
+
+        public virtual void Update() => Updating?.Invoke();
+
+        public virtual void Reset()
         {
-            throw new NotImplementedException();
         }
 
-        public void OnExit(int nextID)
-        {
-            throw new NotImplementedException();
-        }
+        public void AddNext(ITransition transition) => transitions.Add(transition);
 
-        public void RemoveNext(int targetID)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Reset()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update()
-        {
-            throw new NotImplementedException();
-        }
+        public void RemoveNext(ITransition transition) => transitions.Remove(transition);
     }
 }

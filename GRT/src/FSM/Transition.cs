@@ -1,29 +1,39 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace GRT.FSM
 {
     public class Transition : ITransition
     {
-        protected Func<bool> conditions;
+        private ICollection<ICondition> _conditions;
 
-        public Func<bool> Conditions => conditions;
+        public int TargetID { get; set; }
 
-        public bool OK
+        ICollection<ICondition> ITransition.Conditions => _conditions;
+
+        bool ITransition.OK
         {
             get
             {
-                var methods = conditions.GetInvocationList();
-                for (int i = 0; i < methods.Length; i++)
+                if (_conditions != null)
                 {
-                    if (!((Func<bool>)methods[i]).Invoke())
+                    foreach (var condition in _conditions)
                     {
-                        return false;
+                        if (!condition.OK)
+                        {
+                            return false;
+                        }
                     }
                 }
+
                 return true;
             }
         }
 
-        public IState To { get; set; }
+        public Transition(int target, ICollection<ICondition> conditions)
+        {
+            TargetID = target;
+
+            _conditions = conditions;
+        }
     }
 }
