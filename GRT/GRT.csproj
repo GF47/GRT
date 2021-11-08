@@ -63,6 +63,7 @@
     <Compile Include="src\Configuration\XmlConfig.cs" />
     <Compile Include="src\Configuration\Config.cs" />
     <Compile Include="src\Configuration\ConstValues.cs" />
+    <Compile Include="src\Coroutine\IdleUntil.cs" />
     <Compile Include="src\Events\EventSystem3D.cs" />
     <Compile Include="src\Events\EventTrigger3D.cs" />
     <Compile Include="src\Events\IEvents.cs" />
