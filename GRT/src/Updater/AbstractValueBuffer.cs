@@ -41,7 +41,13 @@ namespace GRT.Updater
                 _to = value;
                 _diff = Subtraction(_to, _from);
                 Update(_percent = 0f);
-                if (IsValid(_diff)) { Start(); }
+                if (IsValid(_diff))
+                {
+                    if (!IsAlive)
+                    {
+                        Start();
+                    }
+                }
                 else { Stop(); }
             }
         }
@@ -53,7 +59,7 @@ namespace GRT.Updater
                 _percent = Math.Max(Math.Min(value, 1f), 0f);
                 Value = Project01(_percent);
 
-                if (value >= 1f) { Stop(); }
+                if (_percent >= 1f) { Stop(); }
             }
         }
 
