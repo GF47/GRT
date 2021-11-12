@@ -59,7 +59,7 @@ namespace GRT.Updater
                 _percent = Math.Max(Math.Min(value, 1f), 0f);
                 Value = Project01(_percent);
 
-                if (_percent >= 1f) { Stop(); }
+                if (value >= 1f) { Stop(); }
             }
         }
 
