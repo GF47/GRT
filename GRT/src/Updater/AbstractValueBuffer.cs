@@ -22,7 +22,14 @@ namespace GRT.Updater
 
         public bool IsAlive => _isAlive;
 
-        public T Value { get => _value; set => Updating?.Invoke(_value = value); }
+        public T Value
+        {
+            get => _value; set
+            {
+                _value = value;
+                Updating?.Invoke(_value);
+            }
+        }
 
         T IProjecter01<T>.From
         {
@@ -43,7 +50,7 @@ namespace GRT.Updater
                 Update(_percent = 0f);
                 if (IsValid(_diff))
                 {
-                    if (!IsAlive)
+                    if (!_isAlive)
                     {
                         Start();
                     }

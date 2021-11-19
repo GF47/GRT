@@ -54,6 +54,7 @@
     <Compile Include="FSM.cs" />
     <Compile Include="Test_Updater.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnitTest1.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
