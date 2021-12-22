@@ -80,6 +80,8 @@
     <Compile Include="src\FSM\Util.cs" />
     <Compile Include="src\Geometry\Point.cs" />
     <Compile Include="src\GRandom.cs" />
+    <Compile Include="src\GTask\Interfaces.cs" />
+    <Compile Include="src\GTask\UnityCoroutineExtension.cs" />
     <Compile Include="src\IBlackBoard.cs" />
     <Compile Include="src\Convert.cs" />
     <Compile Include="src\Coroutines.cs" />

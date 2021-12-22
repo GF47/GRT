@@ -9,6 +9,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using System.Threading;
 
 namespace GRT
 {
@@ -19,6 +20,10 @@ namespace GRT
     {
         private static Coroutines _instance;
 
+        private static SynchronizationContext _context;
+
+        public static SynchronizationContext UnityContext => _context;
+
         private void Awake()
         {
             if (_instance != null && _instance != this)
@@ -26,6 +31,8 @@ namespace GRT
                 Debug.LogWarning("Do not init another Coroutines");
                 Destroy(this);
             }
+
+            _context = SynchronizationContext.Current;
         }
 
         public static void Init()

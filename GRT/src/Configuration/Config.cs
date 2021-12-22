@@ -11,6 +11,8 @@ namespace GRT.Configuration
         public const string configPath = "Application.config";
         private static XmlConfig _config;
 
+        public static bool Ready { get; private set; }
+
         static Config()
         {
 #if !UNITY_EDITOR && UNITY_WEBGL
@@ -19,6 +21,7 @@ namespace GRT.Configuration
 
 #else
             (_config = new XmlConfig()).Initialize_XmlFileName($"{Application.streamingAssetsPath}/{configPath}");
+            Ready = true;
 #endif
         }
 
@@ -38,6 +41,8 @@ namespace GRT.Configuration
             {
                 _config = new XmlConfig();
             }
+
+            Ready = true;
         }
 
 #endif

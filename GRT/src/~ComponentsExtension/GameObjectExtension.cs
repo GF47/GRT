@@ -9,16 +9,18 @@ namespace GRT
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static string GetHierarchy(this GameObject obj)
+        public static string GetTransformLayout(this GameObject obj)
         {
             string path = obj.name;
 
-            while (obj.transform.parent != null)
+            Transform t = obj.transform.parent;
+
+            while (t != null)
             {
-                obj = obj.transform.parent.gameObject;
-                path = string.Format(@"{0}\{1}", obj.name, path);
+                path = $"{t.name}/{path}"; 
+                t = t.parent;
             }
-            return string.Format(@"\{0}\", path);
+            return path;
         }
 
         /// <summary> 在目标物体上添加一个子物体
