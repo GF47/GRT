@@ -149,6 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\Components\UI\" />
+    <Folder Include="src\Ioc\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

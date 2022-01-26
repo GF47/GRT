@@ -46,12 +46,14 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\Editor\BuildAB.cs" />
+    <Compile Include="src\Editor\BuildSingleAssetBundle.cs" />
     <Compile Include="src\Editor\CreateLineRenderFromBezier.cs" />
     <Compile Include="src\Editor\CreateScriptableObjectAssets.cs" />
     <Compile Include="src\Editor\CsvBezierConvert.cs" />
     <Compile Include="src\Editor\EditorObjExporter.cs" />
     <Compile Include="src\Editor\GF47AxisHandler.cs" />
     <Compile Include="src\Editor\GF47CameraPathEditor.cs" />
+    <Compile Include="src\Editor\GF47ColliderUtility.cs" />
     <Compile Include="src\Editor\GF47Configuration.cs" />
     <Compile Include="src\Editor\GF47CopyComponents.cs" />
     <Compile Include="src\Editor\GF47DeleteComponentHidden.cs" />
