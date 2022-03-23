@@ -4,42 +4,42 @@ namespace GRT.Events
 {
     public interface IClick3D
     {
-        void OnClick(Camera camera, RaycastHit hit);
+        void OnClick(Camera camera, RaycastHit hit, Vector2 point);
     }
 
     public interface IClickDown3D
     {
-        void OnClickDown(Camera camera, RaycastHit hit);
+        void OnClickDown(Camera camera, RaycastHit hit, Vector2 point);
     }
 
     public interface IClickUp3D
     {
-        void OnClickUp(Camera camera, RaycastHit hit);
+        void OnClickUp(Camera camera, RaycastHit hit, Vector2 point);
     }
 
     public interface IDrag3D
     {
-        void OnDrag(Camera camera, RaycastHit hit);
+        void OnDrag(Camera camera, RaycastHit hit, Vector2 point);
     }
 
     public interface IDragDown3D
     {
-        void OnDragDown(Camera camera, RaycastHit hit);
+        void OnDragDown(Camera camera, RaycastHit hit, Vector2 point);
     }
 
     public interface IDragUp3D
     {
-        void OnDragUp(Camera camera, RaycastHit hit);
+        void OnDragUp(Camera camera, RaycastHit hit, Vector2 point);
     }
 
     public interface IEnter3D
     {
-        void OnEnter(Camera camera, RaycastHit hit);
+        void OnEnter(Camera camera, RaycastHit hit, Vector2 point);
     }
 
     public interface IExit3D
     {
-        void OnExit(Camera camera, RaycastHit hit);
+        void OnExit(Camera camera, RaycastHit hit, Vector2 point);
     }
 
 }

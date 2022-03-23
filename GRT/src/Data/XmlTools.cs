@@ -96,7 +96,8 @@ namespace GRT.Data
         {
             if (node.HasAttribute(attributeName, out string text))
             {
-                return bool.TryParse(text, out value);
+                value = Convert.ToBool(text);
+                return true;
             }
 
             value = false; return false;

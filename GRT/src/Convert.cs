@@ -98,6 +98,11 @@ namespace GRT
 
         public static Color ToColor(string value)
         {
+            if (ColorUtility.TryParseHtmlString(value,out var c))
+            {
+                return c;
+            }
+
             string[] array = StringInBrackets(value).Split(',');
             float[] f = { 0f, 0f, 0f, 1f };
             for (int i = 0; i < array.Length && i < 4; i++)

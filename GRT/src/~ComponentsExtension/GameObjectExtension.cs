@@ -7,9 +7,7 @@ namespace GRT
     {
         /// <summary> 返回目标物体的完整层级
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public static string GetTransformLayout(this GameObject obj)
+        public static string GetLayer(this GameObject obj)
         {
             string path = obj.name;
 
@@ -18,6 +16,23 @@ namespace GRT
             while (t != null)
             {
                 path = $"{t.name}/{path}"; 
+                t = t.parent;
+            }
+            return path;
+        }
+
+        /// <summary> 返回目标物体的相对层级
+        /// </summary>
+        /// <param name="obj">目标物体</param>
+        /// <param name="root">根物体</param>
+        public static string GetRelativeLayer(this GameObject obj, GameObject root)
+        {
+            string path = obj.name;
+            Transform t = obj.transform.parent;
+            Transform rootTrans = root.transform;
+            while (t != null && t != rootTrans)
+            {
+                path = $"{t.name}/{path}";
                 t = t.parent;
             }
             return path;

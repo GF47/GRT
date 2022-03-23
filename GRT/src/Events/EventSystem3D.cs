@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 
@@ -18,7 +19,11 @@ namespace GRT.Events
         /// <summary> /// 鼠标按下 /// </summary>
         public const int POINTER_DOWN = 3;
 
+        /// <summary> /// 空的射线碰撞 /// </summary>
+        private static RaycastHit _emptyHit = new RaycastHit();
 
+
+        public static EventSystem3D Current { get; private set; }
 
         /// <summary> /// 拖拽起始阈值 /// </summary>
         public int dragThreshold = 100;
@@ -43,13 +48,46 @@ namespace GRT.Events
         /// <summary> /// 是否在拖拽 /// </summary>
         private bool _dragging;
 
+        private Dictionary<int, Vector4> _block;
 
+        public int Block(Vector4 area)
+        {
+            var i = GRandom.Get();
+            _block.Add(i, area);
+            return i;
+        }
+
+        public void UnBlock(int i)
+        {
+            _block.Remove(i);
+        }
+
+        private  bool Blocking(Vector2 pos)
+        {
+            foreach (var pair in _block)
+            {
+                var area = pair.Value;
+
+                if (area[0]<pos.x&&pos.x<area[2] && area[1]<pos.y&& pos.y < area[3])
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         private void Awake()
         {
             _mainCamera = GetComponent<Camera>();
 
             _stopwatch = new Stopwatch();
+
+            _block = new Dictionary<int, Vector4>();
+        }
+
+        private void OnEnable()
+        {
+            Current = this;
         }
 
         private void OnDisable()
@@ -61,10 +99,11 @@ namespace GRT.Events
             _stopwatch.Reset();
 
 
+            var point = GetPointerPosition();
 
             if (_coverCollider != null)
             {
-                SendExitEvent(_coverCollider.gameObject, new RaycastHit());
+                SendExitEvent(_coverCollider.gameObject, _emptyHit, point);
             }
             _coverCollider = null;
 
@@ -72,15 +111,11 @@ namespace GRT.Events
 
             if (_collider != null)
             {
-                SendClickUpEvent(_collider.gameObject, new RaycastHit());
+                SendClickUpEvent(_collider.gameObject, _emptyHit, point);
 
                 if (_dragging)
                 {
-                    SendDragUpEvent(_collider.gameObject, new RaycastHit());
-                }
-                else
-                {
-                    SendClickEvent(_collider.gameObject, new RaycastHit());
+                    SendDragUpEvent(_collider.gameObject, _emptyHit, point);
                 }
             }
             _collider = null;
@@ -94,8 +129,11 @@ namespace GRT.Events
 
             #region camera & ray
 
-            var ray = _mainCamera.ScreenPointToRay(GetPointerPosition());
-            if (Physics.Raycast(ray, out var hit, 1000f, castLayer))
+            var point = GetPointerPosition();
+            var ray = _mainCamera.ScreenPointToRay(point);
+            var hit = _emptyHit;
+
+            if (!Blocking(point) && Physics.Raycast(ray, out hit, 1000f, castLayer))
             {
                 var collider = hit.collider;
 
@@ -103,32 +141,28 @@ namespace GRT.Events
                 {
                     if (_coverCollider != null)
                     {
-                        SendExitEvent(_coverCollider.gameObject, hit);
+                        SendExitEvent(_coverCollider.gameObject, hit, point);
                     }
 
                     _coverCollider = collider;
 
-                    if (_coverCollider != null)
-                    {
-                        SendEnterEvent(_coverCollider.gameObject, hit);
-                    }
+                    // _coverCollider 肯定不为空了
+                    SendEnterEvent(_coverCollider.gameObject, hit, point);
                 }
 
                 if (pointerState == POINTER_DOWN)
                 {
                     _collider = collider;
 
-                    if (_collider != null)
-                    {
-                        SendClickDownEvent(_collider.gameObject, hit);
-                    }
+                    // _collider 肯定不为空了
+                    SendClickDownEvent(_collider.gameObject, hit, point);
                 }
             }
             else
             {
                 if (_coverCollider != null)
                 {
-                    SendExitEvent(_coverCollider.gameObject, hit);
+                    SendExitEvent(_coverCollider.gameObject, hit, point);
                 }
                 _coverCollider = null;
             }
@@ -141,22 +175,21 @@ namespace GRT.Events
             {
                 if (_collider != null)
                 {
-                    SendClickUpEvent(_collider.gameObject, new RaycastHit());
+                    SendClickUpEvent(_collider.gameObject, hit, point);
 
                     if (_dragging)
                     {
-                        SendDragUpEvent(_collider.gameObject, new RaycastHit());
+                        SendDragUpEvent(_collider.gameObject, hit, point);
                     }
                     else
                     {
-                        SendClickEvent(_collider.gameObject, new RaycastHit());
+                        SendClickEvent(_collider.gameObject, hit, point);
                     }
                 }
                 _collider = null;
                 _dragging = false;
             }
-
-            if (pointerState == POINTER_HOLD)
+            else if (pointerState == POINTER_HOLD)
             {
                 if (_collider != null)
                 {
@@ -164,12 +197,12 @@ namespace GRT.Events
                     {
                         if (_dragging)
                         {
-                            SendDragEvent(_collider.gameObject, hit);
+                            SendDragEvent(_collider.gameObject, hit, point);
                         }
                         else
                         {
                             _dragging = true;
-                            SendDragDownEvent(_collider.gameObject, hit);
+                            SendDragDownEvent(_collider.gameObject, hit, point);
                         }
                     }
                 }
@@ -214,98 +247,98 @@ namespace GRT.Events
             return Array.ConvertAll(go.GetComponents<Component>(), c => c as T);
         }
 
-        protected virtual void SendEnterEvent(GameObject go, RaycastHit hit)
+        protected virtual void SendEnterEvent(GameObject go, RaycastHit hit, Vector2 point)
         {
             var coms = GetInterfaces<IEnter3D>(go);
             for (int i = 0; i < coms.Length; i++)
             {
                 if (coms[i] != null)
                 {
-                    coms[i].OnEnter(_mainCamera, hit);
+                    coms[i].OnEnter(_mainCamera, hit, point);
                 }
             }
         }
 
-        protected virtual void SendExitEvent(GameObject go, RaycastHit hit)
+        protected virtual void SendExitEvent(GameObject go, RaycastHit hit, Vector2 point)
         {
             var coms = GetInterfaces<IExit3D>(go);
             for (int i = 0; i < coms.Length; i++)
             {
                 if (coms[i] != null)
                 {
-                    coms[i].OnExit(_mainCamera, hit);
+                    coms[i].OnExit(_mainCamera, hit, point);
                 }
             }
         }
 
-        protected virtual void SendClickDownEvent(GameObject go, RaycastHit hit)
+        protected virtual void SendClickDownEvent(GameObject go, RaycastHit hit, Vector2 point)
         {
             var coms = GetInterfaces<IClickDown3D>(go);
             for (int i = 0; i < coms.Length; i++)
             {
                 if (coms[i] != null)
                 {
-                    coms[i].OnClickDown(_mainCamera, hit);
+                    coms[i].OnClickDown(_mainCamera, hit, point);
                 }
             }
         }
 
-        protected virtual void SendClickUpEvent(GameObject go, RaycastHit hit)
+        protected virtual void SendClickUpEvent(GameObject go, RaycastHit hit, Vector2 point)
         {
             var coms = GetInterfaces<IClickUp3D>(go);
             for (int i = 0; i < coms.Length; i++)
             {
                 if (coms[i] != null)
                 {
-                    coms[i].OnClickUp(_mainCamera, hit);
+                    coms[i].OnClickUp(_mainCamera, hit, point);
                 }
             }
         }
 
-        protected virtual void SendClickEvent(GameObject go, RaycastHit hit)
+        protected virtual void SendClickEvent(GameObject go, RaycastHit hit, Vector2 point)
         {
             var coms = GetInterfaces<IClick3D>(go);
             for (int i = 0; i < coms.Length; i++)
             {
                 if (coms[i] != null)
                 {
-                    coms[i].OnClick(_mainCamera, hit);
+                    coms[i].OnClick(_mainCamera, hit, point);
                 }
             }
         }
 
-        protected virtual void SendDragDownEvent(GameObject go, RaycastHit hit)
+        protected virtual void SendDragDownEvent(GameObject go, RaycastHit hit, Vector2 point)
         {
             var coms = GetInterfaces<IDragDown3D>(go);
             for (int i = 0; i < coms.Length; i++)
             {
                 if (coms[i] != null)
                 {
-                    coms[i].OnDragDown(_mainCamera, hit);
+                    coms[i].OnDragDown(_mainCamera, hit, point);
                 }
             }
         }
 
-        protected virtual void SendDragUpEvent(GameObject go, RaycastHit hit)
+        protected virtual void SendDragUpEvent(GameObject go, RaycastHit hit, Vector2 point)
         {
             var coms = GetInterfaces<IDragUp3D>(go);
             for (int i = 0; i < coms.Length; i++)
             {
                 if (coms[i] != null)
                 {
-                    coms[i].OnDragUp(_mainCamera, hit);
+                    coms[i].OnDragUp(_mainCamera, hit, point);
                 }
             }
         }
 
-        protected virtual void SendDragEvent(GameObject go, RaycastHit hit)
+        protected virtual void SendDragEvent(GameObject go, RaycastHit hit, Vector2 point)
         {
             var coms = GetInterfaces<IDrag3D>(go);
             for (int i = 0; i < coms.Length; i++)
             {
                 if (coms[i] != null)
                 {
-                    coms[i].OnDrag(_mainCamera, hit);
+                    coms[i].OnDrag(_mainCamera, hit, point);
                 }
             }
         }

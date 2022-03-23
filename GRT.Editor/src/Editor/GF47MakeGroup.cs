@@ -8,7 +8,7 @@ namespace GRT.Editor
         [MenuItem("Tools/GF47 Editor/Transform/Make Group %&g", false, 1)]
         private static void MakeGroup()
         {
-            Transform[] trans = Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.OnlyUserModifiable);
+            Transform[] trans = Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.Editable);
 
             if (trans.Length < 1)
             {
@@ -28,7 +28,7 @@ namespace GRT.Editor
         [MenuItem("Tools/GF47 Editor/Transform/Make Group In The Same Position %g", false, 1)]
         private static void MakeGroupWithTheSameParent()
         {
-            Transform[] trans = Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.OnlyUserModifiable);
+            Transform[] trans = Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.Editable);
 
             if (trans.Length < 1)
             {

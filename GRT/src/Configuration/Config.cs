@@ -8,7 +8,7 @@ namespace GRT.Configuration
 {
     public static class Config
     {
-        public const string configPath = "Application.config";
+        public const string configPath = "Application.xml";
         private static XmlConfig _config;
 
         public static bool Ready { get; private set; }
