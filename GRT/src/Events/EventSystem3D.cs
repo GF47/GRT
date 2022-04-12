@@ -23,7 +23,11 @@ namespace GRT.Events
         private static RaycastHit _emptyHit = new RaycastHit();
 
 
+        /// <summary> 当前的事件系统实例 </summary>
         public static EventSystem3D Current { get; private set; }
+
+        /// <summary> 射线响应距离 </summary>
+        public float distance = 100f;
 
         /// <summary> /// 拖拽起始阈值 /// </summary>
         public int dragThreshold = 100;
@@ -133,7 +137,7 @@ namespace GRT.Events
             var ray = _mainCamera.ScreenPointToRay(point);
             var hit = _emptyHit;
 
-            if (!Blocking(point) && Physics.Raycast(ray, out hit, 1000f, castLayer))
+            if (!Blocking(point) && Physics.Raycast(ray, out hit, distance, castLayer))
             {
                 var collider = hit.collider;
 

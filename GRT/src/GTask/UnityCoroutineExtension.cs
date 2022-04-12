@@ -13,31 +13,48 @@ namespace GRT.GTask
 
             if (SynchronizationContext.Current == Coroutines.UnityContext)
             {
-                Coroutines.StartACoroutineWithCallback(enumerator, () =>
-                {
-                    awaiter.Complete();
-                });
+                Coroutines.StartACoroutineWithCallback(enumerator, () => awaiter.Complete());
             }
             else
             {
                 Coroutines.UnityContext.Post(_ =>
                 {
-                    Coroutines.StartACoroutineWithCallback(enumerator, () =>
-                    {
-                        awaiter.Complete();
-                    });
+                    Coroutines.StartACoroutineWithCallback(enumerator, () => awaiter.Complete());
                 }, null);
             }
 
             return awaiter;
         }
+
+        public static IEnumeratorAwaiter GetAwaiter(this YieldInstruction instruction)
+        {
+            var awaiter = new IEnumeratorAwaiter();
+            if (SynchronizationContext.Current == Coroutines.UnityContext)
+            {
+                Coroutines.StartACoroutineWithCallback(Execute(instruction), () => awaiter.Complete());
+            }
+            else
+            {
+                Coroutines.UnityContext.Post(_ =>
+                {
+                    Coroutines.StartACoroutineWithCallback(Execute(instruction), () => awaiter.Complete());
+                }, null);
+            }
+
+            return awaiter;
+        }
+
+        private static IEnumerator Execute(YieldInstruction instruction)
+        {
+            yield return instruction;
+        }
     }
 
     public class IEnumeratorAwaiter : IAwaiter
     {
-        bool _isCompleted;
+        private bool _isCompleted;
 
-        Action _continuation;
+        private Action _continuation;
 
         public bool IsCompleted => _isCompleted;
 
@@ -57,6 +74,8 @@ namespace GRT.GTask
         public void Complete()
         {
             _isCompleted = true;
+
+            _continuation?.Invoke();
         }
     }
 }
