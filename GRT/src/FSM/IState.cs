@@ -5,6 +5,8 @@ namespace GRT.FSM
     {
         int ID { get; }
 
+        string Info { get; }
+
         ICollection<ITransition> Transitions { get; }
 
         int GetNext();
@@ -17,8 +19,8 @@ namespace GRT.FSM
 
         void Reset();
 
-        void AddNext(ITransition transition);
+        void AddTransition(ITransition transition);
 
-        void RemoveNext(ITransition transition);
+        void RemoveTransition(ITransition transition);
     }
 }

@@ -4,7 +4,7 @@
     {
         static StringTriggerCondition() => EqualFunc = string.Equals;
 
-        public StringTriggerCondition(string trigger) : base(trigger)
+        public StringTriggerCondition(string expected) : base(expected)
         {
         }
     }

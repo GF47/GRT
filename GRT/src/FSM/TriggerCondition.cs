@@ -9,8 +9,8 @@ namespace GRT.FSM
 
         private T _trigger;
 
-        public readonly T expected;
-        public readonly T default_;
+        internal readonly T expected;
+        internal readonly T default_;
 
         /// <summary>
         /// OK属性每调用一次都会清空触发器，重复调用请重新调用Trigger方法传入
@@ -65,6 +65,31 @@ namespace GRT.FSM
                 {
                     conditionT.Trigger(trigger);
                 }
+                else if (condition is LogicalCondition logicalCondition)
+                {
+                    logicalCondition.Trigger(trigger);
+                }
+            }
+        }
+
+        internal static void Trigger<T>(this LogicalCondition condition, T trigger)
+        {
+            if (condition.A is LogicalCondition logicalConditionA)
+            {
+                logicalConditionA.Trigger(trigger);
+            }
+            else if (condition.A is TriggerCondition<T> triggerConditionA)
+            {
+                triggerConditionA.Trigger(trigger);
+            }
+
+            if (condition.B is LogicalCondition logicalConditionB)
+            {
+                logicalConditionB.Trigger(trigger);
+            }
+            else if (condition.B is TriggerCondition<T> triggerConditionB)
+            {
+                triggerConditionB.Trigger(trigger);
             }
         }
     }

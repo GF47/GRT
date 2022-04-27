@@ -29,10 +29,15 @@ namespace GRT.FSM
             }
         }
 
+        public Transition(int target, params ICondition[] conditions)
+        {
+            TargetID = target;
+            _conditions = conditions;
+        }
+
         public Transition(int target, ICollection<ICondition> conditions)
         {
             TargetID = target;
-
             _conditions = conditions;
         }
     }

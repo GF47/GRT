@@ -5,7 +5,7 @@ namespace GRT.FSM
     public class DelegateCondition : ICondition
     {
         private readonly Func<bool> _condition;
-        public bool OK => _condition();
+        bool ICondition.OK => _condition();
 
         public DelegateCondition(Func<bool> condition)
         {

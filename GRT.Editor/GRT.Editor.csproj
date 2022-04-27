@@ -51,6 +51,7 @@
     <Compile Include="src\Editor\CreateScriptableObjectAssets.cs" />
     <Compile Include="src\Editor\CsvBezierConvert.cs" />
     <Compile Include="src\Editor\EditorObjExporter.cs" />
+    <Compile Include="src\Editor\GF47AlignWithSurface.cs" />
     <Compile Include="src\Editor\GF47AxisHandler.cs" />
     <Compile Include="src\Editor\GF47CameraPathEditor.cs" />
     <Compile Include="src\Editor\GF47ColliderUtility.cs" />
@@ -58,11 +59,13 @@
     <Compile Include="src\Editor\GF47CopyComponents.cs" />
     <Compile Include="src\Editor\GF47DeleteComponentHidden.cs" />
     <Compile Include="src\Editor\GF47Duplicate.cs" />
+    <Compile Include="src\Editor\GF47Empty2Prefab.cs" />
     <Compile Include="src\Editor\GF47FindInChildren.cs" />
     <Compile Include="src\Editor\GF47FindReferencesInScene.cs" />
     <Compile Include="src\Editor\GF47GatherAssets.cs" />
     <Compile Include="src\Editor\GF47GetPathToString.cs" />
     <Compile Include="src\Editor\GF47GetRelativeTransform.cs" />
+    <Compile Include="src\Editor\GF47InstantiateOnTheSurface.cs" />
     <Compile Include="src\Editor\GF47MakeGroup.cs" />
     <Compile Include="src\Editor\GF47RenameObject.cs" />
     <Compile Include="src\Editor\GF47RenderCubeMapEditor.cs" />
