@@ -5,5 +5,5 @@ using UnityEngine.Events;
 namespace GRT.Events
 {
     [Serializable]
-    public class Event3D : UnityEvent<Camera, RaycastHit, Vector2> { }
+    public class GnityEvent : UnityEvent<Camera, RaycastHit, Vector2> { }
 }

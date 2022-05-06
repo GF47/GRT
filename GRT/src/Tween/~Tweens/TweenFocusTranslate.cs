@@ -8,6 +8,23 @@ namespace GRT.Tween
         [SerializeField] private Transform _self;
         [SerializeField] private bool _useInterpolation = true;
 
+        public override Vector3 From
+        {
+            get => from; set
+            {
+                from = value;
+                if (UseInterpolation) { CalculateInterpolation(); }
+            }
+        }
+        public override Vector3 To
+        {
+            get => to; set
+            {
+                to = value;
+                if (UseInterpolation) { CalculateInterpolation(); }
+            }
+        }
+
         public Transform Target { get => _target; set => SetTarget(value); }
         public Transform Self { get => _self; set => _self = value; }
         public bool UseInterpolation
@@ -18,7 +35,7 @@ namespace GRT.Tween
                 if (_useInterpolation != value)
                 {
                     _useInterpolation = value;
-                    UseInterpolation_();
+                    if (_useInterpolation) { CalculateInterpolation(); }
                 }
             }
         }
@@ -38,7 +55,7 @@ namespace GRT.Tween
         private void Awake()
         {
             if (_self == null) { _self = transform; }
-            if (_useInterpolation) { UseInterpolation_(); }
+            if (_useInterpolation) { CalculateInterpolation(); }
         }
 
         private void LinearTranslate(float p)
@@ -60,10 +77,10 @@ namespace GRT.Tween
         {
             _target = target;
 
-            if (_useInterpolation) { UseInterpolation_(); }
+            if (_useInterpolation) { CalculateInterpolation(); }
         }
 
-        private void UseInterpolation_()
+        private void CalculateInterpolation()
         {
             if (_target == null)
             {
