@@ -27,6 +27,26 @@ namespace GRT
             Rect,
         }
 
+        public static bool IsTrue(this string value)
+        {
+            return value == TrueString2
+                || value == TrueString1
+                || value == TrueString0
+                || value == TrueString3
+                || value == TrueString4
+                || value == TrueString5;
+        }
+
+        public static bool IsFalse(this string value)
+        {
+            return value == FalseString2
+                || value == FalseString1
+                || value == FalseString0
+                || value == FalseString3
+                || value == FalseString4
+                || value == FalseString5;
+        }
+
         public static bool ToBool(string value)
         {
             if (!bool.TryParse(value, out bool r))
@@ -221,6 +241,20 @@ namespace GRT
         public const string RectType0 = "rect";
         public const string RectType1 = "Rect";
         public const string RectType2 = "UnityEngine.Rect";
+
+        public const string TrueString0 = "t";
+        public const string TrueString1 = "true";
+        public const string TrueString2 = "True";
+        public const string TrueString3 = "y";
+        public const string TrueString4 = "yes";
+        public const string TrueString5 = "Yes";
+
+        public const string FalseString0 = "f";
+        public const string FalseString1 = "false";
+        public const string FalseString2 = "False";
+        public const string FalseString3 = "n";
+        public const string FalseString4 = "no";
+        public const string FalseString5 = "No";
 
         public static UnityStructs ToUnityStructsEnum(Type type)
         {

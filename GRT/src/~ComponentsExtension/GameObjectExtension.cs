@@ -5,6 +5,45 @@ namespace GRT
 
     public static class GameObjectExtension
     {
+        public static (string, string) GetRootAndSubLayer(string path)
+        {
+            var index = path.IndexOf('/');
+            if (index > -1)
+            {
+                return (path.Substring(0, index), path.Substring(index + 1));
+            }
+            return (path, string.Empty);
+        }
+
+        public static GameObject FindIn(string scene, string path)
+        {
+            var s = UnityEngine.SceneManagement.SceneManager.GetSceneByName(scene);
+            if (s.IsValid())
+            {
+                var (rootName, subPath) = GetRootAndSubLayer(path);
+
+                var rootGameObjects = s.GetRootGameObjects();
+                var root = Array.Find(rootGameObjects, go => go.name == rootName);
+                if (root != null)
+                {
+                    if (string.IsNullOrEmpty(subPath))
+                    {
+                        return root;
+                    }
+                    else
+                    {
+                        var target = root.transform.Find(subPath);
+                        if (target != null)
+                        {
+                            return target.gameObject;
+                        }
+                    }
+                }
+            }
+            Debug.LogWarning($"there is not a game object called [{path}] in scene [{scene}]");
+            return null;
+        }
+
         /// <summary> 返回目标物体的完整层级
         /// </summary>
         public static string GetLayer(this GameObject obj)

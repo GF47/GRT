@@ -2,6 +2,8 @@
 
 namespace GRT.Events
 {
+    public delegate void GnityEventHandler(Camera camera, RaycastHit hit, Vector2 pos);
+
     public interface IPointerEnter
     {
         void OnPointerEnter(Camera camera, RaycastHit hit, Vector2 pos);
