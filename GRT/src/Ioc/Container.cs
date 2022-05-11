@@ -1,11 +1,15 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿#define GRT_UNITY
+
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+#if !GRT_UNITY
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+#endif
 
 namespace Microsoft.MinIoC
 {
@@ -14,7 +18,7 @@ namespace Microsoft.MinIoC
     /// </summary>
     class Container : Container.IScope
     {
-        #region Public interfaces
+#region Public interfaces
         /// <summary>
         /// Represents a scope in which per-scope objects are instantiated a single time
         /// </summary>
@@ -37,7 +41,7 @@ namespace Microsoft.MinIoC
             /// </summary>
             void PerScope();
         }
-        #endregion
+#endregion
 
         // Map of registered types
         private readonly Dictionary<Type, Func<ILifetime, object>> _registeredTypes = new Dictionary<Type, Func<ILifetime, object>>();
@@ -99,7 +103,7 @@ namespace Microsoft.MinIoC
         /// </summary>
         public void Dispose() => _lifetime.Dispose();
 
-        #region Lifetime management
+#region Lifetime management
         // ILifetime management adds resolution strategies to an IScope
         interface ILifetime : IScope
         {
@@ -162,12 +166,20 @@ namespace Microsoft.MinIoC
             public object GetServicePerScope(Type type, Func<ILifetime, object> factory)
                 => GetCached(type, factory, this);
         }
-        #endregion
+#endregion
 
-        #region Container items
+#region Container items
+#if GRT_UNITY
+        // 只支持无参的了
+        private static Func<ILifetime, object> FactoryFromType(Type itemType)
+        {
+            return new Func<ILifetime, object>(_ => Activator.CreateInstance(itemType));
+        }
+#else
         // Compiles a lambda that calls the given type's first constructor resolving arguments
         private static Func<ILifetime, object> FactoryFromType(Type itemType)
         {
+
             // Get first constructor for the type
             var constructors = itemType.GetConstructors();
             if (constructors.Length == 0)
@@ -191,6 +203,7 @@ namespace Microsoft.MinIoC
                     })),
                 arg).Compile();
         }
+#endif
 
         // RegisteredType is supposed to be a short lived object tying an item to its container
         // and allowing users to mark it as a singleton or per-scope item
@@ -215,7 +228,7 @@ namespace Microsoft.MinIoC
             public void PerScope()
                 => _registerFactory(lifetime => lifetime.GetServicePerScope(_itemType, _factory));
         }
-        #endregion
+#endregion
     }
 
     /// <summary>
