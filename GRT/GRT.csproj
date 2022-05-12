@@ -78,7 +78,6 @@
     <Compile Include="src\Events\Triggers\KeyTrigger.cs" />
     <Compile Include="src\Events\Triggers\MouseButtonTrigger.cs" />
     <Compile Include="src\Events\Triggers\PointerClickTrigger.cs" />
-    <Compile Include="src\Events\Triggers\PointerCoverTrigger.cs" />
     <Compile Include="src\Events\Triggers\PointerDoubleClickTrigger.cs" />
     <Compile Include="src\Events\Triggers\PointerDownTrigger.cs" />
     <Compile Include="src\Events\Triggers\PointerDragStartTrigger.cs" />
@@ -86,6 +85,7 @@
     <Compile Include="src\Events\Triggers\PointerDragTrigger.cs" />
     <Compile Include="src\Events\Triggers\PointerEnterTrigger.cs" />
     <Compile Include="src\Events\Triggers\PointerExitTrigger.cs" />
+    <Compile Include="src\Events\Triggers\PointerHoverTrigger.cs" />
     <Compile Include="src\Events\Triggers\PointerUpTrigger.cs" />
     <Compile Include="src\Events\Triggers\TriggerDecorator.cs" />
     <Compile Include="src\Events\Triggers\TriggerUtil.cs" />

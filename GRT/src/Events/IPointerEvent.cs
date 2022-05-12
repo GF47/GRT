@@ -14,9 +14,9 @@ namespace GRT.Events
         void OnPointerExit(Camera camera, RaycastHit hit, Vector2 pos);
     }
 
-    public interface IPointerCover
+    public interface IPointerHover
     {
-        void OnPointerCover(Camera camera, RaycastHit hit, Vector2 pos);
+        void OnPointerHover(Camera camera, RaycastHit hit, Vector2 pos);
     }
 
     public interface IPointerDown

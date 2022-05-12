@@ -10,7 +10,7 @@ namespace GRT.Events
 
         private Camera _camera;
         private IList<IPointer> _pointers;
-        private Collider _coveredCollider;
+        private Collider _hoveredCollider;
 
         public float distance = 100f;
         public LayerMask layer = 1 << 0;
@@ -62,24 +62,24 @@ namespace GRT.Events
             if (cased)
             {
                 var collider = hit.collider;
-                if (_coveredCollider != collider)
+                if (_hoveredCollider != collider)
                 {
-                    if (_coveredCollider != null)
+                    if (_hoveredCollider != null)
                     {
-                        SendPointerExitEvent(_coveredCollider.gameObject, null, _camera, hit, pos);
+                        SendPointerExitEvent(_hoveredCollider.gameObject, null, _camera, hit, pos);
                     }
-                    _coveredCollider = collider;
-                    SendPointerEnterEvent(_coveredCollider.gameObject, null, _camera, hit, pos);
+                    _hoveredCollider = collider;
+                    SendPointerEnterEvent(_hoveredCollider.gameObject, null, _camera, hit, pos);
                 }
 
-                SendPointerCoverEvent(_coveredCollider.gameObject, null, _camera, hit, pos);
+                SendPointerHoverEvent(_hoveredCollider.gameObject, null, _camera, hit, pos);
             }
             else
             {
-                if (_coveredCollider != null)
+                if (_hoveredCollider != null)
                 {
-                    SendPointerExitEvent(_coveredCollider.gameObject, null, _camera, hit, pos);
-                    _coveredCollider = null;
+                    SendPointerExitEvent(_hoveredCollider.gameObject, null, _camera, hit, pos);
+                    _hoveredCollider = null;
                 }
             }
 
@@ -121,7 +121,7 @@ namespace GRT.Events
             }
         }
 
-        public static void SendPointerCoverEvent(GameObject go, Predicate<Component> predicate, Camera camera, RaycastHit hit, Vector2 pos)
+        public static void SendPointerHoverEvent(GameObject go, Predicate<Component> predicate, Camera camera, RaycastHit hit, Vector2 pos)
         {
             var coms = GetComponents(go);
             for (int i = 0; i < coms.Count; i++)
@@ -129,9 +129,9 @@ namespace GRT.Events
                 var com = coms[i];
                 if (predicate == null || predicate(com))
                 {
-                    if (com is IPointerCover p)
+                    if (com is IPointerHover p)
                     {
-                        p.OnPointerCover(camera, hit, pos);
+                        p.OnPointerHover(camera, hit, pos);
                     }
                 }
             }
