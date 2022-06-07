@@ -8,7 +8,7 @@ namespace GRT.FSM
 
         public IList<IAction> Chain { get; }
 
-        public override bool Completed => Chain.Count == 0 || Chain[_indicator].Completed;
+        public override bool Completed => Chain.Count == 0 || Chain[Chain.Count - 1].Completed;
 
         public ActionChain(IList<IAction> actions)
         {

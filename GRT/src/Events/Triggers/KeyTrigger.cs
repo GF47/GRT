@@ -9,6 +9,17 @@ namespace GRT.Events.Triggers
         [SerializeField] private GnityEvent _event;
         public KeyCode key;
 
-        public GnityEvent Event { get => _event; set => _event = value; }
+        public GnityEvent Event
+        {
+            get
+            {
+                if (_event == null)
+                {
+                    _event = new GnityEvent();
+                }
+                return _event;
+            }
+            set => _event = value;
+        }
     }
 }

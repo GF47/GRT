@@ -13,7 +13,6 @@ namespace GRT.Tween
             get => from; set
             {
                 from = value;
-                if (UseInterpolation) { CalculateInterpolation(); }
             }
         }
         public override Vector3 To
@@ -21,7 +20,6 @@ namespace GRT.Tween
             get => to; set
             {
                 to = value;
-                if (UseInterpolation) { CalculateInterpolation(); }
             }
         }
 
@@ -32,11 +30,8 @@ namespace GRT.Tween
             get => _useInterpolation;
             set
             {
-                if (_useInterpolation != value)
-                {
-                    _useInterpolation = value;
-                    if (_useInterpolation) { CalculateInterpolation(); }
-                }
+                _useInterpolation = value;
+                if (_useInterpolation) { CalculateInterpolation(); }
             }
         }
 
@@ -76,11 +71,12 @@ namespace GRT.Tween
         public void SetTarget(Transform target)
         {
             _target = target;
-
-            if (_useInterpolation) { CalculateInterpolation(); }
         }
 
-        private void CalculateInterpolation()
+        /// <summary>
+        /// 最终还是需要重新计算一下
+        /// </summary>
+        public void CalculateInterpolation()
         {
             if (_target == null)
             {

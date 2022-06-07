@@ -8,8 +8,6 @@ namespace GRT.FSM
 {
     public class FiniteStateMachine : BaseState, IState
     {
-        private readonly Dictionary<int, IState> _states;
-
         private IState _currentState;
         internal IState CurrentState => _currentState.ID == ExitStateID ? this : _currentState;
 
@@ -18,9 +16,11 @@ namespace GRT.FSM
 
         public IBlackBoard Variables { get; }
 
+        public Dictionary<int, IState> States { get; private set; }
+
         public FiniteStateMachine(int id = 0, string info = "") : base(id, info)
         {
-            _states = new Dictionary<int, IState>();
+            States = new Dictionary<int, IState>();
 
             _currentState = this;
 
@@ -58,7 +58,7 @@ namespace GRT.FSM
                 var next = _currentState.GetNext();
                 if (_currentState.ID != next)
                 {
-                    if (_states.TryGetValue(next, out var state))
+                    if (States.TryGetValue(next, out var state))
                     {
                         _currentState.OnExit(next);
                         _currentState.Reset();
@@ -80,7 +80,7 @@ namespace GRT.FSM
                 UnityEngine.Debug.Log($"fsm {id} enter id is itself");
 #endif
             }
-            else if (_states.TryGetValue(EntryStateID, out var state))
+            else if (States.TryGetValue(EntryStateID, out var state))
             {
                 _currentState = state;
                 _currentState.OnEnter(id);
@@ -109,11 +109,11 @@ namespace GRT.FSM
 
         #region FSM
 
-        public void Add(IState state) => _states.Add(state.ID, state);
+        public void Add(IState state) => States.Add(state.ID, state);
 
-        public void Remove(int id) => _states.Remove(id);
+        public void Remove(int id) => States.Remove(id);
 
-        public void Remove(IState state) => _states.Remove(state.ID);
+        public void Remove(IState state) => States.Remove(state.ID);
 
         public void Start()
         {

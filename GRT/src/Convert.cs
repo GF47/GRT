@@ -34,7 +34,10 @@ namespace GRT
                 || value == TrueString0
                 || value == TrueString3
                 || value == TrueString4
-                || value == TrueString5;
+                || value == TrueString5
+                || value == TrueString6
+                || value == TrueString7
+                || value == TrueString8;
         }
 
         public static bool IsFalse(this string value)
@@ -44,7 +47,10 @@ namespace GRT
                 || value == FalseString0
                 || value == FalseString3
                 || value == FalseString4
-                || value == FalseString5;
+                || value == FalseString5
+                || value == FalseString6
+                || value == FalseString7
+                || value == FalseString8;
         }
 
         public static bool ToBool(string value)
@@ -248,6 +254,9 @@ namespace GRT
         public const string TrueString3 = "y";
         public const string TrueString4 = "yes";
         public const string TrueString5 = "Yes";
+        public const string TrueString6 = "r";
+        public const string TrueString7 = "right";
+        public const string TrueString8 = "Right";
 
         public const string FalseString0 = "f";
         public const string FalseString1 = "false";
@@ -255,6 +264,9 @@ namespace GRT
         public const string FalseString3 = "n";
         public const string FalseString4 = "no";
         public const string FalseString5 = "No";
+        public const string FalseString6 = "w";
+        public const string FalseString7 = "wrong";
+        public const string FalseString8 = "Wrong";
 
         public static UnityStructs ToUnityStructsEnum(Type type)
         {

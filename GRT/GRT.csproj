@@ -90,13 +90,15 @@
     <Compile Include="src\Events\Triggers\TriggerDecorator.cs" />
     <Compile Include="src\Events\Triggers\TriggerUtil.cs" />
     <Compile Include="src\FSM\ActionChain.cs" />
+    <Compile Include="src\FSM\ActionList.cs" />
     <Compile Include="src\FSM\ActionState.cs" />
     <Compile Include="src\FSM\BaseAction.cs" />
     <Compile Include="src\FSM\BaseState.cs" />
     <Compile Include="src\FSM\DelegateCondition.cs" />
+    <Compile Include="src\FSM\FSMManager.cs" />
     <Compile Include="src\FSM\IAction.cs" />
     <Compile Include="src\FSM\ICondition.cs" />
-    <Compile Include="src\FSM\ISerializer.cs" />
+    <Compile Include="src\FSM\IFSMSerializer.cs" />
     <Compile Include="src\FSM\LogicalCondition.cs" />
     <Compile Include="src\FSM\MiniState.cs" />
     <Compile Include="src\FSM\NormalState.cs" />
@@ -135,6 +137,7 @@
     <Compile Include="src\Net\TcpStringsSender.cs" />
     <Compile Include="src\Pool.cs" />
     <Compile Include="src\RootGameObject.cs" />
+    <Compile Include="src\Serialization\ISerializer.cs" />
     <Compile Include="src\SimpleJSON\SimpleJSON.cs" />
     <Compile Include="src\SimpleJSON\SimpleJSONBinary.cs" />
     <Compile Include="src\SimpleJSON\SimpleJSONDotNetTypes.cs" />
@@ -180,7 +183,6 @@
     <Compile Include="src\~ValueTypesExtension\Vector3Extension.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="src\Components\UI\" />
     <Folder Include="src\Ioc\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
