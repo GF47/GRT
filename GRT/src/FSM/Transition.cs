@@ -2,43 +2,28 @@
 
 namespace GRT.FSM
 {
-    public class Transition : ITransition
+    public class Transition : BaseTransition, ITransition
     {
-        private ICollection<ICondition> _conditions;
-
-        public int TargetID { get; set; }
-
-        ICollection<ICondition> ITransition.Conditions => _conditions;
-
-        bool ITransition.OK
-        {
-            get
-            {
-                if (_conditions != null)
-                {
-                    foreach (var condition in _conditions)
-                    {
-                        if (!condition.OK)
-                        {
-                            return false;
-                        }
-                    }
-                }
-
-                return true;
-            }
-        }
-
         public Transition(int target, params ICondition[] conditions)
         {
             TargetID = target;
-            _conditions = conditions;
+
+            if (conditions == null || conditions.Length == 0)
+            {
+                this.conditions = new List<ICondition>();
+            }
+            else
+            {
+                this.conditions = conditions;
+            }
         }
 
         public Transition(int target, ICollection<ICondition> conditions)
         {
             TargetID = target;
-            _conditions = conditions;
+            this.conditions = conditions;
         }
+
+        public override int Go() => TargetID;
     }
 }

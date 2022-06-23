@@ -13,7 +13,7 @@ namespace GRT.FSM
 
         IState ParseState(Node node, int defaultID);
 
-        ITransition ParseTransition(Node node);
+        ITransition ParseTransition(Node node, int defaultTo);
 
         ICondition ParseCondition(Node node);
     }

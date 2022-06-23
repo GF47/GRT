@@ -25,16 +25,16 @@ namespace GRT.FSM
             transitions = new List<ITransition>();
         }
 
-        int IState.GetNext()
+        ITransition IState.GetNext()
         {
             foreach (var transition in transitions)
             {
                 if (transition.OK)
                 {
-                    return transition.TargetID;
+                    return transition;
                 }
             }
-            return id;
+            return null;
         }
 
         public abstract void OnEnter(int lastID);

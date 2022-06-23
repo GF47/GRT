@@ -91,6 +91,10 @@ namespace GRT.FSM
             {
                 _cache.Variables.Set(varName, value);
             }
+            else
+            {
+                throw new System.Exception($"there is not a fsm whose id is {fsmID}");
+            }
         }
 
         public void SetStringVariable(int id, string varName, string value) => SetVariable(id, varName, value);

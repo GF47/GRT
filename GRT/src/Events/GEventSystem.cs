@@ -23,6 +23,7 @@ namespace GRT.Events
         public virtual Vector3 PointerPosition => Input.mousePosition;
 
         public Blocker Blocker { get; private set; }
+        public static Blocker GlobalBlocker { get; } = new Blocker();
 
         private void Awake()
         {
@@ -54,7 +55,7 @@ namespace GRT.Events
             RaycastHit hit = default;
 
             var pos = PointerPosition;
-            if (!Blocker.Blocking(pos))
+            if (!(Blocker.Blocking(pos) || GlobalBlocker.Blocking(pos)))
             {
                 cased = Physics.Raycast(_camera.ScreenPointToRay(pos), out hit, distance, layer);
             }

@@ -290,7 +290,7 @@ namespace GRT.Components
         {
             _angle = rot;
             _currentAngle = _angle;
-            Rotation = Quaternion.Euler(rot);
+            Rotation = Quaternion.Euler(_angle);
         }
 
         /// <summary> 旋转开始 </summary>

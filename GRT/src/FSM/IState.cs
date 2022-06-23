@@ -9,7 +9,7 @@ namespace GRT.FSM
 
         ICollection<ITransition> Transitions { get; }
 
-        int GetNext();
+        ITransition GetNext();
 
         void OnEnter(int lastID);
 

@@ -9,5 +9,6 @@ namespace GRT.FSM
         ICollection<ICondition> Conditions { get; }
 
         bool OK { get; }
+        int Go();
     }
 }

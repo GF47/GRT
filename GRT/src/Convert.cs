@@ -124,7 +124,7 @@ namespace GRT
 
         public static Color ToColor(string value)
         {
-            if (ColorUtility.TryParseHtmlString(value,out var c))
+            if (ColorUtility.TryParseHtmlString(value, out var c))
             {
                 return c;
             }
@@ -158,6 +158,123 @@ namespace GRT
                 float.TryParse(array[i], out c[i]);
             }
             return new Rect(c[0], c[1], c[2], c[3]);
+        }
+
+        public static bool TryParseVector2(this string value, out Vector2 vector)
+        {
+            string[] array = StringInBrackets(value).Split(',');
+            if (array.Length > 1
+                && float.TryParse(array[0], out var x)
+                && float.TryParse(array[1], out var y))
+            {
+                vector = new Vector2(x, y);
+                return true;
+            }
+            else
+            {
+                vector = Vector2.zero;
+                return false;
+            }
+        }
+
+        public static bool TryParseVector3(this string value, out Vector3 vector)
+        {
+            string[] array = StringInBrackets(value).Split(',');
+            if (array.Length > 2
+                && float.TryParse(array[0], out var x)
+                && float.TryParse(array[1], out var y)
+                && float.TryParse(array[2], out var z))
+            {
+                vector = new Vector3(x, y, z);
+                return true;
+            }
+            else
+            {
+                vector = Vector3.zero;
+                return false;
+            }
+        }
+
+        public static bool TryParseVector4(this string value, out Vector4 vector)
+        {
+            string[] array = StringInBrackets(value).Split(',');
+            if (array.Length > 3
+                && float.TryParse(array[0], out var x)
+                && float.TryParse(array[1], out var y)
+                && float.TryParse(array[2], out var z)
+                && float.TryParse(array[3], out var w))
+            {
+                vector = new Vector4(x, y, z, w);
+                return true;
+            }
+            else
+            {
+                vector = Vector4.zero;
+                return false;
+            }
+        }
+
+        public static bool TryParseColor(this string value, out Color color)
+        {
+            if (ColorUtility.TryParseHtmlString(value, out color))
+            {
+                return true;
+            }
+
+            string[] array = StringInBrackets(value).Split(',');
+            if (array.Length > 2
+                && float.TryParse(array[0], out var r)
+                && float.TryParse(array[1], out var g)
+                && float.TryParse(array[2], out var b))
+            {
+                var a = 1f;
+                if (array.Length > 3 && float.TryParse(array[3], out var tempa)) { a = tempa; }
+                color = new Color(r, g, b, a);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public static bool TryParseColor32(this string value, out Color32 color)
+        {
+            string[] array = StringInBrackets(value).Split(',');
+            if (array.Length > 2
+                && byte.TryParse(array[0], out var r)
+                && byte.TryParse(array[1], out var g)
+                && byte.TryParse(array[2], out var b))
+            {
+                byte a = 255;
+                if (array.Length > 3 && byte.TryParse(array[3], out var temp)) { a = temp; }
+                color = new Color32(r, g, b, a);
+                return true;
+            }
+            else
+            {
+                color = new Color32();
+                return false;
+            }
+        }
+
+        public static bool TryParseRect(this string value, out Rect rect)
+        {
+            string[] array = StringInBrackets(value).Split(',');
+            if (array.Length > 3
+                && float.TryParse(array[0], out var x)
+                && float.TryParse(array[1], out var y)
+                && float.TryParse(array[2], out var width)
+                && float.TryParse(array[3], out var height))
+            {
+                rect = new Rect(x, y, width, height);
+                return true;
+            }
+            else
+            {
+                rect = new Rect();
+                return false;
+            }
         }
 
         public static byte[] StructToBytes(object structObj)

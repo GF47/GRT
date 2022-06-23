@@ -8,8 +8,13 @@ namespace GRT.FSM
 {
     public class FiniteStateMachine : BaseState, IState
     {
+        public Action<int> Entering;
+        public Action<int> Exiting;
+        public Action<int> Updating;
+        public Action<int, int> Transiting;
+
         private IState _currentState;
-        internal IState CurrentState => _currentState.ID == ExitStateID ? this : _currentState;
+        public IState CurrentState => _currentState.ID == ExitStateID ? this : _currentState;
 
         public int EntryStateID { get; set; } = Util.EntryStateID;
         public int ExitStateID { get; set; } = Util.ExitStateID;
@@ -29,7 +34,7 @@ namespace GRT.FSM
 
         #region IState
 
-        int IState.GetNext()
+        ITransition IState.GetNext()
         {
             if (_currentState.ID == ExitStateID)
             {
@@ -37,16 +42,17 @@ namespace GRT.FSM
                 {
                     if (transition.OK)
                     {
-                        return transition.TargetID;
+                        return transition;
                     }
                 }
             }
-            return id;
+            return null;
         }
 
         public override void Update()
         {
-            if (_currentState.ID != id)
+            Updating?.Invoke(id);
+            if (_currentState != this)
             {
                 _currentState.Update();
 
@@ -55,18 +61,21 @@ namespace GRT.FSM
                     return;
                 }
 
-                var next = _currentState.GetNext();
-                if (_currentState.ID != next)
+                var transition = _currentState.GetNext();
+                if (transition != null && _currentState.ID != transition.TargetID)
                 {
-                    if (States.TryGetValue(next, out var state))
+                    if (States.TryGetValue(transition.TargetID, out var state))
                     {
-                        _currentState.OnExit(next);
+                        _currentState.OnExit(transition.TargetID);
                         _currentState.Reset();
 
                         var temp = _currentState.ID;
 
                         _currentState = state;
                         _currentState.OnEnter(temp);
+
+                        transition.Go();
+                        Transiting?.Invoke(temp, state.ID);
                     }
                 }
             }
@@ -74,6 +83,7 @@ namespace GRT.FSM
 
         public override void OnEnter(int lastID)
         {
+            Entering?.Invoke(lastID);
             if (EntryStateID == id)
             {
 #if UNITY_EDITOR
@@ -93,6 +103,7 @@ namespace GRT.FSM
 
         public override void OnExit(int nextID)
         {
+            Exiting?.Invoke(nextID);
             if (_currentState.ID == ExitStateID)
             {
                 _currentState.OnExit(id);
@@ -119,6 +130,9 @@ namespace GRT.FSM
         {
             (this as IState).OnEnter(Util.EntryStateID);
         }
+
+        public bool IsExiting => _currentState.ID == ExitStateID;
+        public bool IsUpdating => _currentState != this;
 
         #endregion FSM
 
