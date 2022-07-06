@@ -15,7 +15,7 @@ namespace GRT.Editor
         private static Quaternion _rotation;
         private static Vector3 _scale;
 
-        [MenuItem("Tools/GF47 Editor/Transform Copy/Copy &%c")]
+        [MenuItem("Tools/GF47 Editor/Transform Copy/Copy Local &%c")]
         private static void TransformRecord()
         {
             _position = Selection.activeTransform.localPosition;
@@ -32,6 +32,38 @@ namespace GRT.Editor
             Selection.activeTransform.localPosition = _position;
             Selection.activeTransform.localRotation = _rotation;
             Selection.activeTransform.localScale = _scale;
+        }
+
+        [MenuItem("Tools/GF47 Editor/Transform Copy/Copy World")]
+        private static void WorldTransformRecord()
+        {
+            _position = Selection.activeTransform.position;
+            _rotation = Selection.activeTransform.rotation;
+            _scale = Selection.activeTransform.lossyScale;
+            string str = string.Format("position={0}, eulerAngles={1}, scale={2}", _position.ToString("F4"), _rotation.eulerAngles.ToString("F4"), _scale.ToString("F4"));
+            Debug.Log(str);
+            EditorGUIUtility.systemCopyBuffer = str;
+        }
+
+        [MenuItem("Tools/GF47 Editor/Transform Copy/Copy View Camera")]
+        private static void GetViewCamera()
+        {
+            var camera = SceneView.lastActiveSceneView.camera.transform;
+            _position = camera.position;
+            _rotation = camera.rotation;
+            _scale = camera.lossyScale;
+            string str = string.Format("position={0}, eulerAngles={1}, scale={2}", _position.ToString("F4"), _rotation.eulerAngles.ToString("F4"), _scale.ToString("F4"));
+            Debug.Log(str);
+            EditorGUIUtility.systemCopyBuffer = str;
+        }
+
+        [MenuItem("Tools/GF47 Editor/Transform Copy/Copy View Camera Target")]
+        private static void GetViewCameraTarget()
+        {
+            _position = SceneView.lastActiveSceneView.pivot;
+            string str = string.Format("target={0}", _position.ToString("F4"));
+            Debug.Log(str);
+            EditorGUIUtility.systemCopyBuffer = str;
         }
 
         [MenuItem("Tools/GF47 Editor/Transform Copy/Panel")]
