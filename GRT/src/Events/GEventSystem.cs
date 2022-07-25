@@ -10,7 +10,6 @@ namespace GRT.Events
 
         private Camera _camera;
         private IList<IPointer> _pointers;
-        private Collider _hoveredCollider;
 
         public float distance = 100f;
         public LayerMask layer = 1 << 0;
@@ -20,6 +19,8 @@ namespace GRT.Events
 
         public Camera Camera => _camera;
         public IList<IPointer> Pointers => _pointers;
+        public RaycastHit LastHit { get; private set; }
+        public Collider LastCollider { get; private set; }
         public virtual Vector3 PointerPosition => Input.mousePosition;
 
         public Blocker Blocker { get; private set; }
@@ -63,24 +64,24 @@ namespace GRT.Events
             if (cased)
             {
                 var collider = hit.collider;
-                if (_hoveredCollider != collider)
+                if (LastCollider != collider)
                 {
-                    if (_hoveredCollider != null)
+                    if (LastCollider != null)
                     {
-                        SendPointerExitEvent(_hoveredCollider.gameObject, null, _camera, hit, pos);
+                        SendPointerExitEvent(LastCollider.gameObject, null, _camera, hit, pos);
                     }
-                    _hoveredCollider = collider;
-                    SendPointerEnterEvent(_hoveredCollider.gameObject, null, _camera, hit, pos);
+                    LastCollider = collider;
+                    SendPointerEnterEvent(LastCollider.gameObject, null, _camera, hit, pos);
                 }
 
-                SendPointerHoverEvent(_hoveredCollider.gameObject, null, _camera, hit, pos);
+                SendPointerHoverEvent(LastCollider.gameObject, null, _camera, hit, pos);
             }
             else
             {
-                if (_hoveredCollider != null)
+                if (LastCollider != null)
                 {
-                    SendPointerExitEvent(_hoveredCollider.gameObject, null, _camera, hit, pos);
-                    _hoveredCollider = null;
+                    SendPointerExitEvent(LastCollider.gameObject, null, _camera, hit, pos);
+                    LastCollider = null;
                 }
             }
 
@@ -88,6 +89,8 @@ namespace GRT.Events
             {
                 pointer.Case(this, cased, hit);
             }
+
+            LastHit = hit;
         }
 
         public static void SendPointerEnterEvent(GameObject go, Predicate<Component> predicate, Camera camera, RaycastHit hit, Vector2 pos)

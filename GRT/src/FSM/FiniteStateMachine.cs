@@ -114,6 +114,10 @@ namespace GRT.FSM
         public override void Reset()
         {
             _currentState = this;
+            foreach (var pair in States)
+            {
+                pair.Value.Reset();
+            }
         }
 
         #endregion IState

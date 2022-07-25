@@ -94,6 +94,7 @@
     <Compile Include="src\FSM\ActionState.cs" />
     <Compile Include="src\FSM\BaseAction.cs" />
     <Compile Include="src\FSM\BaseState.cs" />
+    <Compile Include="src\FSM\BaseTransition.cs" />
     <Compile Include="src\FSM\DelegateCondition.cs" />
     <Compile Include="src\FSM\FSMManager.cs" />
     <Compile Include="src\FSM\IAction.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="src\FSM\IState.cs" />
     <Compile Include="src\FSM\ITransition.cs" />
     <Compile Include="src\FSM\TriggerCondition.cs" />
+    <Compile Include="src\FSM\TrueFalseCondition.cs" />
     <Compile Include="src\FSM\Util.cs" />
     <Compile Include="src\Geometry\Point.cs" />
     <Compile Include="src\GRandom.cs" />
@@ -131,6 +133,7 @@
     <Compile Include="src\Geometry\Line.cs" />
     <Compile Include="src\Geometry\Utilities.cs" />
     <Compile Include="src\GMath.cs" />
+    <Compile Include="src\Ioc\Container.cs" />
     <Compile Include="src\IPercent.cs" />
     <Compile Include="src\IProjecter01.cs" />
     <Compile Include="src\Net\TcpStringsReceiver.cs" />
@@ -182,8 +185,15 @@
     <Compile Include="src\~ValueTypesExtension\SingleExtension.cs" />
     <Compile Include="src\~ValueTypesExtension\Vector3Extension.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="src\Ioc\" />
+    <None Include="src\Ioc\LICENSE" />
+    <None Include="src\Ioc\README.md" />
+    <None Include="src\SimpleJSON\LICENSE" />
+    <None Include="src\SimpleJSON\README" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="src\SimpleJSON\Changelog.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
