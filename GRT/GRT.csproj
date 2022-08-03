@@ -67,6 +67,7 @@
     <Compile Include="src\Events\BasePointer.cs" />
     <Compile Include="src\Events\Blocker.cs" />
     <Compile Include="src\Events\ButtonPointer.cs" />
+    <Compile Include="src\Events\GEventArgs.cs" />
     <Compile Include="src\Events\GEventSystem.cs" />
     <Compile Include="src\Events\GnityEvent.cs" />
     <Compile Include="src\Events\IPointer.cs" />
@@ -114,8 +115,19 @@
     <Compile Include="src\FSM\TriggerCondition.cs" />
     <Compile Include="src\FSM\TrueFalseCondition.cs" />
     <Compile Include="src\FSM\Util.cs" />
+    <Compile Include="src\GComponents\Clickable.cs" />
+    <Compile Include="src\GComponents\GCollider.cs" />
+    <Compile Include="src\GComponents\GComponentsUtil.cs" />
+    <Compile Include="src\GComponents\GContextMenu.cs" />
+    <Compile Include="src\GComponents\GEntity.cs" />
+    <Compile Include="src\GComponents\GEventPointer.cs" />
+    <Compile Include="src\GComponents\IGComponent.cs" />
+    <Compile Include="src\GComponents\IGEntity.cs" />
+    <Compile Include="src\GComponents\ILazyBindable.cs" />
+    <Compile Include="src\GComponents\IUGBridge.cs" />
     <Compile Include="src\Geometry\Point.cs" />
     <Compile Include="src\GRandom.cs" />
+    <Compile Include="src\GString.cs" />
     <Compile Include="src\GTask\Interfaces.cs" />
     <Compile Include="src\GTask\UnityCoroutineExtension.cs" />
     <Compile Include="src\IBlackBoard.cs" />
