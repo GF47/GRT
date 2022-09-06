@@ -19,8 +19,6 @@ namespace GRT.FSM
         public int EntryStateID { get; set; } = Util.EntryStateID;
         public int ExitStateID { get; set; } = Util.ExitStateID;
 
-        public IBlackBoard Variables { get; }
-
         public Dictionary<int, IState> States { get; private set; }
 
         public FiniteStateMachine(int id = 0, string info = "") : base(id, info)
@@ -28,8 +26,6 @@ namespace GRT.FSM
             States = new Dictionary<int, IState>();
 
             _currentState = this;
-
-            Variables = new BlackBoard();
         }
 
         #region IState
@@ -139,29 +135,5 @@ namespace GRT.FSM
         public bool IsUpdating => _currentState != this;
 
         #endregion FSM
-
-        #region Variables
-
-        public string GetStringVariable(string varName)
-        {
-            return Variables.Get(varName, string.Empty);
-        }
-
-        public int GetIntVariable(string varName)
-        {
-            return Variables.Get(varName, 0);
-        }
-
-        public float GetFloatVariable(string varName)
-        {
-            return Variables.Get(varName, 0f);
-        }
-
-        public double GetDoubleVariable(string varName)
-        {
-            return Variables.Get(varName, 0d);
-        }
-
-        #endregion Variables
     }
 }

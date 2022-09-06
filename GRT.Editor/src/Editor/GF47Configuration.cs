@@ -294,11 +294,14 @@ namespace GRT.Editor
                 {
                     for (int i = 0; i < list.Count; i++)
                     {
-                        if (!list[i].HasAttribute(ConstValues.NAME, out string nameStr)) { continue; }
-                        if (!list[i].HasAttribute(ConstValues.TYPE, out string typeStr)) { continue; }
-                        if (!list[i].HasAttribute(ConstValues.VALUE, out string valueStr)) { continue; }
+                        var nameAttribute = list[i].SelectSingleNode($"@{ConstValues.NAME}");
+                        if (nameAttribute == null) continue;
+                        var typeAttribute = list[i].SelectSingleNode($"@{ConstValues.TYPE}");
+                        if (typeAttribute == null) continue;
+                        var valueAttribute = list[i].SelectSingleNode($"@{ConstValues.VALUE}");
+                        if (valueAttribute == null) continue;
 
-                        _config.Add(new Item(nameStr, Convert.ToUnityStructsEnum(typeStr), Convert.ConvertTo(typeStr, valueStr)));
+                        _config.Add(new Item(nameAttribute.Value, Convert.ToUnityStructsEnum(typeAttribute.Value), Convert.ConvertTo(typeAttribute.Value, valueAttribute.Value)));
                     }
                 }
             }

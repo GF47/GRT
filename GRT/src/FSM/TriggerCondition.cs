@@ -2,15 +2,12 @@
 
 namespace GRT.FSM
 {
-    public class TriggerCondition<T> : ICondition
+    public class TriggerCondition<T> : ICondition where T : IEquatable<T>
     {
-        /// <summary> 判断两个值是否相等的静态方法 </summary>
-        public static Func<T, T, bool> EqualFunc;
-
         private T _trigger;
 
-        internal readonly T expected;
-        internal readonly T default_;
+        public T Expected { get; set; }
+        public T Default { get; set; }
 
         /// <summary>
         /// OK属性每调用一次都会清空触发器，重复调用请重新调用Trigger方法传入
@@ -20,36 +17,23 @@ namespace GRT.FSM
             get
             {
                 T temp = _trigger;
-                _trigger = default_; // 这里只要调用一次之后就会归位
+                _trigger = Default; // 这里只要调用一次之后就会归位
 
-                if (EqualFunc != null)
-                {
-                    return EqualFunc(expected, temp);
-                }
-
-                // Console.WriteLine($"{GetType()} 的 EqualFunc 方法没有被指定，请手动设定以防止值类型以object方式比较");
-                return Equals(expected, temp);
+                return temp.Equals(Expected);
             }
         }
 
         internal void Trigger(T trigger) => _trigger = trigger;
-
-        public TriggerCondition(T expected, T @default = default)
-        {
-            this.expected = expected;
-            this.default_ = @default;
-            this._trigger = @default;
-        }
     }
 
     public static class TriggerConditionExtension
     {
-        public static void Trigger<T>(this FiniteStateMachine fsm, T trigger)
+        public static void Trigger<T>(this FiniteStateMachine fsm, T trigger) where T : IEquatable<T>
         {
             fsm.CurrentState.Trigger(trigger);
         }
 
-        internal static void Trigger<T>(this IState state, T trigger)
+        internal static void Trigger<T>(this IState state, T trigger) where T : IEquatable<T>
         {
             foreach (var transition in state.Transitions)
             {
@@ -57,7 +41,7 @@ namespace GRT.FSM
             }
         }
 
-        internal static void Trigger<T>(this ITransition transition, T trigger)
+        internal static void Trigger<T>(this ITransition transition, T trigger) where T : IEquatable<T>
         {
             foreach (var condition in transition.Conditions)
             {
@@ -72,7 +56,7 @@ namespace GRT.FSM
             }
         }
 
-        internal static void Trigger<T>(this LogicalCondition condition, T trigger)
+        internal static void Trigger<T>(this LogicalCondition condition, T trigger) where T : IEquatable<T>
         {
             if (condition.A is LogicalCondition logicalConditionA)
             {

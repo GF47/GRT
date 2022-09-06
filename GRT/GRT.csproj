@@ -64,6 +64,8 @@
     <Compile Include="src\Configuration\Config.cs" />
     <Compile Include="src\Configuration\ConstValues.cs" />
     <Compile Include="src\Coroutine\IdleUntil.cs" />
+    <Compile Include="src\Data\GXML.cs" />
+    <Compile Include="src\Data\IGXML.cs" />
     <Compile Include="src\Events\BasePointer.cs" />
     <Compile Include="src\Events\Blocker.cs" />
     <Compile Include="src\Events\ButtonPointer.cs" />
@@ -96,18 +98,14 @@
     <Compile Include="src\FSM\BaseAction.cs" />
     <Compile Include="src\FSM\BaseState.cs" />
     <Compile Include="src\FSM\BaseTransition.cs" />
+    <Compile Include="src\FSM\CompareCondition.cs" />
     <Compile Include="src\FSM\DelegateCondition.cs" />
-    <Compile Include="src\FSM\FSMManager.cs" />
     <Compile Include="src\FSM\IAction.cs" />
     <Compile Include="src\FSM\ICondition.cs" />
     <Compile Include="src\FSM\IFSMSerializer.cs" />
     <Compile Include="src\FSM\LogicalCondition.cs" />
     <Compile Include="src\FSM\MiniState.cs" />
     <Compile Include="src\FSM\NormalState.cs" />
-    <Compile Include="src\FSM\RelationalCondition.cs" />
-    <Compile Include="src\FSM\RelationalConditionFromVariables.cs" />
-    <Compile Include="src\FSM\RelationalConditionImplement.cs" />
-    <Compile Include="src\FSM\StringTriggerCondition.cs" />
     <Compile Include="src\FSM\Transition.cs" />
     <Compile Include="src\FSM\FiniteStateMachine.cs" />
     <Compile Include="src\FSM\IState.cs" />
@@ -138,7 +136,6 @@
     <Compile Include="src\Data\Deserializer.cs" />
     <Compile Include="src\Data\Serializer.cs" />
     <Compile Include="src\Data\SqliteHelper.cs" />
-    <Compile Include="src\Data\XmlTools.cs" />
     <Compile Include="src\FileUtility.cs" />
     <Compile Include="src\Geometry\BezierPoint.cs" />
     <Compile Include="src\Geometry\BezierSpline.cs" />

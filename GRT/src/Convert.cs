@@ -126,6 +126,86 @@ namespace GRT
             return new Vector4(f[0], f[1], f[2], f[3]);
         }
 
+        public static Color ToColorFromTags(this string tag)
+        {
+            switch (tag)
+            {
+                case "AQUAMARINE": return new Color(112, 219, 147);
+                case "BLACK": return new Color(0, 0, 0);
+                case "BLUE": return new Color(0, 0, 255);
+                case "BLUE VIOLET": return new Color(159, 95, 159);
+                case "BROWN": return new Color(165, 42, 42);
+                case "CADET BLUE": return new Color(95, 159, 159);
+                case "CORAL": return new Color(255, 127, 0);
+                case "CORNFLOWER BLUE": return new Color(66, 66, 111);
+                case "CYAN": return new Color(0, 255, 255);
+                case "DARK GREY": return new Color(47, 47, 47);
+
+                case "DARK GREEN": return new Color(47, 79, 47);
+                case "DARK OLIVE GREEN": return new Color(79, 79, 47);
+                case "DARK ORCHID": return new Color(153, 50, 204);
+                case "DARK SLATE BLUE": return new Color(107, 35, 142);
+                case "DARK SLATE GREY": return new Color(47, 79, 79);
+                case "DARK TURQUOISE": return new Color(112, 147, 219);
+                case "DIM GREY": return new Color(84, 84, 84);
+                case "FIREBRICK": return new Color(142, 35, 35);
+                case "FOREST GREEN": return new Color(35, 142, 35);
+                case "GOLD": return new Color(204, 127, 50);
+                case "GOLDENROD": return new Color(219, 219, 112);
+                case "GREY": return new Color(128, 128, 128);
+                case "GREEN": return new Color(0, 255, 0);
+                case "GREEN YELLOW": return new Color(147, 219, 112);
+                case "INDIAN RED": return new Color(79, 47, 47);
+                case "KHAKI": return new Color(159, 159, 95);
+                case "LIGHT BLUE": return new Color(191, 216, 216);
+                case "LIGHT GREY": return new Color(192, 192, 192);
+                case "LIGHT STEEL BLUE": return new Color(143, 143, 188);
+                case "LIME GREEN": return new Color(50, 204, 50);
+                case "LIGHT MAGENTA": return new Color(255, 119, 255);
+                case "MAGENTA": return new Color(255, 0, 255);
+                case "MAROON": return new Color(142, 35, 107);
+                case "MEDIUM AQUAMARINE": return new Color(50, 204, 153);
+                case "MEDIUM GREY": return new Color(100, 100, 100);
+                case "MEDIUM BLUE": return new Color(50, 50, 204);
+                case "MEDIUM FOREST GREEN": return new Color(107, 142, 35);
+                case "MEDIUM GOLDENROD": return new Color(234, 234, 173);
+                case "MEDIUM ORCHID": return new Color(147, 112, 219);
+                case "MEDIUM SEA GREEN": return new Color(66, 111, 66);
+                case "MEDIUM SLATE BLUE": return new Color(127, 0, 255);
+                case "MEDIUM SPRING GREEN": return new Color(127, 255, 0);
+                case "MEDIUM TURQUOISE": return new Color(112, 219, 219);
+                case "MEDIUM VIOLET RED": return new Color(219, 112, 147);
+                case "MIDNIGHT BLUE": return new Color(47, 47, 79);
+                case "NAVY": return new Color(35, 35, 142);
+                case "ORANGE": return new Color(204, 50, 50);
+                case "ORANGE RED": return new Color(255, 0, 127);
+                case "ORCHID": return new Color(219, 112, 219);
+                case "PALE GREEN": return new Color(143, 188, 143);
+                case "PINK": return new Color(255, 192, 203);
+                case "PLUM": return new Color(234, 173, 234);
+                case "PURPLE": return new Color(176, 0, 255);
+                case "RED": return new Color(255, 0, 0);
+                case "SALMON": return new Color(111, 66, 66);
+                case "SEA GREEN": return new Color(35, 142, 107);
+                case "SIENNA": return new Color(142, 107, 35);
+                case "SKY BLUE": return new Color(50, 153, 204);
+                case "SLATE BLUE": return new Color(0, 127, 255);
+                case "SPRING GREEN": return new Color(0, 255, 127);
+                case "STEEL BLUE": return new Color(35, 107, 142);
+                case "TAN": return new Color(219, 147, 112);
+                case "THISTLE": return new Color(216, 191, 216);
+                case "TURQUOISE": return new Color(173, 234, 234);
+                case "VIOLET": return new Color(79, 47, 79);
+                case "VIOLET RED": return new Color(204, 50, 153);
+                case "WHEAT": return new Color(216, 216, 191);
+                case "WHITE": return new Color(255, 255, 255);
+                case "YELLOW": return new Color(255, 255, 0);
+                case "YELLOW GREEN": return new Color(153, 204, 50);
+                default:
+                    return ColorUtility.TryParseHtmlString(tag, out var color) ? color : Color.red;
+            }
+        }
+
         public static Color ToColor(string value)
         {
             if (ColorUtility.TryParseHtmlString(value, out var c))
