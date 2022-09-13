@@ -51,7 +51,7 @@
         public static ICondition AND(ICondition a, ICondition b) => new LogicalCondition(LogicalOperator.AND, a, b);
         public static ICondition OR(ICondition a, ICondition b) => new LogicalCondition(LogicalOperator.OR, a, b);
         public static ICondition XOR(ICondition a, ICondition b) => new LogicalCondition(LogicalOperator.XOR, a, b);
-        public static ICondition NOT(ICondition a) => new LogicalCondition(LogicalOperator.AND, a, null);
+        public static ICondition NOT(ICondition a) => new LogicalCondition(LogicalOperator.NOT, a, null);
 
         private static bool IsOK(ICondition condition) => condition == null || condition.OK;
     }
