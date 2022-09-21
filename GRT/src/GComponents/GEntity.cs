@@ -18,15 +18,15 @@ namespace GRT.GComponents
 
         IGEntity ILazyBindable.GEntity { get => this; set => throw new NotImplementedException(); }
 
-        public void Bind()
+        public virtual void Bind()
         {
-            var uObject = GameObjectExtension.FindIn(Scene, Path);
+            UObject = GameObjectExtension.FindIn(Scene, Path);
 
             foreach (var com in Components)
             {
-                com.Binding(uObject);
+                com.Binding(UObject);
             }
-            Binding?.Invoke(uObject);
+            Binding?.Invoke(UObject);
         }
     }
 }

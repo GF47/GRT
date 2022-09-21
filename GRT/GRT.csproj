@@ -116,6 +116,7 @@
     <Compile Include="src\FSM\TrueFalseCondition.cs" />
     <Compile Include="src\FSM\Util.cs" />
     <Compile Include="src\GComponents\Clickable.cs" />
+    <Compile Include="src\GComponents\DynamicGEntity.cs" />
     <Compile Include="src\GComponents\GCollider.cs" />
     <Compile Include="src\GComponents\GComponentsUtil.cs" />
     <Compile Include="src\GComponents\GContextMenu.cs" />
