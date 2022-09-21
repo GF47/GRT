@@ -5,9 +5,9 @@ namespace GRT.FSM
 {
     public class MiniState : IState
     {
-        private int _id;
-        private string _info;
-        private ICollection<ITransition> _transitions;
+        private readonly int _id;
+        private readonly string _info;
+        private readonly ICollection<ITransition> _transitions;
 
         public int ID => _id;
         public string Info => _info;

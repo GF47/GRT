@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GRT.Events
 {
-    public class MouseButtonPointer : BasePointer
+    public class MouseButtonTargetPointer : TargetPointer
     {
         public int mouseButton;
 

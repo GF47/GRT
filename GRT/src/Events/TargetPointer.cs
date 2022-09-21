@@ -6,7 +6,7 @@ namespace GRT.Events
     /// 使用了鼠标位置和默认射线检测结果
     /// 如果需要自定义位置（比如屏幕正中央等），可以在Case方法内部自行进行射线检测
     /// </summary>
-    public abstract class BasePointer : IPointer
+    public abstract class TargetPointer : IPointer
     {
         private Collider _collider;
         private bool _dragging;
@@ -22,21 +22,33 @@ namespace GRT.Events
             var camera = system.Camera;
             var pos = system.PointerPosition;
 
-            if (cased)
-            {
-                var collider = hit.collider;
+            //  |            | down  | hold  | up    | free  |                    |
+            //  +------------+-------+-------+-------+-------+--------------------+
+            //  | casted     | --2-- | PHOLD | PUP   | --1-- | cached collider    |
+            //  | no casted  | --2-- | PHOLD | PUP   | --1-- |                    |
+            //  +------------+-------+-------+-------+-------+--------------------+
+            //  | casted     | PDOWN | KEEP  | KEEP  | --1-- | no cached collider |
+            //  | no casted  | KEEP  | KEEP  | KEEP  | --1-- |                    |
+            //
+            //  1: 不可能达到, free状态, collider一定是null
+            //  2: 不可能达到, 进入down状态时, collider一定是null, 因为上一次的up状态会把collider置为null
+            //  PDOWN: pointer down
+            //  PHOLD: pointer hold, drag or drag start
+            //  PUP  : pointer up, drag stop or click or double click
+            //  KEEP : 无操作
 
-                if (Downing)
+            if (Downing)
+            {
+                if (cased)
                 {
                     _draggingTimeStamp = Time.time;
 
-                    _collider = collider;
+                    _collider = hit.collider;
 
                     GEventSystem.SendPointerDownEvent(_collider.gameObject, IsInterestedIn, camera, hit, pos);
                 }
             }
-
-            if (Upping)
+            else if (Upping)
             {
                 if (_collider != null)
                 {

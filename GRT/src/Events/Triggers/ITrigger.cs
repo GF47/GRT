@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace GRT.Events.Triggers
+﻿namespace GRT.Events.Triggers
 {
     public interface ITrigger
     {

@@ -29,6 +29,7 @@ namespace GRT
 
         public static bool IsTrue(this string value)
         {
+            if (string.IsNullOrEmpty(value)) return false;
             return value == TrueString2
                 || value == TrueString1
                 || value == TrueString0
@@ -44,6 +45,7 @@ namespace GRT
 
         public static bool IsFalse(this string value)
         {
+            if (string.IsNullOrEmpty(value)) return false;
             return value == FalseString2
                 || value == FalseString1
                 || value == FalseString0
@@ -57,7 +59,7 @@ namespace GRT
                 || value == FalseString10;
         }
 
-        public static bool ToBool(string value)
+        public static bool ToBool(this string value)
         {
             if (!bool.TryParse(value, out bool r))
             {
@@ -66,7 +68,7 @@ namespace GRT
             return r;
         }
 
-        public static int ToInt32(string value)
+        public static int ToInt32(this string value)
         {
             if (!int.TryParse(value, out int r))
             {
@@ -75,7 +77,7 @@ namespace GRT
             return r;
         }
 
-        public static float ToFloat(string value)
+        public static float ToFloat(this string value)
         {
             if (!float.TryParse(value, out float r))
             {
@@ -84,7 +86,7 @@ namespace GRT
             return r;
         }
 
-        public static double ToDouble(string value)
+        public static double ToDouble(this string value)
         {
             if (!double.TryParse(value, out double r))
             {
@@ -93,9 +95,9 @@ namespace GRT
             return r;
         }
 
-        public static Vector2 ToVector2(string value)
+        public static Vector2 ToVector2(this string value)
         {
-            string[] array = StringInBrackets(value).Split(',');
+            string[] array = SubStringInBrackets(value).Split(',');
             float[] f = { 0f, 0f };
             for (int i = 0; i < array.Length && i < 2; i++)
             {
@@ -104,9 +106,9 @@ namespace GRT
             return new Vector2(f[0], f[1]);
         }
 
-        public static Vector3 ToVector3(string value)
+        public static Vector3 ToVector3(this string value)
         {
-            string[] array = StringInBrackets(value).Split(',');
+            string[] array = SubStringInBrackets(value).Split(',');
             float[] f = { 0f, 0f, 0f };
             for (int i = 0; i < array.Length && i < 3; i++)
             {
@@ -115,9 +117,9 @@ namespace GRT
             return new Vector3(f[0], f[1], f[2]);
         }
 
-        public static Vector4 ToVector4(string value)
+        public static Vector4 ToVector4(this string value)
         {
-            string[] array = StringInBrackets(value).Split(',');
+            string[] array = SubStringInBrackets(value).Split(',');
             float[] f = { 0f, 0f, 0f, 0f };
             for (int i = 0; i < array.Length && i < 4; i++)
             {
@@ -206,14 +208,14 @@ namespace GRT
             }
         }
 
-        public static Color ToColor(string value)
+        public static Color ToColor(this string value)
         {
             if (ColorUtility.TryParseHtmlString(value, out var c))
             {
                 return c;
             }
 
-            string[] array = StringInBrackets(value).Split(',');
+            string[] array = SubStringInBrackets(value).Split(',');
             float[] f = { 0f, 0f, 0f, 1f };
             for (int i = 0; i < array.Length && i < 4; i++)
             {
@@ -222,9 +224,9 @@ namespace GRT
             return new Color(f[0], f[1], f[2], f[3]);
         }
 
-        public static Color32 ToColor32(string value)
+        public static Color32 ToColor32(this string value)
         {
-            string[] array = StringInBrackets(value).Split(',');
+            string[] array = SubStringInBrackets(value).Split(',');
             byte[] c = { 0, 0, 0, 255 };
             for (int i = 0; i < array.Length && i < 4; i++)
             {
@@ -233,9 +235,9 @@ namespace GRT
             return new Color32(c[0], c[1], c[2], c[3]);
         }
 
-        public static Rect ToRect(string value)
+        public static Rect ToRect(this string value)
         {
-            string[] array = StringInBrackets(value).Split(',');
+            string[] array = SubStringInBrackets(value).Split(',');
             float[] c = { 0f, 0f, 0f, 0f };
             for (int i = 0; i < array.Length && i < 4; i++)
             {
@@ -246,7 +248,7 @@ namespace GRT
 
         public static bool TryParseVector2(this string value, out Vector2 vector)
         {
-            string[] array = StringInBrackets(value).Split(',');
+            string[] array = SubStringInBrackets(value).Split(',');
             if (array.Length > 1
                 && float.TryParse(array[0], out var x)
                 && float.TryParse(array[1], out var y))
@@ -263,7 +265,7 @@ namespace GRT
 
         public static bool TryParseVector3(this string value, out Vector3 vector)
         {
-            string[] array = StringInBrackets(value).Split(',');
+            string[] array = SubStringInBrackets(value).Split(',');
             if (array.Length > 2
                 && float.TryParse(array[0], out var x)
                 && float.TryParse(array[1], out var y)
@@ -281,7 +283,7 @@ namespace GRT
 
         public static bool TryParseVector4(this string value, out Vector4 vector)
         {
-            string[] array = StringInBrackets(value).Split(',');
+            string[] array = SubStringInBrackets(value).Split(',');
             if (array.Length > 3
                 && float.TryParse(array[0], out var x)
                 && float.TryParse(array[1], out var y)
@@ -305,7 +307,7 @@ namespace GRT
                 return true;
             }
 
-            string[] array = StringInBrackets(value).Split(',');
+            string[] array = SubStringInBrackets(value).Split(',');
             if (array.Length > 2
                 && float.TryParse(array[0], out var r)
                 && float.TryParse(array[1], out var g)
@@ -324,7 +326,7 @@ namespace GRT
 
         public static bool TryParseColor32(this string value, out Color32 color)
         {
-            string[] array = StringInBrackets(value).Split(',');
+            string[] array = SubStringInBrackets(value).Split(',');
             if (array.Length > 2
                 && byte.TryParse(array[0], out var r)
                 && byte.TryParse(array[1], out var g)
@@ -344,7 +346,7 @@ namespace GRT
 
         public static bool TryParseRect(this string value, out Rect rect)
         {
-            string[] array = StringInBrackets(value).Split(',');
+            string[] array = SubStringInBrackets(value).Split(',');
             if (array.Length > 3
                 && float.TryParse(array[0], out var x)
                 && float.TryParse(array[1], out var y)
@@ -391,7 +393,7 @@ namespace GRT
         /// <param name="leftBracket">左括号</param>
         /// <param name="rightBracket">右括号</param>
         /// <returns></returns>
-        public static string StringInBrackets(string s, char leftBracket = '(', char rightBracket = ')')
+        public static string SubStringInBrackets(this string s, char leftBracket = '(', char rightBracket = ')')
         {
             int left = s.IndexOf(leftBracket) + 1;
             int right = s.LastIndexOf(rightBracket);
@@ -399,7 +401,7 @@ namespace GRT
             return s.Substring(left, right - left);
         }
 
-        public static T[] StringToArray<T>(string s, char splitChar = ',')
+        public static T[] ToArray<T>(this string s, char splitChar = ',')
         {
             if (string.IsNullOrEmpty(s)) { return null; }
             string[] strArray = s.Split(splitChar);
@@ -473,7 +475,7 @@ namespace GRT
         public const string FalseString9 = "off";
         public const string FalseString10 = "Off";
 
-        public static UnityStructs ToUnityStructsEnum(Type type)
+        public static UnityStructs ToUnityStructsEnum(this Type type)
         {
             UnityStructs t = UnityStructs.String;
             if (type == typeof(string))
@@ -523,7 +525,8 @@ namespace GRT
 
             return t;
         }
-        public static UnityStructs ToUnityStructsEnum(string type)
+
+        public static UnityStructs ToUnityStructsEnum(this string type)
         {
             UnityStructs t = UnityStructs.String;
 
@@ -534,51 +537,61 @@ namespace GRT
                 case StringType2:
                     t = UnityStructs.String;
                     break;
+
                 case BooleanType0:
                 case BooleanType1:
                 case BooleanType2:
                     t = UnityStructs.Boolean;
                     break;
+
                 case IntType0:
                 case IntType1:
                 case IntType2:
                     t = UnityStructs.Int32;
                     break;
+
                 case FloatType0:
                 case FloatType1:
                 case FloatType2:
                     t = UnityStructs.Single;
                     break;
+
                 case DoubleType0:
                 case DoubleType1:
                 case DoubleType2:
                     t = UnityStructs.Double;
                     break;
+
                 case Vector2Type0:
                 case Vector2Type1:
                 case Vector2Type2:
                     t = UnityStructs.Vector2;
                     break;
+
                 case Vector3Type0:
                 case Vector3Type1:
                 case Vector3Type2:
                     t = UnityStructs.Vector3;
                     break;
+
                 case Vector4Type0:
                 case Vector4Type1:
                 case Vector4Type2:
                     t = UnityStructs.Vector4;
                     break;
+
                 case ColorType0:
                 case ColorType1:
                 case ColorType2:
                     t = UnityStructs.Color;
                     break;
+
                 case Color32Type0:
                 case Color32Type1:
                 case Color32Type2:
                     t = UnityStructs.Color32;
                     break;
+
                 case RectType0:
                 case RectType1:
                 case RectType2:
@@ -587,7 +600,8 @@ namespace GRT
             }
             return t;
         }
-        public static Type ToType(UnityStructs type)
+
+        public static Type ToType(this UnityStructs type)
         {
             Type t = null;
             if (type == UnityStructs.String)
@@ -637,7 +651,8 @@ namespace GRT
 
             return t;
         }
-        public static Type ToType(string type)
+
+        public static Type ToType(this string type)
         {
             Type t = null;
 
@@ -648,51 +663,61 @@ namespace GRT
                 case StringType2:
                     t = typeof(string);
                     break;
+
                 case BooleanType0:
                 case BooleanType1:
                 case BooleanType2:
                     t = typeof(bool);
                     break;
+
                 case IntType0:
                 case IntType1:
                 case IntType2:
                     t = typeof(int);
                     break;
+
                 case FloatType0:
                 case FloatType1:
                 case FloatType2:
                     t = typeof(float);
                     break;
+
                 case DoubleType0:
                 case DoubleType1:
                 case DoubleType2:
                     t = typeof(double);
                     break;
+
                 case Vector2Type0:
                 case Vector2Type1:
                 case Vector2Type2:
                     t = typeof(Vector2);
                     break;
+
                 case Vector3Type0:
                 case Vector3Type1:
                 case Vector3Type2:
                     t = typeof(Vector3);
                     break;
+
                 case Vector4Type0:
                 case Vector4Type1:
                 case Vector4Type2:
                     t = typeof(Vector4);
                     break;
+
                 case ColorType0:
                 case ColorType1:
                 case ColorType2:
                     t = typeof(Color);
                     break;
+
                 case Color32Type0:
                 case Color32Type1:
                 case Color32Type2:
                     t = typeof(Color32);
                     break;
+
                 case RectType0:
                 case RectType1:
                 case RectType2:
@@ -701,7 +726,8 @@ namespace GRT
             }
             return t;
         }
-        public static object ConvertTo(Type type, string value)
+
+        public static object ConvertTo(this string value, Type type)
         {
             object result = null;
             if (type == typeof(string))
@@ -750,7 +776,8 @@ namespace GRT
             }
             return result;
         }
-        public static object ConvertTo(UnityStructs type, string value)
+
+        public static object ConvertTo(this string value, UnityStructs type)
         {
             object result = null;
             switch (type)
@@ -758,40 +785,51 @@ namespace GRT
                 case UnityStructs.String:
                     result = value;
                     break;
+
                 case UnityStructs.Boolean:
                     result = bool.Parse(value);
                     break;
+
                 case UnityStructs.Int32:
                     result = int.Parse(value);
                     break;
+
                 case UnityStructs.Single:
                     result = float.Parse(value);
                     break;
+
                 case UnityStructs.Double:
                     result = double.Parse(value);
                     break;
+
                 case UnityStructs.Vector2:
                     result = ToVector2(value);
                     break;
+
                 case UnityStructs.Vector3:
                     result = ToVector3(value);
                     break;
+
                 case UnityStructs.Vector4:
                     result = ToVector4(value);
                     break;
+
                 case UnityStructs.Color:
                     result = ToColor(value);
                     break;
+
                 case UnityStructs.Color32:
                     result = ToColor32(value);
                     break;
+
                 case UnityStructs.Rect:
                     result = ToRect(value);
                     break;
             }
             return result;
         }
-        public static object ConvertTo(string type, string value)
+
+        public static object ConvertTo(this string value, string type)
         {
             object result = null;
             switch (type)
@@ -801,51 +839,61 @@ namespace GRT
                 case StringType2:
                     result = value;
                     break;
+
                 case BooleanType0:
                 case BooleanType1:
                 case BooleanType2:
                     result = bool.Parse(value);
                     break;
+
                 case IntType0:
                 case IntType1:
                 case IntType2:
                     result = int.Parse(value);
                     break;
+
                 case FloatType0:
                 case FloatType1:
                 case FloatType2:
                     result = float.Parse(value);
                     break;
+
                 case DoubleType0:
                 case DoubleType1:
                 case DoubleType2:
                     result = double.Parse(value);
                     break;
+
                 case Vector2Type0:
                 case Vector2Type1:
                 case Vector2Type2:
                     result = ToVector2(value);
                     break;
+
                 case Vector3Type0:
                 case Vector3Type1:
                 case Vector3Type2:
                     result = ToVector3(value);
                     break;
+
                 case Vector4Type0:
                 case Vector4Type1:
                 case Vector4Type2:
                     result = ToVector4(value);
                     break;
+
                 case ColorType0:
                 case ColorType1:
                 case ColorType2:
                     result = ToColor(value);
                     break;
+
                 case Color32Type0:
                 case Color32Type1:
                 case Color32Type2:
                     result = ToColor32(value);
                     break;
+
                 case RectType0:
                 case RectType1:
                 case RectType2:
@@ -855,7 +903,7 @@ namespace GRT
             return result;
         }
 
-        public static object GetDefaultValue(UnityStructs type)
+        public static object GetDefaultValue(this UnityStructs type)
         {
             object result = null;
             switch (type)
@@ -863,33 +911,43 @@ namespace GRT
                 case UnityStructs.String:
                     result = string.Empty;
                     break;
+
                 case UnityStructs.Boolean:
                     result = false;
                     break;
+
                 case UnityStructs.Int32:
                     result = 0;
                     break;
+
                 case UnityStructs.Single:
                     result = 0f;
                     break;
+
                 case UnityStructs.Double:
                     result = 0d;
                     break;
+
                 case UnityStructs.Vector2:
                     result = Vector2.zero;
                     break;
+
                 case UnityStructs.Vector3:
                     result = Vector3.zero;
                     break;
+
                 case UnityStructs.Vector4:
                     result = Vector4.zero;
                     break;
+
                 case UnityStructs.Color:
                     result = Color.black;
                     break;
+
                 case UnityStructs.Color32:
                     result = (Color32)Color.black;
                     break;
+
                 case UnityStructs.Rect:
                     result = new Rect(0, 0, 0, 0);
                     break;
@@ -897,7 +955,7 @@ namespace GRT
             return result;
         }
 
-        public static string FormatToString(UnityStructs type, object value)
+        public static string ToFormattedString(this object value, UnityStructs type)
         {
             string result;
 
@@ -906,49 +964,60 @@ namespace GRT
                 case UnityStructs.String:
                     result = (string)value;
                     break;
+
                 case UnityStructs.Boolean:
                     result = ((bool)value).ToString();
                     break;
+
                 case UnityStructs.Int32:
                     result = ((int)value).ToString();
                     break;
+
                 case UnityStructs.Single:
                     result = ((float)value).ToString("F4");
                     break;
+
                 case UnityStructs.Double:
                     result = ((double)value).ToString("F4");
                     break;
+
                 case UnityStructs.Vector2:
                     Vector2 vector2 = (Vector2)value;
                     result = vector2.ToString("F4");
                     break;
+
                 case UnityStructs.Vector3:
                     Vector3 vector3 = (Vector3)value;
                     result = vector3.ToString("F4");
                     break;
+
                 case UnityStructs.Vector4:
                     Vector4 vector4 = (Vector4)value;
                     result = vector4.ToString("F4");
                     break;
+
                 case UnityStructs.Color:
                     Color32 color = (Color)value;
                     result = color.ToString();
                     break;
+
                 case UnityStructs.Color32:
                     Color32 color32 = (Color32)value;
                     result = color32.ToString();
                     break;
+
                 case UnityStructs.Rect:
                     Rect rect = (Rect)value;
                     result = rect.ToString();
                     break;
+
                 default:
                     return value.ToString();
             }
             return result;
         }
 
-        public static string FormatToString(UnityStructs type, object value, string format)
+        public static string ToFormattedString(this object value, UnityStructs type, string format)
         {
             string result = string.Empty;
 
@@ -957,38 +1026,48 @@ namespace GRT
                 case UnityStructs.String:
                     result = (string)value;
                     break;
+
                 case UnityStructs.Boolean:
                     result = ((bool)value).ToString();
                     break;
+
                 case UnityStructs.Int32:
                     result = ((int)value).ToString();
                     break;
+
                 case UnityStructs.Single:
                     result = ((float)value).ToString(format);
                     break;
+
                 case UnityStructs.Double:
                     result = ((double)value).ToString(format);
                     break;
+
                 case UnityStructs.Vector2:
                     Vector2 vector2 = (Vector2)value;
                     result = vector2.ToString(format);
                     break;
+
                 case UnityStructs.Vector3:
                     Vector3 vector3 = (Vector3)value;
                     result = vector3.ToString(format);
                     break;
+
                 case UnityStructs.Vector4:
                     Vector4 vector4 = (Vector4)value;
                     result = vector4.ToString(format);
                     break;
+
                 case UnityStructs.Color:
                     Color32 color = (Color)value;
                     result = color.ToString(format);
                     break;
+
                 case UnityStructs.Color32:
                     Color32 color32 = (Color32)value;
                     result = color32.ToString(format);
                     break;
+
                 case UnityStructs.Rect:
                     Rect rect = (Rect)value;
                     result = rect.ToString(format);
@@ -997,6 +1076,6 @@ namespace GRT
             return result;
         }
 
-        #endregion
+        #endregion 类型转换
     }
 }

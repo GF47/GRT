@@ -28,6 +28,7 @@ namespace GRT.Data
         float GetInnerFloat(T node);
         V GetInner<V>(T node, Func<string, (bool, V)> parser, V @default = default);
 
+        IDictionary<string, string> GetAttributes(T node);
         string GetAttribute(T node, string name);
         bool GetAttributeBoolean(T node, string name);
         int GetAttributeInteger(T node, string name);

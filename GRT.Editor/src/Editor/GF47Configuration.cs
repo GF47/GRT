@@ -7,7 +7,6 @@
  **************************************************************/
 
 using GRT.Configuration;
-using GRT.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -227,7 +226,7 @@ namespace GRT.Editor
                                 {
                                     w.WriteAttributeString(ConstValues.NAME, _config[i].name);
                                     w.WriteAttributeString(ConstValues.TYPE, _config[i].type.ToString());
-                                    w.WriteAttributeString(ConstValues.VALUE, Convert.FormatToString(_config[i].type, _config[i].value));
+                                    w.WriteAttributeString(ConstValues.VALUE, _config[i].value.ToFormattedString(_config[i].type));
                                 }
                                 w.WriteEndElement();
                             }

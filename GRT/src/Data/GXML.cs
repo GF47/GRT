@@ -7,6 +7,8 @@ namespace GRT.Data
     {
         public abstract string NameOf(T node);
 
+        public abstract IDictionary<string, string> GetAttributes(T node);
+
         public abstract string GetAttribute(T node, string name);
 
         public V GetAttribute<V>(T node, string name, Func<string, (bool, V)> parser, V @default = default)
@@ -65,15 +67,15 @@ namespace GRT.Data
             var children = GetChildren(node);
             if (children != null)
             {
-                var list = new List<T>(children.Count);
+                List<T> list = null;
                 foreach (var child in children)
                 {
                     if (NameOf(child) == name)
                     {
+                        if (list == null) { list = new List<T>(); }
                         list.Add(child);
                     }
                 }
-                list.TrimExcess();
                 return list;
             }
             else
@@ -87,15 +89,15 @@ namespace GRT.Data
             var children = GetChildren(node);
             if (children != null)
             {
-                var list = new List<T>(children.Count);
+                List<T> list = null;
                 foreach (var child in children)
                 {
                     if (predicate(child))
                     {
+                        if (list == null) { list = new List<T>(); }
                         list.Add(child);
                     }
                 }
-                list.TrimExcess();
                 return list;
             }
             else

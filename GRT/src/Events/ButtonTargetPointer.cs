@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GRT.Events
 {
-    public class ButtonPointer : BasePointer
+    public class ButtonTargetPointer : TargetPointer
     {
         public string buttonName;
 

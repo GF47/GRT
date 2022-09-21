@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GRT.Events.Triggers
 {
@@ -12,10 +8,9 @@ namespace GRT.Events.Triggers
         //     where T: TriggerDecorator
         //     where V : ITrigger
         // {
-
         // }
 
-        public static bool HasInnerTrigger(this ITrigger trigger,Type type, out ITrigger innerTrigger)
+        public static bool HasInnerTrigger(this ITrigger trigger, Type type, out ITrigger innerTrigger)
         {
             var current = trigger;
             var currentType = current.GetType();

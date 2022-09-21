@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace GRT.Events
 {
-    public struct GEventArgs
+    public class GEventArgs : EventArgs
     {
         public Camera Camera { get; set; }
         public RaycastHit RaycastHit { get; set; }

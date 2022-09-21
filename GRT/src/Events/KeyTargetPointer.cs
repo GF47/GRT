@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GRT.Events
 {
-    public class KeyPointer : BasePointer
+    public class KeyTargetPointer : TargetPointer
     {
         public KeyCode key;
 
