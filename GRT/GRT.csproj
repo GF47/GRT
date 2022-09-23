@@ -98,6 +98,7 @@
     <Compile Include="src\FSM\ActionList.cs" />
     <Compile Include="src\FSM\ActionState.cs" />
     <Compile Include="src\FSM\BaseAction.cs" />
+    <Compile Include="src\FSM\BaseAssignmentAction.cs" />
     <Compile Include="src\FSM\BaseState.cs" />
     <Compile Include="src\FSM\BaseTransition.cs" />
     <Compile Include="src\FSM\CompareCondition.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="src\FSM\FailedActionCondition.cs" />
     <Compile Include="src\FSM\IAction.cs" />
     <Compile Include="src\FSM\ICondition.cs" />
+    <Compile Include="src\FSM\IReceiver.cs" />
     <Compile Include="src\FSM\LogicalCondition.cs" />
     <Compile Include="src\FSM\MiniState.cs" />
     <Compile Include="src\FSM\NormalState.cs" />
