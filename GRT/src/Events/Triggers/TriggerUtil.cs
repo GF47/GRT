@@ -14,7 +14,7 @@ namespace GRT.Events.Triggers
         {
             var current = trigger;
             var currentType = current.GetType();
-            if (currentType == type)
+            if (type.IsAssignableFrom(currentType))
             {
                 innerTrigger = current;
                 return true;
@@ -24,7 +24,7 @@ namespace GRT.Events.Triggers
             {
                 current = decorator.InnerTrigger;
                 currentType = current.GetType();
-                if (currentType == type)
+                if (type.IsAssignableFrom(currentType))
                 {
                     innerTrigger = current;
                     return true;

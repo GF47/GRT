@@ -31,16 +31,19 @@ namespace GRT.GComponents
         {
             Assert.IsNotNull(GetTemplate, $"DynamicGEntity.GetTemplate func is null, you can not clone a game object named [{TemplatePath}]");
 
-            UObject = GameObject.Instantiate(await GetTemplate(TemplatePath));
+            var template = await GetTemplate(TemplatePath);
+            UObject = GameObject.Instantiate(template);
+            UObject.name = $"{template.name} {GRandom.Get()}";
 
             // Scene 是外部指定的
-            if (!string.IsNullOrEmpty(Scene))
+            var scene = SceneManager.GetSceneByName(Scene);
+            if (scene.IsValid())
             {
-                var scene = SceneManager.GetSceneByName(Scene);
-                if (scene.IsValid())
-                {
-                    SceneManager.MoveGameObjectToScene(UObject, scene);
-                }
+                SceneManager.MoveGameObjectToScene(UObject, scene);
+            }
+            else
+            {
+                Scene = SceneManager.GetActiveScene().name;
             }
 
             // Path 是自动指定的

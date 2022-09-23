@@ -32,7 +32,7 @@ namespace GRT.GComponents
         {
             foreach (var com in entity.Components)
             {
-                if (com.GetType() == type)
+                if (type.IsAssignableFrom(com.GetType()))
                 {
                     return com;
                 }
