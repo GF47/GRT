@@ -1,0 +1,16 @@
+﻿namespace GRT.GInventory
+{
+    public interface ISkill
+    {
+        string Name { get; }
+
+        string Description { get; }
+
+        /// <summary>
+        /// 触发方式
+        /// </summary>
+        ITrigger Trigger { get; }
+
+        void Invoke(IOwner owner, IInventory inventory, IStack stack);
+    }
+}

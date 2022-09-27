@@ -9,7 +9,7 @@ namespace GRT.Events
         public static GEventSystem Current { get; private set; }
 
         private Camera _camera;
-        private IList<IPointer> _pointers;
+        private PointersLinkedList _pointers;
 
         public float distance = 100f;
         public LayerMask layer = 1 << 0;
@@ -18,7 +18,7 @@ namespace GRT.Events
         public float doubleClickThreshod = 0.5f;
 
         public Camera Camera => _camera;
-        public IList<IPointer> Pointers => _pointers;
+        public PointersLinkedList Pointers => _pointers;
         public RaycastHit LastHit { get; private set; }
         public Collider LastCollider { get; private set; }
         public virtual Vector3 PointerPosition => Input.mousePosition;
@@ -29,7 +29,7 @@ namespace GRT.Events
         private void Awake()
         {
             _camera = GetComponent<Camera>();
-            _pointers = new List<IPointer>();
+            _pointers = new PointersLinkedList();
             Blocker = new Blocker();
         }
 
@@ -42,10 +42,7 @@ namespace GRT.Events
         {
             if (Current == this) { Current = null; }
 
-            foreach (var pointer in _pointers)
-            {
-                pointer.Reset(this);
-            }
+            _pointers.ForEach(pointer => pointer.Reset(this));
         }
 
         private void Update()
@@ -85,10 +82,7 @@ namespace GRT.Events
                 }
             }
 
-            foreach (var pointer in _pointers)
-            {
-                pointer.Case(this, cased, hit);
-            }
+            _pointers.ForEach(pointer => pointer.Case(this, cased, hit));
 
             LastHit = hit;
         }
@@ -268,5 +262,97 @@ namespace GRT.Events
 
         private static GameObject _goCache;
         private static IList<Component> _comCache;
+    }
+
+    public class PointersLinkedList
+    {
+        private readonly Item _head = new Item(null);
+
+        public void ForEach(Action<IPointer> action)
+        {
+            if (action != null)
+            {
+                var current = _head.Next;
+                while (current != null)
+                {
+                    action(current.Pointer);
+                    current = current.Next;
+                }
+            }
+        }
+
+        public bool Contains(IPointer pointer)
+        {
+            if (pointer != null)
+            {
+                var current = _head.Next;
+                while (current != null)
+                {
+                    if (current.Pointer == pointer)
+                    {
+                        return true;
+                    }
+                    current = current.Next;
+                }
+            }
+            return false;
+        }
+
+        public bool Add(IPointer pointer)
+        {
+            if (pointer != null)
+            {
+                var current = _head.Next;
+                var last = _head;
+                while (current != null)
+                {
+                    if (current.Pointer == pointer)
+                    {
+                        // already exist
+                        return false;
+                    }
+
+                    last = current;
+                    current = current.Next;
+                }
+
+                last.Next = new Item(pointer);
+                return true;
+            }
+            return false;
+        }
+
+        public bool Remove(IPointer pointer)
+        {
+            if (pointer != null)
+            {
+                var current = _head.Next;
+                var last = _head;
+                while (current != null)
+                {
+                    if (current.Pointer == pointer)
+                    {
+                        last.Next = current.Next;
+                        return true;
+                    }
+
+                    last = current;
+                    current = current.Next;
+                }
+            }
+            return false;
+        }
+
+        private class Item
+        {
+            public Item Next { get; set; }
+
+            public IPointer Pointer { get; private set; }
+
+            public Item(IPointer pointer)
+            {
+                Pointer = pointer;
+            }
+        }
     }
 }
