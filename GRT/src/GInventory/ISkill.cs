@@ -11,6 +11,6 @@
         /// </summary>
         ITrigger Trigger { get; }
 
-        void Invoke(IOwner owner, IInventory inventory, IStack stack);
+        void Invoke(IOwner owner, IStack stack);
     }
 }

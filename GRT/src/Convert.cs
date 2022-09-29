@@ -409,7 +409,7 @@ namespace GRT
             string type = typeof(T).Name;
             for (int i = 0; i < strArray.Length; i++)
             {
-                object value = ConvertTo(type, strArray[i]);
+                object value = strArray[i].ConvertTo(type);
                 array[i] = value == null ? default : (T)value;
             }
             return array;

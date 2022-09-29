@@ -2,6 +2,8 @@
 {
     public interface IInventory
     {
+        void OnSelect(IStack stack, IStack old);
+
         void OnStackSpawn(IOwner owner, IStack stack);
 
         void OnStackDestroy(IStack stack);

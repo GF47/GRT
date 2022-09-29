@@ -7,7 +7,7 @@ namespace GRT.GInventory.Triggers
 {
     public class MouseButtonPointerTrigger : ITrigger
     {
-        public event Action<IOwner, IInventory, IStack> Triggering;
+        public event Action<IOwner, IStack> Triggering;
 
         public int MouseButton => _pointer.mouseButton;
 
@@ -37,7 +37,7 @@ namespace GRT.GInventory.Triggers
             }
         }
 
-        public Func<(IOwner, IInventory, IStack)> GetContext { get; set; }
+        public Func<(IOwner, IStack)> GetContext { get; set; }
 
         public MouseButtonPointerTrigger(int mouseButton = 0, float holdTime = float.NegativeInfinity, int clickCount = 1)
         {
@@ -54,8 +54,8 @@ namespace GRT.GInventory.Triggers
                 {
                     if (_holdTimeStamp + HoldTime <= Time.time)
                     {
-                        var (owner, inventory, stack) = GetContext();
-                        Triggering?.Invoke(owner, inventory, stack);
+                        var (owner, stack) = GetContext();
+                        Triggering?.Invoke(owner, stack);
                     }
                     _holdTimeStamp = float.NegativeInfinity;
                 });
@@ -65,8 +65,8 @@ namespace GRT.GInventory.Triggers
                 _pointer.PointerDoubleClicking = new GnityEvent();
                 _pointer.PointerDoubleClicking.AddListener((c, h, p) =>
                 {
-                    var (owner, inventory, stack) = GetContext();
-                    Triggering?.Invoke(owner, inventory, stack);
+                    var (owner, stack) = GetContext();
+                    Triggering?.Invoke(owner, stack);
                 });
             }
             else
@@ -74,8 +74,8 @@ namespace GRT.GInventory.Triggers
                 _pointer.PointerClicking = new GnityEvent();
                 _pointer.PointerClicking.AddListener((c, h, p) =>
                 {
-                    var (owner, inventory, stack) = GetContext();
-                    Triggering?.Invoke(owner, inventory, stack);
+                    var (owner, stack) = GetContext();
+                    Triggering?.Invoke(owner, stack);
                 });
             }
         }

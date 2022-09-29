@@ -17,17 +17,36 @@ namespace GRT
 
         public T Get<T>(string name, T @default = default)
         {
-            object v = null;
-            var has = items.ContainsKey(name) && (v = items[name]) is T;
-            return has ? (T)v : @default;
+            if (items.TryGetValue(name, out object obj))
+            {
+                return obj is T tValue ? tValue : @default;
+            }
+            else
+            {
+                return @default;
+            }
         }
 
         public bool Get<T>(string name, out T value, T @default = default)
         {
-            object v = null;
-            var has = items.ContainsKey(name) && (v = items[name]) is T;
-            value = has ? (T)v : @default;
-            return has;
+            if (items.TryGetValue(name, out object obj))
+            {
+                if (obj is T tValue)
+                {
+                    value = tValue;
+                    return true;
+                }
+                else
+                {
+                    value = @default;
+                    return false;
+                }
+            }
+            else
+            {
+                value = @default;
+                return false;
+            }
         }
 
         public void Set<T>(string name, T value)

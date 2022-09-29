@@ -18,6 +18,6 @@
             }
         }
 
-        public abstract void Invoke(IOwner owner, IInventory inventory, IStack stack);
+        public abstract void Invoke(IOwner owner, IStack stack);
     }
 }

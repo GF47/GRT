@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace GRT.GInventory
 {
-    public abstract class BaseInventory<T> : IInventory
+    public abstract class BaseInventory<T> : IInventory where T : IInventoryItem
     {
+        public event Action<IStack, IStack> Selecting;
+
         public IDictionary<IStack, T> Stacks { get; protected set; } = new Dictionary<IStack, T>();
 
         public IStack In(IStack stack)
@@ -18,9 +21,9 @@ namespace GRT.GInventory
                 }
             }
 
-            Stacks.Add(stack, GetNewInventoryItem());
-
-            stack.Quantity.ValueChanging += Quantity_ValueChanging;
+            var item = GetNewInventoryItem(stack);
+            stack.Quantity.ValueChanging += item.OnQuantityValueChange;
+            Stacks.Add(stack, item);
 
             return stack;
         }
@@ -38,12 +41,9 @@ namespace GRT.GInventory
 
         public void OnStackSpawn(IOwner owner, IStack stack)
         {
-            if (owner != null && owner.Inventory == this)
+            if (!stack.AutoSpawn())
             {
-                if (!stack.AutoSpawn())
-                {
-                    In(stack);
-                }
+                In(stack);
             }
         }
 
@@ -51,15 +51,15 @@ namespace GRT.GInventory
         {
             if (Stacks.TryGetValue(stack, out var item))
             {
-                stack.Quantity.ValueChanging -= Quantity_ValueChanging;
+                stack.Quantity.ValueChanging -= item.OnQuantityValueChange;
                 CollectInventoryItem(item);
                 Stacks.Remove(stack);
             }
         }
 
-        protected abstract void Quantity_ValueChanging(IStack stack, int newValue, int oldValue);
+        public void OnSelect(IStack stack, IStack old) => Selecting?.Invoke(stack, old);
 
-        protected abstract T GetNewInventoryItem();
+        protected abstract T GetNewInventoryItem(IStack stack);
 
         protected abstract void CollectInventoryItem(T item);
     }

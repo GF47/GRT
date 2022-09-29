@@ -6,8 +6,8 @@ namespace GRT.GInventory
     {
         bool Enabled { get; set; }
 
-        event Action<IOwner, IInventory, IStack> Triggering;
+        event Action<IOwner, IStack> Triggering;
 
-        Func<(IOwner, IInventory, IStack)> GetContext { get; set; }
+        Func<(IOwner, IStack)> GetContext { get; set; }
     }
 }
