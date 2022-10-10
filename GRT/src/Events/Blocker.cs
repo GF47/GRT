@@ -16,7 +16,16 @@ namespace GRT.Events
 
         public void Unblock(int i) => _blocks.Remove(i);
 
-        public void UpdateBlock(int i, Vector4 area) => _blocks[i] = area;
+        public void UpdateBlock(int i, Vector4 area, bool addIfNotContain = false)
+        {
+            if (addIfNotContain && !_blocks.ContainsKey(i))
+            {
+                _blocks.Add(i, area);
+                return;
+            }
+
+            _blocks[i] = area;
+        }
 
         public bool Blocking(Vector2 pos)
         {

@@ -300,7 +300,7 @@ namespace GRT.Editor
                         var valueAttribute = list[i].SelectSingleNode($"@{ConstValues.VALUE}");
                         if (valueAttribute == null) continue;
 
-                        _config.Add(new Item(nameAttribute.Value, Convert.ToUnityStructsEnum(typeAttribute.Value), Convert.ConvertTo(typeAttribute.Value, valueAttribute.Value)));
+                        _config.Add(new Item(nameAttribute.Value, Convert.ToUnityStructsEnum(typeAttribute.Value), valueAttribute.Value.ConvertTo(typeAttribute.Value)));
                     }
                 }
             }
