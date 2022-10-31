@@ -59,156 +59,133 @@ namespace GRT
                 || value == FalseString10;
         }
 
-        public static bool ToBool(this string value)
-        {
-            if (!bool.TryParse(value, out bool r))
-            {
-                return false;
-            }
-            return r;
-        }
+        public static bool ToBool(this string value, bool @default = default) => bool.TryParse(value, out bool b) ? b : @default;
 
-        public static int ToInt32(this string value)
-        {
-            if (!int.TryParse(value, out int r))
-            {
-                return 0;
-            }
-            return r;
-        }
+        public static int ToInt32(this string value, int @default = default) => int.TryParse(value, out int i) ? i : @default;
 
-        public static float ToFloat(this string value)
-        {
-            if (!float.TryParse(value, out float r))
-            {
-                return 0f;
-            }
-            return r;
-        }
+        public static float ToFloat(this string value, float @default = default) => float.TryParse(value, out float f) ? f : @default;
 
-        public static double ToDouble(this string value)
-        {
-            if (!double.TryParse(value, out double r))
-            {
-                return 0d;
-            }
-            return r;
-        }
+        public static double ToDouble(this string value, double @default = default) => double.TryParse(value, out double d) ? d : @default;
 
-        public static Vector2 ToVector2(this string value)
+        public static Vector2 ToVector2(this string value, float defaultX = default, float defaultY = default)
         {
             string[] array = SubStringInBrackets(value).Split(',');
-            float[] f = { 0f, 0f };
-            for (int i = 0; i < array.Length && i < 2; i++)
-            {
-                float.TryParse(array[i], out f[i]);
-            }
-            return new Vector2(f[0], f[1]);
+            var x = array.Length > 0 && float.TryParse(array[0], out float x_) ? x_ : defaultX;
+            var y = array.Length > 1 && float.TryParse(array[1], out float y_) ? y_ : defaultY;
+            return new Vector2(x, y);
         }
 
-        public static Vector3 ToVector3(this string value)
+        public static Vector3 ToVector3(this string value,
+            float defaultX = default,
+            float defaultY = default,
+            float defaultZ = default)
         {
             string[] array = SubStringInBrackets(value).Split(',');
-            float[] f = { 0f, 0f, 0f };
-            for (int i = 0; i < array.Length && i < 3; i++)
-            {
-                float.TryParse(array[i], out f[i]);
-            }
-            return new Vector3(f[0], f[1], f[2]);
+            var x = array.Length > 0 && float.TryParse(array[0], out float x_) ? x_ : defaultX;
+            var y = array.Length > 1 && float.TryParse(array[1], out float y_) ? y_ : defaultY;
+            var z = array.Length > 2 && float.TryParse(array[2], out float z_) ? z_ : defaultZ;
+            return new Vector3(x, y, z);
         }
 
-        public static Vector4 ToVector4(this string value)
+        public static Vector4 ToVector4(this string value,
+            float defaultX = default,
+            float defaultY = default,
+            float defaultZ = default,
+            float defaultW = default)
         {
             string[] array = SubStringInBrackets(value).Split(',');
-            float[] f = { 0f, 0f, 0f, 0f };
-            for (int i = 0; i < array.Length && i < 4; i++)
-            {
-                float.TryParse(array[i], out f[i]);
-            }
-            return new Vector4(f[0], f[1], f[2], f[3]);
+            var x = array.Length > 0 && float.TryParse(array[0], out float x_) ? x_ : defaultX;
+            var y = array.Length > 1 && float.TryParse(array[1], out float y_) ? y_ : defaultY;
+            var z = array.Length > 2 && float.TryParse(array[2], out float z_) ? z_ : defaultZ;
+            var w = array.Length > 3 && float.TryParse(array[3], out float w_) ? w_ : defaultW;
+            return new Vector4(x, y, z, w);
         }
 
         public static Color ToColorFromTags(this string tag)
         {
             switch (tag)
             {
-                case "AQUAMARINE": return new Color(112, 219, 147);
-                case "BLACK": return new Color(0, 0, 0);
-                case "BLUE": return new Color(0, 0, 255);
-                case "BLUE VIOLET": return new Color(159, 95, 159);
-                case "BROWN": return new Color(165, 42, 42);
-                case "CADET BLUE": return new Color(95, 159, 159);
-                case "CORAL": return new Color(255, 127, 0);
-                case "CORNFLOWER BLUE": return new Color(66, 66, 111);
-                case "CYAN": return new Color(0, 255, 255);
-                case "DARK GREY": return new Color(47, 47, 47);
+                case "AQUAMARINE": return new Color32(112, 219, 147, 255);
+                case "BLACK": return new Color32(0, 0, 0, 255);
+                case "BLUE": return new Color32(0, 0, 255, 255);
+                case "BLUE VIOLET": return new Color32(159, 95, 159, 255);
+                case "BROWN": return new Color32(165, 42, 42, 255);
+                case "CADET BLUE": return new Color32(95, 159, 159, 255);
+                case "CORAL": return new Color32(255, 127, 0, 255);
+                case "CORNFLOWER BLUE": return new Color32(66, 66, 111, 255);
+                case "CYAN": return new Color32(0, 255, 255, 255);
+                case "DARK GREY": return new Color32(47, 47, 47, 255);
 
-                case "DARK GREEN": return new Color(47, 79, 47);
-                case "DARK OLIVE GREEN": return new Color(79, 79, 47);
-                case "DARK ORCHID": return new Color(153, 50, 204);
-                case "DARK SLATE BLUE": return new Color(107, 35, 142);
-                case "DARK SLATE GREY": return new Color(47, 79, 79);
-                case "DARK TURQUOISE": return new Color(112, 147, 219);
-                case "DIM GREY": return new Color(84, 84, 84);
-                case "FIREBRICK": return new Color(142, 35, 35);
-                case "FOREST GREEN": return new Color(35, 142, 35);
-                case "GOLD": return new Color(204, 127, 50);
-                case "GOLDENROD": return new Color(219, 219, 112);
-                case "GREY": return new Color(128, 128, 128);
-                case "GREEN": return new Color(0, 255, 0);
-                case "GREEN YELLOW": return new Color(147, 219, 112);
-                case "INDIAN RED": return new Color(79, 47, 47);
-                case "KHAKI": return new Color(159, 159, 95);
-                case "LIGHT BLUE": return new Color(191, 216, 216);
-                case "LIGHT GREY": return new Color(192, 192, 192);
-                case "LIGHT STEEL BLUE": return new Color(143, 143, 188);
-                case "LIME GREEN": return new Color(50, 204, 50);
-                case "LIGHT MAGENTA": return new Color(255, 119, 255);
-                case "MAGENTA": return new Color(255, 0, 255);
-                case "MAROON": return new Color(142, 35, 107);
-                case "MEDIUM AQUAMARINE": return new Color(50, 204, 153);
-                case "MEDIUM GREY": return new Color(100, 100, 100);
-                case "MEDIUM BLUE": return new Color(50, 50, 204);
-                case "MEDIUM FOREST GREEN": return new Color(107, 142, 35);
-                case "MEDIUM GOLDENROD": return new Color(234, 234, 173);
-                case "MEDIUM ORCHID": return new Color(147, 112, 219);
-                case "MEDIUM SEA GREEN": return new Color(66, 111, 66);
-                case "MEDIUM SLATE BLUE": return new Color(127, 0, 255);
-                case "MEDIUM SPRING GREEN": return new Color(127, 255, 0);
-                case "MEDIUM TURQUOISE": return new Color(112, 219, 219);
-                case "MEDIUM VIOLET RED": return new Color(219, 112, 147);
-                case "MIDNIGHT BLUE": return new Color(47, 47, 79);
-                case "NAVY": return new Color(35, 35, 142);
-                case "ORANGE": return new Color(204, 50, 50);
-                case "ORANGE RED": return new Color(255, 0, 127);
-                case "ORCHID": return new Color(219, 112, 219);
-                case "PALE GREEN": return new Color(143, 188, 143);
-                case "PINK": return new Color(255, 192, 203);
-                case "PLUM": return new Color(234, 173, 234);
-                case "PURPLE": return new Color(176, 0, 255);
-                case "RED": return new Color(255, 0, 0);
-                case "SALMON": return new Color(111, 66, 66);
-                case "SEA GREEN": return new Color(35, 142, 107);
-                case "SIENNA": return new Color(142, 107, 35);
-                case "SKY BLUE": return new Color(50, 153, 204);
-                case "SLATE BLUE": return new Color(0, 127, 255);
-                case "SPRING GREEN": return new Color(0, 255, 127);
-                case "STEEL BLUE": return new Color(35, 107, 142);
-                case "TAN": return new Color(219, 147, 112);
-                case "THISTLE": return new Color(216, 191, 216);
-                case "TURQUOISE": return new Color(173, 234, 234);
-                case "VIOLET": return new Color(79, 47, 79);
-                case "VIOLET RED": return new Color(204, 50, 153);
-                case "WHEAT": return new Color(216, 216, 191);
-                case "WHITE": return new Color(255, 255, 255);
-                case "YELLOW": return new Color(255, 255, 0);
-                case "YELLOW GREEN": return new Color(153, 204, 50);
+                case "DARK GREEN": return new Color32(47, 79, 47, 255);
+                case "DARK OLIVE GREEN": return new Color32(79, 79, 47, 255);
+                case "DARK ORCHID": return new Color32(153, 50, 204, 255);
+                case "DARK SLATE BLUE": return new Color32(107, 35, 142, 255);
+                case "DARK SLATE GREY": return new Color32(47, 79, 79, 255);
+                case "DARK TURQUOISE": return new Color32(112, 147, 219, 255);
+                case "DIM GREY": return new Color32(84, 84, 84, 255);
+                case "FIREBRICK": return new Color32(142, 35, 35, 255);
+                case "FOREST GREEN": return new Color32(35, 142, 35, 255);
+                case "GOLD": return new Color32(204, 127, 50, 255);
+                case "GOLDENROD": return new Color32(219, 219, 112, 255);
+                case "GREY": return new Color32(128, 128, 128, 255);
+                case "GREEN": return new Color32(0, 255, 0, 255);
+                case "GREEN YELLOW": return new Color32(147, 219, 112, 255);
+                case "INDIAN RED": return new Color32(79, 47, 47, 255);
+                case "KHAKI": return new Color32(159, 159, 95, 255);
+                case "LIGHT BLUE": return new Color32(191, 216, 216, 255);
+                case "LIGHT GREY": return new Color32(192, 192, 192, 255);
+                case "LIGHT STEEL BLUE": return new Color32(143, 143, 188, 255);
+                case "LIME GREEN": return new Color32(50, 204, 50, 255);
+                case "LIGHT MAGENTA": return new Color32(255, 119, 255, 255);
+                case "MAGENTA": return new Color32(255, 0, 255, 255);
+                case "MAROON": return new Color32(142, 35, 107, 255);
+                case "MEDIUM AQUAMARINE": return new Color32(50, 204, 153, 255);
+                case "MEDIUM GREY": return new Color32(100, 100, 100, 255);
+                case "MEDIUM BLUE": return new Color32(50, 50, 204, 255);
+                case "MEDIUM FOREST GREEN": return new Color32(107, 142, 35, 255);
+                case "MEDIUM GOLDENROD": return new Color32(234, 234, 173, 255);
+                case "MEDIUM ORCHID": return new Color32(147, 112, 219, 255);
+                case "MEDIUM SEA GREEN": return new Color32(66, 111, 66, 255);
+                case "MEDIUM SLATE BLUE": return new Color32(127, 0, 255, 255);
+                case "MEDIUM SPRING GREEN": return new Color32(127, 255, 0, 255);
+                case "MEDIUM TURQUOISE": return new Color32(112, 219, 219, 255);
+                case "MEDIUM VIOLET RED": return new Color32(219, 112, 147, 255);
+                case "MIDNIGHT BLUE": return new Color32(47, 47, 79, 255);
+                case "NAVY": return new Color32(35, 35, 142, 255);
+                case "ORANGE": return new Color32(204, 50, 50, 255);
+                case "ORANGE RED": return new Color32(255, 0, 127, 255);
+                case "ORCHID": return new Color32(219, 112, 219, 255);
+                case "PALE GREEN": return new Color32(143, 188, 143, 255);
+                case "PINK": return new Color32(255, 192, 203, 255);
+                case "PLUM": return new Color32(234, 173, 234, 255);
+                case "PURPLE": return new Color32(176, 0, 255, 255);
+                case "RED": return new Color32(255, 0, 0, 255);
+                case "SALMON": return new Color32(111, 66, 66, 255);
+                case "SEA GREEN": return new Color32(35, 142, 107, 255);
+                case "SIENNA": return new Color32(142, 107, 35, 255);
+                case "SKY BLUE": return new Color32(50, 153, 204, 255);
+                case "SLATE BLUE": return new Color32(0, 127, 255, 255);
+                case "SPRING GREEN": return new Color32(0, 255, 127, 255);
+                case "STEEL BLUE": return new Color32(35, 107, 142, 255);
+                case "TAN": return new Color32(219, 147, 112, 255);
+                case "THISTLE": return new Color32(216, 191, 216, 255);
+                case "TURQUOISE": return new Color32(173, 234, 234, 255);
+                case "VIOLET": return new Color32(79, 47, 79, 255);
+                case "VIOLET RED": return new Color32(204, 50, 153, 255);
+                case "WHEAT": return new Color32(216, 216, 191, 255);
+                case "WHITE": return new Color32(255, 255, 255, 255);
+                case "YELLOW": return new Color32(255, 255, 0, 255);
+                case "YELLOW GREEN": return new Color32(153, 204, 50, 255);
                 default:
-                    return ColorUtility.TryParseHtmlString(tag, out var color) ? color : Color.red;
+                    return tag.ToColor(1, 0, 0, 1);
             }
         }
 
-        public static Color ToColor(this string value)
+        public static Color ToColor(this string value,
+            float defaultR = default,
+            float defaultG = default,
+            float defaultB = default,
+            float defaultA = 1f)
         {
             if (ColorUtility.TryParseHtmlString(value, out var c))
             {
@@ -216,34 +193,40 @@ namespace GRT
             }
 
             string[] array = SubStringInBrackets(value).Split(',');
-            float[] f = { 0f, 0f, 0f, 1f };
-            for (int i = 0; i < array.Length && i < 4; i++)
-            {
-                float.TryParse(array[i], out f[i]);
-            }
-            return new Color(f[0], f[1], f[2], f[3]);
+            var r = array.Length > 0 && float.TryParse(array[0], out float r_) ? r_ : defaultR;
+            var g = array.Length > 1 && float.TryParse(array[1], out float g_) ? g_ : defaultG;
+            var b = array.Length > 2 && float.TryParse(array[2], out float b_) ? b_ : defaultB;
+            var a = array.Length > 3 && float.TryParse(array[3], out float a_) ? a_ : defaultA;
+            return new Color(r, g, b, a);
         }
 
-        public static Color32 ToColor32(this string value)
+        public static Color32 ToColor32(this string value,
+            byte defaultR = default,
+            byte defaultG = default,
+            byte defaultB = default,
+            byte defaultA = 255)
+
         {
             string[] array = SubStringInBrackets(value).Split(',');
-            byte[] c = { 0, 0, 0, 255 };
-            for (int i = 0; i < array.Length && i < 4; i++)
-            {
-                byte.TryParse(array[i], out c[i]);
-            }
-            return new Color32(c[0], c[1], c[2], c[3]);
+            var r = array.Length > 0 && byte.TryParse(array[0], out var r_) ? r_ : defaultR;
+            var g = array.Length > 1 && byte.TryParse(array[1], out var g_) ? g_ : defaultG;
+            var b = array.Length > 2 && byte.TryParse(array[2], out var b_) ? b_ : defaultB;
+            var a = array.Length > 3 && byte.TryParse(array[3], out var a_) ? a_ : defaultA;
+            return new Color32(r, g, b, a);
         }
 
-        public static Rect ToRect(this string value)
+        public static Rect ToRect(this string value,
+            float defaultX = default,
+            float defaultY = default,
+            float defaultW = default,
+            float defaultH = default)
         {
             string[] array = SubStringInBrackets(value).Split(',');
-            float[] c = { 0f, 0f, 0f, 0f };
-            for (int i = 0; i < array.Length && i < 4; i++)
-            {
-                float.TryParse(array[i], out c[i]);
-            }
-            return new Rect(c[0], c[1], c[2], c[3]);
+            var x = array.Length > 0 && float.TryParse(array[0], out float x_) ? x_ : defaultX;
+            var y = array.Length > 1 && float.TryParse(array[1], out float y_) ? y_ : defaultY;
+            var w = array.Length > 2 && float.TryParse(array[2], out float w_) ? w_ : defaultW;
+            var h = array.Length > 3 && float.TryParse(array[3], out float h_) ? h_ : defaultH;
+            return new Rect(x, y, w, h);
         }
 
         public static bool TryParseVector2(this string value, out Vector2 vector)
