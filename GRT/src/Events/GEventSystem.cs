@@ -53,7 +53,7 @@ namespace GRT.Events
             RaycastHit hit = default;
 
             var pos = PointerPosition;
-            if (!(Blocker.Blocking(pos) || GlobalBlocker.Blocking(pos)))
+            if (!(OffScreen() || Blocker.Blocking(pos) || GlobalBlocker.Blocking(pos)))
             {
                 cased = Physics.Raycast(_camera.ScreenPointToRay(pos), out hit, distance, layer);
             }
@@ -85,6 +85,16 @@ namespace GRT.Events
             _pointers.ForEach(pointer => pointer.Case(this, cased, hit));
 
             LastHit = hit;
+        }
+
+        private bool OffScreen()
+        {
+            var pos = PointerPosition;
+            var area = Screen.safeArea;
+            return pos.x < area.x
+                || pos.x > area.width
+                || pos.y < area.y
+                || pos.y > area.height;
         }
 
         public static void SendPointerEnterEvent(GameObject go, Predicate<Component> predicate, Camera camera, RaycastHit hit, Vector2 pos)
