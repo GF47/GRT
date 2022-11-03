@@ -21,5 +21,7 @@ namespace GRT.Events.Triggers
             }
             set => _event = value;
         }
+
+        public GeneralizedTriggerType Type => GeneralizedTriggerType.None;
     }
 }

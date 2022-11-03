@@ -1,4 +1,5 @@
 ﻿using GRT.Events;
+using GRT.Events.Triggers;
 using UnityEngine;
 
 namespace GRT.GComponents
@@ -69,19 +70,19 @@ namespace GRT.GComponents
 
             public void OnPointerEnter(Camera camera, RaycastHit hit, Vector2 pos)
             {
-                GlobalEntering?.Invoke(GComponent, new GEventArgs(camera, hit, pos));
+                GlobalEntering?.Invoke(GComponent, new GEventArgs(camera, hit, pos, GeneralizedTriggerType.On));
                 GComponent.Entering?.Invoke(camera, hit, pos);
             }
 
             public void OnPointerExit(Camera camera, RaycastHit hit, Vector2 pos)
             {
-                GlobalExiting?.Invoke(GComponent, new GEventArgs(camera, hit, pos));
+                GlobalExiting?.Invoke(GComponent, new GEventArgs(camera, hit, pos, GeneralizedTriggerType.Off));
                 GComponent.Exiting?.Invoke(camera, hit, pos);
             }
 
             public void OnPointerHover(Camera camera, RaycastHit hit, Vector2 pos)
             {
-                GlobalHovering?.Invoke(GComponent, new GEventArgs(camera, hit, pos));
+                GlobalHovering?.Invoke(GComponent, new GEventArgs(camera, hit, pos, GeneralizedTriggerType.Keep));
                 GComponent.Hovering?.Invoke(camera, hit, pos);
             }
         }

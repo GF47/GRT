@@ -15,6 +15,7 @@ namespace GRT
         public event Action<T> Creating;
         public event Action<T> Getting;
         public event Action<T> Releasing;
+        public event Action<T> Disposing;
 
         /// <summary>
         /// 池初始化，根据传入的实例化方法来生成新的实例
@@ -101,6 +102,20 @@ namespace GRT
             {
                 Release(target, callback);
             }
+        }
+
+        /// <summary>
+        /// 清空池
+        /// </summary>
+        public void Dispose(Action<T> callback = null)
+        {
+            foreach (var target in _queue)
+            {
+                callback?.Invoke(target);
+                Disposing?.Invoke(target);
+            }
+
+            _queue.Clear();
         }
     }
 }

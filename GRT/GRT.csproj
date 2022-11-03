@@ -79,6 +79,7 @@
     <Compile Include="src\Events\NoneTargetPointer.cs" />
     <Compile Include="src\Events\TargetPointer.cs" />
     <Compile Include="src\Events\Triggers\ButtonTrigger.cs" />
+    <Compile Include="src\Events\Triggers\GeneralizedTriggerType.cs" />
     <Compile Include="src\Events\Triggers\ITrigger.cs" />
     <Compile Include="src\Events\Triggers\KeyTrigger.cs" />
     <Compile Include="src\Events\Triggers\MouseButtonTrigger.cs" />
