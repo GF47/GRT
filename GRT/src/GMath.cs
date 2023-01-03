@@ -294,6 +294,25 @@ namespace GRT
             return matrix1;
         }
 
+        public static Vector2 MatrixMultiplyVector2(this float[,] m, Vector2 v) => m.MatrixMultiplyVector3(v);
+
+        public static Vector3 MatrixMultiplyVector3(this float[,] m, Vector3 v3)
+        {
+            if (m.GetLength(0) != 3 || m.GetLength(1) != 3) { throw new ArgumentException("matrix must be 3x3"); }
+
+            var vector = new Vector3();
+            for (int i = 0; i < 3; i++)
+            {
+                var v = 0f;
+                for (int k = 0; k < 3; k++)
+                {
+                    v += m[i, k] * v3[k];
+                }
+                vector[i] = v;
+            }
+            return vector;
+        }
+
         /// <summary>
         /// 矩阵转置
         /// </summary>

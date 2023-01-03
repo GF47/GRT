@@ -16,6 +16,30 @@ namespace GRT.FSM
         private IState _currentState;
         public IState CurrentState => _currentState.ID == ExitStateID ? this : _currentState;
 
+        /// <summary>
+        /// Are you sure?
+        /// </summary>
+        public void ___SetCurrentState(int targetID)
+        {
+            if (_currentState.ID != targetID)
+            {
+                if (States.TryGetValue(targetID, out var state))
+                {
+                    _currentState.OnExit(targetID);
+                    _currentState.Reset();
+
+                    var lastID = _currentState.ID;
+
+                    _currentState = state;
+                    _currentState.OnEnter(lastID);
+                }
+                else
+                {
+                    throw new Exception($"id {targetID} is not included in the fsm");
+                }
+            }
+        }
+
         public int EntryStateID { get; set; } = Util.EntryStateID;
         public int ExitStateID { get; set; } = Util.ExitStateID;
 

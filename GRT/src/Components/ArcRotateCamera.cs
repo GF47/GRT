@@ -10,26 +10,26 @@ namespace GRT.Components
 
         #region serialized field
 
-        [SerializeField] [InspectorDisplayAs("是否为局部坐标")] private bool _isLocal;
+        [SerializeField][InspectorDisplayAs("是否为局部坐标")] private bool _isLocal;
 
-        [SerializeField] [InspectorDisplayAs("相机焦点")] private Transform _target;
+        [SerializeField][InspectorDisplayAs("相机焦点")] private Transform _target;
 
-        [SerializeField] [InspectorDisplayAs("半径最小值")] private float _lowerRadius = 10f;
-        [SerializeField] [InspectorDisplayAs("半径最大值")] private float _upperRadius = 200f;
-        [SerializeField] [InspectorDisplayAs("相机半径")] private float _radius = 100f;
-        [SerializeField] [InspectorDisplayAs("推拉速率")] private float _zoomInFactor = 20f;
+        [SerializeField][InspectorDisplayAs("半径最小值")] private float _lowerRadius = 10f;
+        [SerializeField][InspectorDisplayAs("半径最大值")] private float _upperRadius = 200f;
+        [SerializeField][InspectorDisplayAs("相机半径")] private float _radius = 100f;
+        [SerializeField][InspectorDisplayAs("推拉速率")] private float _zoomInFactor = 20f;
 
-        [SerializeField] [InspectorDisplayAs("旋转按钮")] private MouseButton _rotatingButton = MouseButton.Right;
-        [SerializeField] [InspectorDisplayAs("经速度")] private float _longitudeFactor = 1f;
-        [SerializeField] [InspectorDisplayAs("纬速度")] private float _latitudeFactor = 1f;
-        [SerializeField] [InspectorDisplayAs("纬度最小值")] private float _lowerLatitude = 10f;
-        [SerializeField] [InspectorDisplayAs("纬度最大值")] private float _upperLatitude = 80f;
-        [SerializeField] [InspectorDisplayAs("惯性持续时间")] private float _inertialDuration = 0.5f;
-        [SerializeField] [InspectorDisplayAs("惯性速率")] private float _inertialFactor = 10000f;
+        [SerializeField][InspectorDisplayAs("旋转按钮")] private MouseButton _rotatingButton = MouseButton.Right;
+        [SerializeField][InspectorDisplayAs("经速度")] private float _longitudeFactor = 1f;
+        [SerializeField][InspectorDisplayAs("纬速度")] private float _latitudeFactor = 1f;
+        [SerializeField][InspectorDisplayAs("纬度最小值")] private float _lowerLatitude = 10f;
+        [SerializeField][InspectorDisplayAs("纬度最大值")] private float _upperLatitude = 80f;
+        [SerializeField][InspectorDisplayAs("惯性持续时间")] private float _inertialDuration = 0.5f;
+        [SerializeField][InspectorDisplayAs("惯性速率")] private float _inertialFactor = 10000f;
 
-        [SerializeField] [InspectorDisplayAs("移动按钮")] private MouseButton _panningButton = MouseButton.Wheel;
-        [SerializeField] [InspectorDisplayAs("移动速率")] private float _panningFactor = 0.25f;
-        [SerializeField] [InspectorDisplayAs("仅限水平移动")] private bool _panningHorizontal = false;
+        [SerializeField][InspectorDisplayAs("移动按钮")] private MouseButton _panningButton = MouseButton.Wheel;
+        [SerializeField][InspectorDisplayAs("移动速率")] private float _panningFactor = 0.25f;
+        [SerializeField][InspectorDisplayAs("仅限水平移动")] private bool _panningHorizontal = false;
 
         #endregion serialized field
 
@@ -87,17 +87,17 @@ namespace GRT.Components
 
         #region events
 
-        public event Action onRotatingStart;
+        public event Action RotatingStart;
 
-        public event Action onRotating;
+        public event Action Rotating;
 
-        public event Action onRotatingEnd;
+        public event Action RotatingEnd;
 
-        public event Action onPanningStart;
+        public event Action PanningStart;
 
-        public event Action onPanning;
+        public event Action Panning;
 
-        public event Action onPanningEnd;
+        public event Action PanningEnd;
 
         #endregion events
 
@@ -159,6 +159,7 @@ namespace GRT.Components
             _screenPointOffset = new Vector2(Input.mousePosition.x - _lastScreenPoint.x, Input.mousePosition.y - _lastScreenPoint.y);
 
             #region 鼠标响应
+
             if (Input.GetMouseButton((int)_panningButton))
             {
                 if (Input.GetMouseButtonDown((int)_panningButton))
@@ -184,6 +185,7 @@ namespace GRT.Components
             {
                 OnRotatingEnd();
             }
+
             #endregion 鼠标响应
 
             _currentAngle = Vector2.SmoothDamp(_currentAngle, _angle, ref _palstance, _inertialDuration, _inertialFactor, Time.deltaTime);
@@ -224,10 +226,12 @@ namespace GRT.Components
                 _camera = GetComponent<Camera>();
             }
 
-            _angle = new Vector2(Mathf.Clamp(EulerAngles.x, _lowerLatitude, _upperLatitude), EulerAngles.y);
+            var x = EulerAngles.x;
+            if (x > 180f) { x -= 360f; }
+
+            _angle = new Vector2(Mathf.Clamp(x, _lowerLatitude, _upperLatitude), EulerAngles.y);
             _currentAngle = _angle;
             Rotation = Quaternion.Euler(_angle);
-
 
             if (_target != null)
             {
@@ -258,11 +262,10 @@ namespace GRT.Components
             if (_target != null)
             {
                 var direction = TargetPosition - Position;
-                var rotation = Quaternion.LookRotation(direction);
 
-                _angle = rotation.eulerAngles;
+                Rotation = Quaternion.LookRotation(direction);
+                _angle = Rotation.eulerAngles;
                 _currentAngle = _angle;
-                Rotation = rotation;
 
                 _radius = direction.magnitude;
                 _currentRadius = _radius;
@@ -304,7 +307,7 @@ namespace GRT.Components
             _angle = new Vector2(Mathf.Clamp(x, _lowerLatitude, _upperLatitude), EulerAngles.y);
             _currentAngle = _angle;
 
-            onRotatingStart?.Invoke();
+            RotatingStart?.Invoke();
         }
 
         /// <summary> 旋转 </summary>
@@ -315,13 +318,13 @@ namespace GRT.Components
                 _longitudeFactor * _screenPointOffset.x);
             _angle.x = Mathf.Clamp(_angle.x, _lowerLatitude, _upperLatitude);
 
-            onRotating?.Invoke();
+            Rotating?.Invoke();
         }
 
         /// <summary> 旋转终止 </summary>
         private void OnRotatingEnd()
         {
-            onRotatingEnd?.Invoke();
+            RotatingEnd?.Invoke();
         }
 
         /// <summary> 平移开始 </summary>
@@ -331,7 +334,7 @@ namespace GRT.Components
 
             _position = _target == null ? Position : TargetPosition;
 
-            onPanningStart?.Invoke();
+            PanningStart?.Invoke();
         }
 
         /// <summary> 平移 </summary>
@@ -341,13 +344,13 @@ namespace GRT.Components
             var offset = _camera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, _currentRadius)) - from;
             _position -= _panningFactor * offset;
 
-            onPanning?.Invoke();
+            Panning?.Invoke();
         }
 
         /// <summary> 平移终止 </summary>
         private void OnPanningEnd()
         {
-            onPanningEnd?.Invoke();
+            PanningEnd?.Invoke();
         }
 
         /// <summary>
