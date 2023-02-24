@@ -219,14 +219,14 @@ namespace GRT.Editor
                         w.Formatting = Formatting.Indented;
                         w.WriteStartDocument();
                         {
-                            w.WriteStartElement(ConstValues.ROOTNODE);
+                            w.WriteStartElement(Keywords.ROOTNODE);
                             for (int i = 0; i < _config.Count; i++)
                             {
-                                w.WriteStartElement(ConstValues.NODE);
+                                w.WriteStartElement(Keywords.NODE);
                                 {
-                                    w.WriteAttributeString(ConstValues.NAME, _config[i].name);
-                                    w.WriteAttributeString(ConstValues.TYPE, _config[i].type.ToString());
-                                    w.WriteAttributeString(ConstValues.VALUE, _config[i].value.ToFormattedString(_config[i].type));
+                                    w.WriteAttributeString(Keywords.NAME, _config[i].name);
+                                    w.WriteAttributeString(Keywords.TYPE, _config[i].type.ToString());
+                                    w.WriteAttributeString(Keywords.VALUE, _config[i].value.ToFormattedString(_config[i].type));
                                 }
                                 w.WriteEndElement();
                             }
@@ -261,7 +261,7 @@ namespace GRT.Editor
                             w.Formatting = Formatting.Indented;
                             w.WriteStartDocument();
                             {
-                                w.WriteStartElement(ConstValues.ROOTNODE);
+                                w.WriteStartElement(Keywords.ROOTNODE);
                                 w.WriteEndElement();
                             }
                             w.WriteEndDocument();
@@ -288,16 +288,16 @@ namespace GRT.Editor
                 doc.Load(_configPath);
                 XmlNode rn = doc.LastChild;
 
-                XmlNodeList list = rn.SelectNodes(ConstValues.NODE);
+                XmlNodeList list = rn.SelectNodes(Keywords.NODE);
                 if (list != null)
                 {
                     for (int i = 0; i < list.Count; i++)
                     {
-                        var nameAttribute = list[i].SelectSingleNode($"@{ConstValues.NAME}");
+                        var nameAttribute = list[i].SelectSingleNode($"@{Keywords.NAME}");
                         if (nameAttribute == null) continue;
-                        var typeAttribute = list[i].SelectSingleNode($"@{ConstValues.TYPE}");
+                        var typeAttribute = list[i].SelectSingleNode($"@{Keywords.TYPE}");
                         if (typeAttribute == null) continue;
-                        var valueAttribute = list[i].SelectSingleNode($"@{ConstValues.VALUE}");
+                        var valueAttribute = list[i].SelectSingleNode($"@{Keywords.VALUE}");
                         if (valueAttribute == null) continue;
 
                         _config.Add(new Item(nameAttribute.Value, Convert.ToUnityStructsEnum(typeAttribute.Value), valueAttribute.Value.ConvertTo(typeAttribute.Value)));

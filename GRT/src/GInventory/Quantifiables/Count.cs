@@ -4,7 +4,7 @@ namespace GRT.GInventory.Quantifiables
 {
     public class Count : IQuantifiable
     {
-        public const string TYPE = InventoryKeyword.COUNT;
+        public const string TYPE = Keywords.COUNT;
 
         public const int MAX_COUNT = 64;
 

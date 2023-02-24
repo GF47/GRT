@@ -1,6 +1,6 @@
 namespace GRT.Configuration
 {
-    public static class ConstValues
+    public static class Keywords
     {
         public const string ROOTNODE = "config";
         public const string NODE = "add";

@@ -60,7 +60,7 @@
     <Compile Include="src\BlackBoard.cs" />
     <Compile Include="src\Components\ArcRotateCamera.cs" />
     <Compile Include="src\Components\RotateTransform.cs" />
-    <Compile Include="src\Configuration\ConstValues.cs" />
+    <Compile Include="src\Configuration\Keywords.cs" />
     <Compile Include="src\Coroutine\IdleUntil.cs" />
     <Compile Include="src\Data\GXML.cs" />
     <Compile Include="src\Data\IGXML.cs" />
@@ -141,7 +141,7 @@
     <Compile Include="src\GInventory\IDefinition.cs" />
     <Compile Include="src\GInventory\IInventory.cs" />
     <Compile Include="src\GInventory\IInventoryItem.cs" />
-    <Compile Include="src\GInventory\InventoryKeyword.cs" />
+    <Compile Include="src\GInventory\Keywords.cs" />
     <Compile Include="src\GInventory\IQuantifiable.cs" />
     <Compile Include="src\GInventory\ISkill.cs" />
     <Compile Include="src\GInventory\IStack.cs" />

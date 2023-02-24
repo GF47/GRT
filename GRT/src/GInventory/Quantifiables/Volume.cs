@@ -5,7 +5,7 @@ namespace GRT.GInventory.Quantifiables
 {
     public class Volume : IQuantifiable
     {
-        public const string TYPE = InventoryKeyword.VOLUME;
+        public const string TYPE = Keywords.VOLUME;
 
         public const int MAX_VOLUME = 100;
 

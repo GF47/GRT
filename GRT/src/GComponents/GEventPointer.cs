@@ -70,19 +70,19 @@ namespace GRT.GComponents
 
             public void OnPointerEnter(Camera camera, RaycastHit hit, Vector2 pos)
             {
-                GlobalEntering?.Invoke(GComponent, new GEventArgs(camera, hit, pos, GeneralizedTriggerType.On));
+                GlobalEntering?.Invoke(GComponent, new GEventArgs() { camera = camera, raycastHit = hit, position = pos, triggerType = GeneralizedTriggerType.On });
                 GComponent.Entering?.Invoke(camera, hit, pos);
             }
 
             public void OnPointerExit(Camera camera, RaycastHit hit, Vector2 pos)
             {
-                GlobalExiting?.Invoke(GComponent, new GEventArgs(camera, hit, pos, GeneralizedTriggerType.Off));
+                GlobalExiting?.Invoke(GComponent, new GEventArgs() { camera = camera, raycastHit = hit, position = pos, triggerType = GeneralizedTriggerType.Off });
                 GComponent.Exiting?.Invoke(camera, hit, pos);
             }
 
             public void OnPointerHover(Camera camera, RaycastHit hit, Vector2 pos)
             {
-                GlobalHovering?.Invoke(GComponent, new GEventArgs(camera, hit, pos, GeneralizedTriggerType.Keep));
+                GlobalHovering?.Invoke(GComponent, new GEventArgs() { camera = camera, raycastHit = hit, position = pos, triggerType = GeneralizedTriggerType.Keep });
                 GComponent.Hovering?.Invoke(camera, hit, pos);
             }
         }

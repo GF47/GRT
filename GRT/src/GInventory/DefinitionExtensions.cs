@@ -43,8 +43,8 @@ namespace GRT.GInventory
                 Quantity = a.Quantity.Clone(realQuantity),
                 Properties = new Dictionary<string, object>()
                 {
-                    {InventoryKeyword.SCALE, a.GetScale() },
-                    {InventoryKeyword.PICK_QUANTITY, a.PickQuantity() },
+                    {Keywords.SCALE, a.GetScale() },
+                    {Keywords.PICK_QUANTITY, a.PickQuantity() },
                 },
             };
         }
@@ -56,22 +56,22 @@ namespace GRT.GInventory
         }
 
         public static Vector3 GetPosition(this IStack stack) =>
-            stack.Properties.TryGetValue(InventoryKeyword.POS, out var prop) ? (prop is Vector3 pos ? pos : Vector3.zero) : Vector3.zero;
+            stack.Properties.TryGetValue(Keywords.POS, out var prop) ? (prop is Vector3 pos ? pos : Vector3.zero) : Vector3.zero;
 
         public static Vector3 GetRotation(this IStack stack) =>
-            stack.Properties.TryGetValue(InventoryKeyword.ROT, out var prop) ? (prop is Vector3 rot ? rot : Vector3.zero) : Vector3.zero;
+            stack.Properties.TryGetValue(Keywords.ROT, out var prop) ? (prop is Vector3 rot ? rot : Vector3.zero) : Vector3.zero;
 
         public static Vector3 GetScale(this IStack stack) =>
-            stack.Properties.TryGetValue(InventoryKeyword.SCALE, out var prop) ? (prop is Vector3 scale ? scale : Vector3.zero) : Vector3.zero;
+            stack.Properties.TryGetValue(Keywords.SCALE, out var prop) ? (prop is Vector3 scale ? scale : Vector3.zero) : Vector3.zero;
 
         public static bool Instantiatable(this IStack stack) => !string.IsNullOrEmpty(stack.Model);
 
         public static bool AutoSpawn(this IStack stack) =>
             Instantiatable(stack)
-            && stack.Properties.TryGetValue(InventoryKeyword.AUTO_SPAWN, out var prop)
+            && stack.Properties.TryGetValue(Keywords.AUTO_SPAWN, out var prop)
             && (prop is bool autoSpawn ? autoSpawn : System.Convert.ToBoolean(prop));
 
         public static int PickQuantity(this IStack stack) =>
-            stack.Properties.TryGetValue(InventoryKeyword.PICK_QUANTITY, out var prop) ? (prop is int quantity ? quantity : 1) : 1;
+            stack.Properties.TryGetValue(Keywords.PICK_QUANTITY, out var prop) ? (prop is int quantity ? quantity : 1) : 1;
     }
 }

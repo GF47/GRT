@@ -1,6 +1,6 @@
 ﻿namespace GRT.GInventory
 {
-    public static class InventoryKeyword
+    public static class Keywords
     {
         public const string ITEM = "item";
         public const string NAME = "name";
