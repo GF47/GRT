@@ -32,7 +32,7 @@ namespace GRT.GComponents
                 trigger.InnerTrigger = new MouseButtonTrigger() { button = 0 };
                 trigger.Event.AddListener((camera, hit, position) =>
                 {
-                    ClickingAt?.Invoke(this, new GEventArgs(camera, hit, position, GeneralizedTriggerType.OneShot));
+                    ClickingAt?.Invoke(this, new GEventArgs() { camera = camera, raycastHit = hit, position = position, triggerType = GeneralizedTriggerType.OneShot });
                     Clicking?.Invoke(camera, hit, position);
                 });
             }

@@ -112,8 +112,8 @@ namespace Assets.InventoryUI
                     Quantity = new Count(nCount),
                     Properties = new Dictionary<string, object>(),
                 };
-                stack.SetProperty(InventoryKeyword.AUTO_SPAWN, nAutoSpawn);
-                stack.SetProperty(InventoryKeyword.POS, Random.insideUnitSphere);
+                stack.SetProperty(Keywords.AUTO_SPAWN, nAutoSpawn);
+                stack.SetProperty(Keywords.POS, Random.insideUnitSphere);
 
                 stacks.Add(stack);
             }
