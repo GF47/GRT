@@ -101,10 +101,21 @@ namespace GRT.Editor.Inspectors
                 if (point.Position != position)
                 {
                     point.Position = position;
+                    EditorUtility.SetDirty(_target);
                 }
                 EditorGUILayout.BeginHorizontal();
-                point.type = (BezierPoint.PointType)EditorGUILayout.EnumPopup("Type", point.type);
-                point.Percent = EditorGUILayout.FloatField("Percent", point.Percent);
+                BezierPoint.PointType type = (BezierPoint.PointType)EditorGUILayout.EnumPopup("Type", point.type);
+                if (point.type != type)
+                {
+                    point.type = type;
+                    EditorUtility.SetDirty(_target);
+                }
+                float percent = EditorGUILayout.FloatField("Percent", point.Percent);
+                if (point.Percent != percent)
+                {
+                    point.Percent = percent;
+                    EditorUtility.SetDirty(_target);
+                }
                 EditorGUILayout.EndHorizontal();
                 EditorGUILayout.BeginHorizontal();
                 if (selected)
