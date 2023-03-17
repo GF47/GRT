@@ -22,9 +22,9 @@ namespace GRT
         public static Vector2 Size = new Vector2(Screen.width / 2f, Screen.height / 16f);
         public static Vector2 Pos = new Vector2(16f, 16f);
 
-        public static void Init()
+        public static void Init(GameObject root)
         {
-            _instance = RootGameObject.AddComponent<GLog>();
+            _instance = root.AddComponent<GLog>();
             _instance._infos = new string[4];
         }
 

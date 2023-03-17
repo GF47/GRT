@@ -35,9 +35,9 @@ namespace GRT
             _context = SynchronizationContext.Current;
         }
 
-        public static void Init()
+        public static void Init(GameObject root)
         {
-            _instance = RootGameObject.AddComponent<Coroutines>();
+            _instance = root.AddComponent<Coroutines>();
             Debug.Log($"{nameof(Coroutines)} loaded on {_instance.name}");
         }
 

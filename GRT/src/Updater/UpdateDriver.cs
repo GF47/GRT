@@ -5,9 +5,9 @@ namespace GRT.Updater
 {
     public class UpdateDriver : MonoBehaviour
     {
-        public static void Init()
+        public static void Init(GameObject root)
         {
-            _instance = RootGameObject.AddComponent<UpdateDriver>();
+            _instance = root.AddComponent<UpdateDriver>();
             Debug.Log($"{nameof(UpdateDriver)} loaded on {_instance.name}");
         }
 
