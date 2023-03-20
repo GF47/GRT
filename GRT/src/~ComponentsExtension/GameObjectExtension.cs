@@ -5,14 +5,16 @@ namespace GRT
 
     public static class GameObjectExtension
     {
-        public static (string, string) GetRootAndSubLayer(string path)
+        public static (string, string) SplitRootAndSubLayer(string path)
         {
             var index = path.IndexOf('/');
-            if (index > -1)
-            {
-                return (path.Substring(0, index), path.Substring(index + 1));
-            }
-            return (path, string.Empty);
+            return index > -1 ? (path.Substring(0, index), path.Substring(index + 1)) : (path, string.Empty);
+        }
+
+        public static (string, string) SplitSceneAndGameObjectPath(string str)
+        {
+            var i = str.IndexOf(':');
+            return i > 0 ? (str.Substring(0, i), str.Substring(i + 1)) : (string.Empty, str);
         }
 
         public static GameObject FindIn(string scene, string path)
@@ -20,7 +22,7 @@ namespace GRT
             var s = UnityEngine.SceneManagement.SceneManager.GetSceneByName(scene);
             if (s.IsValid())
             {
-                var (rootName, subPath) = GetRootAndSubLayer(path);
+                var (rootName, subPath) = SplitRootAndSubLayer(path);
 
                 var rootGameObjects = s.GetRootGameObjects();
                 var root = Array.Find(rootGameObjects, go => go.name == rootName);
@@ -138,9 +140,12 @@ namespace GRT
         public static T FindInParent<T>(this GameObject target) where T : Component
         {
             if (target == null) return null;
-            T component = target.GetComponent<T>();
 
-            if (component == null)
+            if (target.TryGetComponent<T>(out var component))
+            {
+                return component;
+            }
+            else
             {
                 Transform t = target.transform.parent;
 
@@ -149,8 +154,9 @@ namespace GRT
                     component = t.gameObject.GetComponent<T>();
                     t = t.parent;
                 }
+
+                return component;
             }
-            return component;
         }
 
         /// <summary> 设置物体的层级，包括子物体
