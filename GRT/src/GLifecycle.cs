@@ -164,12 +164,12 @@ namespace GRT
                 }
             }
 #else
-            if (life is IStartable startable)
+            if (life is IGStartable startable)
             {
-                startable.Start();
+                startable.GStart();
             }
 
-            if (life is IScope scope)
+            if (life is IGScope scope)
             {
                 foreach (var lifeInScope in scope.Lives)
                 {
@@ -197,12 +197,12 @@ namespace GRT
                 }
             }
 #else
-            if (life is ITickable tickable)
+            if (life is IGTickable tickable)
             {
-                tickable.Tick();
+                tickable.GTick();
             }
 
-            if (life is IScope scope)
+            if (life is IGScope scope)
             {
                 foreach (var lifeInScope in scope.Lives)
                 {
@@ -230,7 +230,7 @@ namespace GRT
                 disposeable.GDispose();
             }
 #else
-            if (life is IScope scope)
+            if (life is IGScope scope)
             {
                 foreach (var lifeInScope in scope.Lives)
                 {
