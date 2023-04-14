@@ -71,6 +71,7 @@
     <Compile Include="src\Editor\GF47RenderCubeMapEditor.cs" />
     <Compile Include="src\Editor\GF47ReplaceAssetsAccordingToMetaFile.cs" />
     <Compile Include="src\Editor\GF47Ruler.cs" />
+    <Compile Include="src\Editor\GF47SelectFromFile.cs" />
     <Compile Include="src\Editor\GF47Serialization.cs" />
     <Compile Include="src\Editor\GF47SkyBoxGenerator.cs" />
     <Compile Include="src\Editor\GF47SnapSettings.cs" />
