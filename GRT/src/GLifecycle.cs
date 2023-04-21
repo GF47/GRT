@@ -27,7 +27,7 @@ namespace GRT
 
     public interface IGTickable : IGLife
     {
-        void GTick();
+        void GTick(float delta);
     }
 
     public interface IGDisposable : IGLife
@@ -57,6 +57,76 @@ namespace GRT
     {
     }
 
+    public class MiniGLifecycle : IGStartable, IGDisposable
+    {
+        public event Action<IGStartable> Starting;
+
+        public event Action<IGDisposable> Disposing;
+
+#if FAST_BUT_SHIT
+        public IGStartable AsGStartable => this;
+        public virtual IGTickable AsGTickable => null;
+        public IGDisposable AsGDisposable => this;
+        public virtual IGScope AsGScope => null;
+#endif
+
+        public bool IsAlive { get; protected set; }
+
+        public IGScope Scope { get; set; }
+
+        public virtual void GStart()
+        {
+            IsAlive = true;
+            Starting?.Invoke(this);
+        }
+
+        public virtual void GDispose()
+        {
+            Disposing?.Invoke(this);
+            IsAlive = false;
+        }
+    }
+
+    public class MiniGLifecycleWithTick : MiniGLifecycle, IGTickable
+    {
+        public event Action<IGTickable, float> Ticking;
+
+#if FAST_BUT_SHIT
+        public override IGTickable AsGTickable => this;
+#endif
+
+        public void GTick(float delta)
+        {
+            Ticking?.Invoke(this, delta);
+        }
+    }
+
+    public class MiniGLifecycleWithScope : MiniGLifecycle, IGScope
+    {
+#if FAST_BUT_SHIT
+        public override IGScope AsGScope => this;
+#endif
+
+        public ICollection<IGLife> Lives { get; protected set; } = new List<IGLife>();
+    }
+
+    public class MiniGLifecycleWithTickAndScope : MiniGLifecycle, IGTickable, IGScope
+    {
+        public event Action<IGTickable, float> Ticking;
+
+#if FAST_BUT_SHIT
+        public override IGTickable AsGTickable => this;
+        public override IGScope AsGScope => this;
+#endif
+
+        public ICollection<IGLife> Lives { get; protected set; } = new List<IGLife>();
+
+        public void GTick(float delta)
+        {
+            Ticking?.Invoke(this, delta);
+        }
+    }
+
     public class MiniGLifecycle<T> : IGStartable<T>, IGDisposable<T>
     {
         public event Action<IGStartable<T>> Starting;
@@ -65,13 +135,12 @@ namespace GRT
 
         public T Object { get; protected set; }
 
+#if FAST_BUT_SHIT
         public IGStartable AsGStartable => this;
-
         public virtual IGTickable AsGTickable => null;
-
         public IGDisposable AsGDisposable => this;
-
         public virtual IGScope AsGScope => null;
+#endif
 
         public bool IsAlive { get; protected set; }
 
@@ -99,23 +168,27 @@ namespace GRT
 
     public class MiniGLifecycleWithTick<T> : MiniGLifecycle<T>, IGTickable<T>
     {
-        public event Action<IGTickable<T>> Ticking;
+        public event Action<IGTickable<T>, float> Ticking;
 
+#if FAST_BUT_SHIT
         public override IGTickable AsGTickable => this;
+#endif
 
         public MiniGLifecycleWithTick(T obj) : base(obj)
         {
         }
 
-        public void GTick()
+        public void GTick(float delta)
         {
-            Ticking?.Invoke(this);
+            Ticking?.Invoke(this, delta);
         }
     }
 
     public class MiniGLifecycleWithScope<T> : MiniGLifecycle<T>, IGScope
     {
+#if FAST_BUT_SHIT
         public override IGScope AsGScope => this;
+#endif
 
         public ICollection<IGLife> Lives { get; protected set; } = new List<IGLife>();
 
@@ -126,11 +199,12 @@ namespace GRT
 
     public class MiniGLifecycleWithTickAndScope<T> : MiniGLifecycle<T>, IGTickable<T>, IGScope
     {
-        public event Action<IGTickable<T>> Ticking;
+        public event Action<IGTickable<T>, float> Ticking;
 
+#if FAST_BUT_SHIT
         public override IGTickable AsGTickable => this;
-
         public override IGScope AsGScope => this;
+#endif
 
         public ICollection<IGLife> Lives { get; private set; } = new List<IGLife>();
 
@@ -138,22 +212,18 @@ namespace GRT
         {
         }
 
-        public void GTick()
+        public void GTick(float delta)
         {
-            Ticking?.Invoke(this);
+            Ticking?.Invoke(this, delta);
         }
     }
 
-    public static class GLifeExtensions
+    public static class GLifecycleExtensions
     {
         public static void LifeStart(this IGLife life)
         {
 #if FAST_BUT_SHIT
-            var startable = life.AsGStartable;
-            if (startable != null)
-            {
-                startable.GStart();
-            }
+            life.AsGStartable?.GStart();
 
             var scope = life.AsGScope;
             if (scope != null)
@@ -179,34 +249,30 @@ namespace GRT
 #endif
         }
 
-        public static void LifeTick(this IGLife life)
+        public static void LifeTick(this IGLife life, float delta)
         {
 #if FAST_BUT_SHIT
-            var tickable = life.AsGTickable;
-            if (tickable != null)
-            {
-                tickable.GTick();
-            }
+            life.AsGTickable?.GTick(delta);
 
             var scope = life.AsGScope;
             if (scope != null)
             {
                 foreach (var lifeInScope in scope.Lives)
                 {
-                    lifeInScope.LifeTick();
+                    lifeInScope.LifeTick(delta);
                 }
             }
 #else
             if (life is IGTickable tickable)
             {
-                tickable.GTick();
+                tickable.GTick(delta);
             }
 
             if (life is IGScope scope)
             {
                 foreach (var lifeInScope in scope.Lives)
                 {
-                    lifeInScope.LifeTick();
+                    lifeInScope.LifeTick(delta);
                 }
             }
 #endif
@@ -224,11 +290,7 @@ namespace GRT
                 }
             }
 
-            var disposeable = life.AsGDisposable;
-            if (disposeable != null)
-            {
-                disposeable.GDispose();
-            }
+            life.AsGDisposable?.GDispose();
 #else
             if (life is IGScope scope)
             {
@@ -247,24 +309,27 @@ namespace GRT
 
         public static void AttachTo(this IGLife life, IGScope scope, bool autoStart = true)
         {
-            if (life.Scope != null)
-            {
-                life.Scope.Lives.Remove(life);
-            }
+            life.Scope?.Lives.Remove(life);
             scope.Lives.Add(life);
             life.Scope = scope;
+
             if (autoStart && scope.IsAlive && !life.IsAlive)
             {
                 life.LifeStart();
             }
         }
 
-        public static void Detach(this IGLife life)
+        public static void Detach(this IGLife life, bool autoDispose = false)
         {
             if (life.Scope != null)
             {
                 life.Scope.Lives.Remove(life);
                 life.Scope = null;
+
+                if (life.IsAlive && autoDispose)
+                {
+                    life.LifeDispose();
+                }
             }
         }
 
@@ -275,22 +340,6 @@ namespace GRT
                 if (life is T target && (predicate == null || predicate(target)))
                 {
                     return target;
-                }
-            }
-
-            return default;
-        }
-
-        public static T FindInScope<T>(this IGLife life, Predicate<T> predicate = null) where T : IGLife
-        {
-            if (life.Scope != null)
-            {
-                foreach (var lifeInScope in life.Scope.Lives)
-                {
-                    if (lifeInScope is T target && (predicate == null || predicate(target)))
-                    {
-                        return target;
-                    }
                 }
             }
 
@@ -314,6 +363,36 @@ namespace GRT
             {
                 return default;
             }
+        }
+
+        public static object Find(this IGScope scope, Type type)
+        {
+            foreach (var life in scope.Lives)
+            {
+                if (life.GetType() == type)
+                {
+                    return life;
+                }
+            }
+
+            return default;
+        }
+
+        public static object FindInParent(this IGLife life, Type type)
+        {
+            if (life.Scope != null)
+            {
+                if (life.Scope.GetType() == type)
+                {
+                    return life.Scope;
+                }
+                else
+                {
+                    return life.Scope.FindInParent(type);
+                }
+            }
+
+            return default;
         }
     }
 }
