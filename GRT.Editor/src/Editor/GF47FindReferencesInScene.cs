@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEditor;
 
-namespace GF47.Editor
+namespace GRT.Editor
 {
     public class GF47FindReferencesInScene : ScriptableObject
     {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEditor;
@@ -11,7 +10,7 @@ namespace GRT.Editor
 {
     public class GF47SelectFromFile : EditorWindow
     {
-        private static GUILayoutOption _height = GUILayout.Height(32f);
+        private static readonly GUILayoutOption _height = GUILayout.Height(32f);
         private string _pattern = @"(?<=entity\s+path\s*=\s*"")((.+):)?(.+?)(?="")";
         private int _sceneGroup = 2;
         private int _pathGroup = 3;
