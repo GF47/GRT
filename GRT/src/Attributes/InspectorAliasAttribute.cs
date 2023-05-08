@@ -1,5 +1,5 @@
 ﻿/***************************************************************
- *@File Name     : InspectorDisplayAsAttribute.cs
+ *@File Name     : InspectorAliasAttribute.cs
  *@Author        : GF47
  *@Description   : 字段自定义 Inspector 显示
  *@Data          : 2020-11-10 15:22
@@ -12,9 +12,9 @@ namespace GRT
     using UnityEngine;
 
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-    public class InspectorDisplayAsAttribute : PropertyAttribute
+    public class InspectorAliasAttribute : PropertyAttribute
     {
-        public InspectorDisplayAsAttribute(string name, string tips = "")
+        public InspectorAliasAttribute(string name, string tips = "")
         {
             Name = name;
             Tips = tips;

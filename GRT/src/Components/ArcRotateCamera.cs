@@ -10,26 +10,26 @@ namespace GRT.Components
 
         #region serialized field
 
-        [SerializeField][InspectorDisplayAs("是否为局部坐标")] private bool _isLocal;
+        [SerializeField][InspectorAlias("是否为局部坐标")] private bool _isLocal;
 
-        [SerializeField][InspectorDisplayAs("相机焦点")] private Transform _target;
+        [SerializeField][InspectorAlias("相机焦点")] private Transform _target;
 
-        [SerializeField][InspectorDisplayAs("半径最小值")] private float _lowerRadius = 10f;
-        [SerializeField][InspectorDisplayAs("半径最大值")] private float _upperRadius = 200f;
-        [SerializeField][InspectorDisplayAs("相机半径")] private float _radius = 100f;
-        [SerializeField][InspectorDisplayAs("推拉速率")] private float _zoomInFactor = 20f;
+        [SerializeField][InspectorAlias("半径最小值")] private float _lowerRadius = 10f;
+        [SerializeField][InspectorAlias("半径最大值")] private float _upperRadius = 200f;
+        [SerializeField][InspectorAlias("相机半径")] private float _radius = 100f;
+        [SerializeField][InspectorAlias("推拉速率")] private float _zoomInFactor = 20f;
 
-        [SerializeField][InspectorDisplayAs("旋转按钮")] private MouseButton _rotatingButton = MouseButton.Right;
-        [SerializeField][InspectorDisplayAs("经速度")] private float _longitudeFactor = 1f;
-        [SerializeField][InspectorDisplayAs("纬速度")] private float _latitudeFactor = 1f;
-        [SerializeField][InspectorDisplayAs("纬度最小值")] private float _lowerLatitude = 10f;
-        [SerializeField][InspectorDisplayAs("纬度最大值")] private float _upperLatitude = 80f;
-        [SerializeField][InspectorDisplayAs("惯性持续时间")] private float _inertialDuration = 0.5f;
-        [SerializeField][InspectorDisplayAs("惯性速率")] private float _inertialFactor = 10000f;
+        [SerializeField][InspectorAlias("旋转按钮")] private MouseButton _rotatingButton = MouseButton.Right;
+        [SerializeField][InspectorAlias("经速度")] private float _longitudeFactor = 1f;
+        [SerializeField][InspectorAlias("纬速度")] private float _latitudeFactor = 1f;
+        [SerializeField][InspectorAlias("纬度最小值")] private float _lowerLatitude = 10f;
+        [SerializeField][InspectorAlias("纬度最大值")] private float _upperLatitude = 80f;
+        [SerializeField][InspectorAlias("惯性持续时间")] private float _inertialDuration = 0.5f;
+        [SerializeField][InspectorAlias("惯性速率")] private float _inertialFactor = 10000f;
 
-        [SerializeField][InspectorDisplayAs("移动按钮")] private MouseButton _panningButton = MouseButton.Wheel;
-        [SerializeField][InspectorDisplayAs("移动速率")] private float _panningFactor = 0.25f;
-        [SerializeField][InspectorDisplayAs("仅限水平移动")] private bool _panningHorizontal = false;
+        [SerializeField][InspectorAlias("移动按钮")] private MouseButton _panningButton = MouseButton.Wheel;
+        [SerializeField][InspectorAlias("移动速率")] private float _panningFactor = 0.25f;
+        [SerializeField][InspectorAlias("仅限水平移动")] private bool _panningHorizontal = false;
 
         #endregion serialized field
 

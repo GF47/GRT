@@ -5,13 +5,13 @@ namespace GRT.Components
 {
     public class RotateTransform : MonoBehaviour
     {
-        [InspectorDisplayAs("旋转按钮")] [SerializeField] private int _rotateButton = 1;
-        [InspectorDisplayAs("经速度")] [SerializeField] private float _longitudeFactor = 1f;
-        [InspectorDisplayAs("纬速度")] [SerializeField] private float _latitudeFactor = 1f;
-        [InspectorDisplayAs("纬度最小值")] [SerializeField] private float _lowerLatitude = 10f;
-        [InspectorDisplayAs("纬度最大值")] [SerializeField] private float _upperLatitude = 80f;
-        [InspectorDisplayAs("惯性持续时间")] [SerializeField] private float _inertialDuration = 0.5f;
-        [InspectorDisplayAs("惯性速率")] [SerializeField] private float _inertialFactor = 10000f;
+        [InspectorAlias("旋转按钮")] [SerializeField] private int _rotateButton = 1;
+        [InspectorAlias("经速度")] [SerializeField] private float _longitudeFactor = 1f;
+        [InspectorAlias("纬速度")] [SerializeField] private float _latitudeFactor = 1f;
+        [InspectorAlias("纬度最小值")] [SerializeField] private float _lowerLatitude = 10f;
+        [InspectorAlias("纬度最大值")] [SerializeField] private float _upperLatitude = 80f;
+        [InspectorAlias("惯性持续时间")] [SerializeField] private float _inertialDuration = 0.5f;
+        [InspectorAlias("惯性速率")] [SerializeField] private float _inertialFactor = 10000f;
 
         /// <summary> /// 旋转按钮 /// </summary>
         public int RotateButton { get => _rotateButton; set => _rotateButton = value; }

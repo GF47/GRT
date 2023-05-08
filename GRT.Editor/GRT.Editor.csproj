@@ -82,7 +82,7 @@
     <Compile Include="src\Editor\Inspectors\BezierSplineInspector.cs" />
     <Compile Include="src\Editor\Inspectors\EnumFlagsAttributeDrawer.cs" />
     <Compile Include="src\Editor\Inspectors\InheritFromAttributeDrawer.cs" />
-    <Compile Include="src\Editor\Inspectors\InspectorDisplayAsDrawer.cs" />
+    <Compile Include="src\Editor\Inspectors\InspectorAliasDrawer.cs" />
     <Compile Include="src\Editor\Inspectors\TweenDriverInspector.cs" />
   </ItemGroup>
   <ItemGroup />
