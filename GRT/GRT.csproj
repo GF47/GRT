@@ -44,7 +44,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\AssetBundles\ABConfig.cs" />
     <Compile Include="src\AssetBundles\Old\ABConfig.cs" />
     <Compile Include="src\AssetBundles\Old\ABDownloader.cs" />
     <Compile Include="src\AssetBundles\Old\ABItem.cs" />

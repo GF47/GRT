@@ -49,7 +49,7 @@ namespace GRT.Editor
                 for (int i = 0; i < reflectedFields.Length; i++)
                 {
                     FieldInfo info = reflectedFields[i];
-                    if (InheritedFromIEnumerable(info.FieldType))
+                    if (typeof(IList).IsAssignableFrom(info.FieldType))
                     {
                         infos.Add(info);
                     }
@@ -78,16 +78,6 @@ namespace GRT.Editor
                     }
                 }
             }
-        }
-
-        private static bool InheritedFromIEnumerable(Type type)
-        {
-            Type baseType = type.GetInterface("System.Collections.IList");
-            if (baseType != null)
-            {
-                return true;
-            }
-            return false;
         }
 
         private static int LimitIn(int t, int min, int max)

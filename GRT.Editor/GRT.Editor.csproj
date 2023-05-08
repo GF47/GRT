@@ -71,12 +71,14 @@
     <Compile Include="src\Editor\GF47RenderCubeMapEditor.cs" />
     <Compile Include="src\Editor\GF47ReplaceAssetsAccordingToMetaFile.cs" />
     <Compile Include="src\Editor\GF47Ruler.cs" />
+    <Compile Include="src\Editor\GF47SelectedSetOperation.cs" />
     <Compile Include="src\Editor\GF47SelectFromFile.cs" />
     <Compile Include="src\Editor\GF47Serialization.cs" />
     <Compile Include="src\Editor\GF47SkyBoxGenerator.cs" />
     <Compile Include="src\Editor\GF47SnapSettings.cs" />
     <Compile Include="src\Editor\GF47SortArray.cs" />
     <Compile Include="src\Editor\GF47TransfomCopyPanel.cs" />
+    <Compile Include="src\Editor\GPie\GPiePanel.cs" />
     <Compile Include="src\Editor\Inspectors\BezierSplineInspector.cs" />
     <Compile Include="src\Editor\Inspectors\EnumFlagsAttributeDrawer.cs" />
     <Compile Include="src\Editor\Inspectors\InheritFromAttributeDrawer.cs" />

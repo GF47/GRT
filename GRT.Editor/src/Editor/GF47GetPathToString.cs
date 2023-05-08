@@ -114,20 +114,19 @@ namespace GRT.Editor
         /**
          * 获取场景物体的层级
          */
-        [MenuItem("GameObject/GetTransformLayout", false, 0)]
-        private static void GetTransformLayout()
+        [MenuItem("GameObject/Get Transform Hierarchy", false, 0)]
+        private static void GetTransformHierarchy()
         {
             var trans = Selection.activeTransform;
-            var layout = string.Empty;
             if (trans != null)
             {
-                layout = trans.name;
+                var hierarchy = trans.name;
                 while ((trans = trans.parent) != null)
                 {
-                    layout = trans.name + '/' + layout;
+                    hierarchy = trans.name + '/' + hierarchy;
                 }
-                UnityEngine.Debug.Log(layout);
-                EditorGUIUtility.systemCopyBuffer = layout;
+                UnityEngine.Debug.Log(hierarchy);
+                EditorGUIUtility.systemCopyBuffer = hierarchy;
             }
             else
             {
