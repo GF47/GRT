@@ -84,6 +84,7 @@
     <Compile Include="src\Editor\Inspectors\InheritFromAttributeDrawer.cs" />
     <Compile Include="src\Editor\Inspectors\InspectorAliasDrawer.cs" />
     <Compile Include="src\Editor\Inspectors\TweenDriverInspector.cs" />
+    <Compile Include="src\Editor\TextureCompresser.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
