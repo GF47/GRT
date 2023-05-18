@@ -23,9 +23,16 @@ namespace GRT.Editor.Inspectors
             {
                 _realAttribute = attribute as InspectorAliasAttribute;
             }
-            label.text = _realAttribute.Name;
-            label.tooltip = _realAttribute.Tips;
-            EditorGUI.PropertyField(position, property, label);
+            if (property.propertyType != SerializedPropertyType.String && property.isArray)
+            {
+                EditorGUI.LabelField(position, $"[ {property.name} ] can not add the Inspector Alias attribute");
+            }
+            else
+            {
+                label.text = _realAttribute.Name;
+                label.tooltip = _realAttribute.Tips;
+                EditorGUI.PropertyField(position, property, label);
+            }
         }
     }
 }

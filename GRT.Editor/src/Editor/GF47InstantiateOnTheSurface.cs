@@ -1,72 +1,49 @@
-﻿using System;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace GRT.Editor
 {
     public class GF47InstantiateOnTheSurface : ScriptableObject
     {
-        private static GF47InstantiateOnTheSurface _instance;
+        private static bool _isActive;
 
         /// <summary>
         /// 需要被复制的物体
         /// </summary>
-        private RectTransform _template;
-        /// <summary>
-        /// 新生成的物体的缩放值
-        /// </summary>
-        private float _scale = 0.1f;
+        private static Transform _template;
 
         /// <summary>
         /// 屏幕绘制的面片顶点
         /// </summary>
-        private Vector3[] _points = new Vector3[8];
+        private static readonly Vector3[] _points = new Vector3[8];
 
-        private string _name = string.Empty;
-        private Vector3 _up = Vector3.up;
+        private static Vector3 _up = Vector3.up;
 
         /// <summary>
         /// 鼠标左键拖拽时，最近的点
         /// </summary>
-        private Vector3 _closestPoint;
+        private static Vector3 _closestPoint;
 
-        private Vector3 _lastPoint;
-        private float _width, _height;
+        private static Vector3 _lastPoint;
 
-        [MenuItem("Tools/GF47 Editor/Transform/Instantiate On The Surface")]
+        [MenuItem("Tools/GF47 Editor/Instantiate On The Surface")]
         public static void Init()
         {
-            if (_instance != null)
-            {
-                DestroyImmediate(_instance);
-            }
-            _instance = CreateInstance<GF47InstantiateOnTheSurface>();
-        }
-
-        private void Awake()
-        {
-            SceneView.duringSceneGui += SceneView_duringSceneGui;
-            var tempGO = new GameObject("~~~ temp Mesh Collider ~~~");
-            tempGO.hideFlags = HideFlags.DontSave;
-            _tempMeshCollider = tempGO.AddComponent<MeshCollider>();
-
-            Tools.pivotMode = PivotMode.Pivot;
-            Tools.pivotRotation = PivotRotation.Local;
-        }
-
-        private void OnDestroy()
-        {
             SceneView.duringSceneGui -= SceneView_duringSceneGui;
-            if (_tempMeshCollider != null)
+            _isActive = !_isActive;
+            if (_isActive)
             {
-                DestroyImmediate(_tempMeshCollider.gameObject);
+                SceneView.duringSceneGui += SceneView_duringSceneGui;
+
+                Tools.pivotMode = PivotMode.Pivot;
+                Tools.pivotRotation = PivotRotation.Local;
             }
         }
 
-        private void SceneView_duringSceneGui(SceneView scene)
+        private static void SceneView_duringSceneGui(SceneView scene)
         {
             Handles.BeginGUI();
-            GUILayout.BeginArea(new Rect(0, 0, 320, 152), EditorStyles.textArea);
+            GUILayout.BeginArea(new Rect(0, 0, 320, 90), EditorStyles.textArea);
 
             DrawSceneViewUI();
 
@@ -76,22 +53,20 @@ namespace GRT.Editor
             DrawSceneHandle(scene);
         }
 
-        private void DrawSceneViewUI()
+        private static void DrawSceneViewUI()
         {
             GUILayout.BeginHorizontal();
             {
                 GUILayout.Label("Instantiate On The Surface\npress [Left Control + Left Mouse Button]\nto pick surface", EditorStyles.boldLabel, GUILayout.Width(270f));
                 if (GUILayout.Button("X", GUILayout.Height(20f)))
                 {
-                    DestroyImmediate(_instance);
+                    SceneView.duringSceneGui -= SceneView_duringSceneGui;
+                    _isActive = false;
                 }
             }
             GUILayout.EndHorizontal();
 
-            _template = EditorGUILayout.ObjectField("Template", _template, typeof(RectTransform), true) as RectTransform;
-            _scale = Math.Max(EditorGUILayout.FloatField("Instantiate Scale", _scale), 0.01f);
-
-            SetTargetMesh(EditorGUILayout.ObjectField("Target Mesh Filter", _targetMesh, typeof(MeshFilter), true) as MeshFilter);
+            _template = EditorGUILayout.ObjectField("Template", _template, typeof(Transform), true) as Transform;
 
             if (GUILayout.Button("Replace"))
             {
@@ -108,33 +83,26 @@ namespace GRT.Editor
                     normal += Vector3.Cross(_points[5] - _points[4], _points[7] - _points[6]);
                     normal /= 2f;
 
-                    var led = GameObject.Instantiate(_template, pos, Quaternion.LookRotation(normal, _up));
-                    led.name = _name + "_LED";
-                    led.localScale = _scale * Vector3.one;
-                    led.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _width / _scale);
-                    led.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _height / _scale);
+                    var led = Instantiate(_template, pos, Quaternion.LookRotation(normal, _up));
+                    led.name = _template.name + "_Clone";
 
                     Undo.RegisterCreatedObjectUndo(led.gameObject, "instantiate on the surface");
-                    Selection.activeGameObject = led.gameObject;
-                    SetTargetMesh(null);
                 }
             }
-
-            GUILayout.BeginHorizontal();
-            {
-                if (GUILayout.Button("Set Width")) { _width = Vector3.Distance(_lastPoint, _closestPoint); Debug.LogWarning($"Set Width [{_width}]"); }
-                if (GUILayout.Button("Set Height")) { _height = Vector3.Distance(_lastPoint, _closestPoint); Debug.LogWarning($"Set Height [{_height}]"); }
-            }
-            GUILayout.EndHorizontal();
         }
 
-        private void DrawSceneHandle(SceneView scene)
+        private static void DrawSceneHandle(SceneView scene)
         {
             HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
 
-            if (IsPicking(Event.current))
+            if (IsPicking(Event.current) && Selection.activeGameObject != null)
             {
-                Pick(scene);
+                var mpos = Event.current.mousePosition;
+                mpos.y = scene.camera.pixelHeight - mpos.y;
+                var ray = scene.camera.ScreenPointToRay(mpos);
+
+                Pick(ray, Selection.activeGameObject);
+                scene.Repaint();
             }
 
             if (IsDraging(Event.current))
@@ -153,7 +121,6 @@ namespace GRT.Editor
                         closestDistance = d;
                     }
                 }
-                // var closestPoint = HandleUtility.ClosestPointToPolyLine(_triangles);
                 var distance = Vector3.Distance(closest, _closestPoint);
                 if (distance > 1e-2f) { _lastPoint = _closestPoint; _closestPoint = closest; }
 
@@ -162,35 +129,23 @@ namespace GRT.Editor
 
             Handles.color = Color.yellow;
             Handles.DrawPolyLine(_points);
-
-            Handles.color = Color.blue;
-            Handles.DotHandleCap(0, _lastPoint, Quaternion.identity, 0.05f * HandleUtility.GetHandleSize(_lastPoint), EventType.Repaint);
-            Handles.color = Color.red;
-            Handles.DotHandleCap(0, _closestPoint, Quaternion.identity, 0.05f * HandleUtility.GetHandleSize(_closestPoint), EventType.Repaint);
         }
 
-        private Mesh _mesh;
-        private int _triangleIndex;
-        private void Pick(SceneView scene)
+        private static int _triangleIndex;
+
+        private static void Pick(Ray ray, GameObject go)
         {
-            var mpos = Event.current.mousePosition;
-            mpos.y = scene.camera.pixelHeight - mpos.y;
-            var ray = scene.camera.ScreenPointToRay(mpos);
-            if (Physics.Raycast(ray, out var hit))
+            var meshFilter = go.GetComponent<MeshFilter>();
+            if (meshFilter != null && meshFilter.sharedMesh != null)
             {
-                if (hit.collider is MeshCollider mc)
+                var mesh = meshFilter.sharedMesh;
+                var transform = go.transform;
+                if (GF47AlignWithSurface.IntersectRayMesh(ray, mesh, transform.localToWorldMatrix, out var hit))
                 {
-                    if (_mesh != mc.sharedMesh)
-                    {
-                        _mesh = mc.sharedMesh;
-                        _triangleIndex = -1;
+                    _up = transform.up;
 
-                        _name = (mc == _tempMeshCollider ? _targetMesh.gameObject : mc.gameObject).name;
-                        _up = hit.transform.up;
-                    }
-
-                    var vertices = _mesh.vertices;
-                    var triangles = _mesh.triangles;
+                    var vertices = mesh.vertices;
+                    var triangles = mesh.triangles;
                     if (_triangleIndex != hit.triangleIndex)
                     {
                         _triangleIndex = hit.triangleIndex;
@@ -200,56 +155,19 @@ namespace GRT.Editor
                         _points[3] = _points[7];
 
                         var index = _triangleIndex * 3;
-                        var matrix = hit.transform.localToWorldMatrix;
+                        var matrix = transform.localToWorldMatrix;
 
                         _points[7] = matrix.MultiplyPoint3x4(vertices[triangles[index]]);
                         _points[4] = matrix.MultiplyPoint3x4(vertices[triangles[index++]]);
                         _points[5] = matrix.MultiplyPoint3x4(vertices[triangles[index++]]);
                         _points[6] = matrix.MultiplyPoint3x4(vertices[triangles[index]]);
-
-                        scene.Repaint();
                     }
 
                     return;
                 }
             }
-            _mesh = null;
+
             _triangleIndex = -1;
-        }
-
-
-        // TODO 如果目标本身带有 BoxCollider 等其他非 MeshCollider 则会出问题
-        // 解决办法：滚蛋。
-        private MeshFilter _targetMesh; // 如果当前鼠标所在物体没有MeshCollider，则射线无法获取顶点和三角形，所以需要手动生成一个MeshCollider
-        private MeshCollider _tempMeshCollider; // 随 _instance 生成和销毁
-        private void SetTargetMesh(MeshFilter target)
-        {
-            if (target != _targetMesh)
-            {
-                _targetMesh = target;
-
-                if (_targetMesh != null)
-                {
-                    _tempMeshCollider.transform.SetPositionAndRotation(_targetMesh.transform.position, _targetMesh.transform.rotation);
-                    _tempMeshCollider.transform.localScale = _targetMesh.transform.lossyScale;
-
-                    var targetCollider = _targetMesh.GetComponent<Collider>();
-                    if (targetCollider is MeshCollider)
-                    {
-                        // 如果物体本身已经有MeshCollider了，则不需要手动生成，否则自动生成一个
-                        _tempMeshCollider.sharedMesh = null;
-                    }
-                    else
-                    {
-                        _tempMeshCollider.sharedMesh = _targetMesh.sharedMesh;
-                    }
-                    // Debug.LogWarning($"{_targetMesh.name} has a collider but not a mesh collider, please resolve it");
-                }
-                else
-                {
-                    _tempMeshCollider.sharedMesh = null;
-                }
-            }
         }
 
         #region Key & Mouse
@@ -279,9 +197,6 @@ namespace GRT.Editor
             && e.button == 0
             && (e.type == EventType.MouseDrag || e.type == EventType.MouseDown);
 
-        private static bool IsCtrlUp(Event e) => e.keyCode == KeyCode.LeftControl && e.type == EventType.KeyUp;
-        private static bool IsDragingUp(Event e) => e.button == 0 && e.type == EventType.MouseUp;
-
-        #endregion
+        #endregion Key & Mouse
     }
 }
