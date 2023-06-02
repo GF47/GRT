@@ -143,7 +143,10 @@ namespace Assets.InventoryUI
 
             public override void Invoke(IOwner owner, IStack stack)
             {
-                Debug.Log($"{owner} use {stack.Name} and said: {Message}");
+                if (IsReady)
+                {
+                    Debug.Log($"{owner} use {stack.Name} and said: {Message}");
+                }
             }
         }
     }

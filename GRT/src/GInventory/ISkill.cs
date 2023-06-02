@@ -6,6 +6,8 @@
 
         string Description { get; }
 
+        bool IsReady { get; }
+
         /// <summary>
         /// 触发方式
         /// </summary>

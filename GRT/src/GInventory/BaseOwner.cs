@@ -27,7 +27,10 @@ namespace GRT.GInventory
                     {
                         foreach (var skill in oldStack.Skills)
                         {
-                            skill.Trigger.Enabled = false;
+                            if (skill.Trigger != null)
+                            {
+                                skill.Trigger.Enabled = false;
+                            }
                         }
                     }
 
@@ -35,7 +38,10 @@ namespace GRT.GInventory
                     {
                         foreach (var skill in _currentStack.Skills)
                         {
-                            skill.Trigger.Enabled = true;
+                            if (skill.Trigger != null)
+                            {
+                                skill.Trigger.Enabled = true;
+                            }
                         }
                     }
 
@@ -64,7 +70,10 @@ namespace GRT.GInventory
 
                 foreach (var skill in stack.Definition.Skills)
                 {
-                    skill.Trigger.GetContext = () => (this, CurrentStack);
+                    if (skill.Trigger != null)
+                    {
+                        skill.Trigger.GetContext = () => (this, CurrentStack);
+                    }
                 }
 
                 stack.Spawn(this);

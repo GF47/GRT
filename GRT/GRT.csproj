@@ -171,6 +171,7 @@
     <Compile Include="src\Geometry\Line.cs" />
     <Compile Include="src\Geometry\Utilities.cs" />
     <Compile Include="src\GMath.cs" />
+    <Compile Include="src\IGFormattable.cs" />
     <Compile Include="src\Ioc\Container.cs" />
     <Compile Include="src\IPercent.cs" />
     <Compile Include="src\IProjecter01.cs" />

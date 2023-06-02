@@ -37,15 +37,21 @@ namespace GRT.GInventory
                 a.Quantity.SetValue(a, 0);
             }
 
+            var properties = new Dictionary<string, object>();
+            foreach (var pair in a.Properties)
+            {
+                // 按理说除了位置和旋转都应该深拷贝下来
+                if (pair.Key != Keywords.POS && pair.Key != Keywords.ROT && pair.Key != Keywords.AUTO_SPAWN)
+                {
+                    properties.Add(pair.Key, pair.Value);
+                }
+            }
+
             return new BaseStack()
             {
                 Definition = a.Definition,
                 Quantity = a.Quantity.Clone(realQuantity),
-                Properties = new Dictionary<string, object>()
-                {
-                    {Keywords.SCALE, a.GetScale() },
-                    {Keywords.PICK_QUANTITY, a.PickQuantity() },
-                },
+                Properties = properties,
             };
         }
 
@@ -54,6 +60,9 @@ namespace GRT.GInventory
             if (stack.Properties.ContainsKey(name)) { stack.Properties[name] = value; }
             else { stack.Properties.Add(name, value); }
         }
+
+        public static object GetProperty(this IStack stack, string name) =>
+            stack.Properties.TryGetValue(name, out var value) ? value : null;
 
         public static Vector3 GetPosition(this IStack stack) =>
             stack.Properties.TryGetValue(Keywords.POS, out var prop) ? (prop is Vector3 pos ? pos : Vector3.zero) : Vector3.zero;

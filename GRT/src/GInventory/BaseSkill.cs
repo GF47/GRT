@@ -8,13 +8,18 @@
 
         public string Description { get; set; }
 
+        public virtual bool IsReady { get => true; }
+
         public ITrigger Trigger
         {
             get => _trigger;
             set
             {
                 _trigger = value;
-                _trigger.Triggering += Invoke;
+                if (_trigger != null)
+                {
+                    _trigger.Triggering += Invoke;
+                }
             }
         }
 
