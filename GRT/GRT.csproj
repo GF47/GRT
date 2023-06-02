@@ -136,7 +136,7 @@
     <Compile Include="src\GInventory\BaseStack.cs" />
     <Compile Include="src\GInventory\BaseWorld.cs" />
     <Compile Include="src\GInventory\BaseWorldObject.cs" />
-    <Compile Include="src\GInventory\DefinitionExtensions.cs" />
+    <Compile Include="src\GInventory\StackExtensions.cs" />
     <Compile Include="src\GInventory\IDefinition.cs" />
     <Compile Include="src\GInventory\IInventory.cs" />
     <Compile Include="src\GInventory\IInventoryItem.cs" />
