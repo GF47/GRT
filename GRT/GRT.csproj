@@ -97,6 +97,7 @@
     <Compile Include="src\FSM\ActionChain.cs" />
     <Compile Include="src\FSM\ActionList.cs" />
     <Compile Include="src\FSM\ActionState.cs" />
+    <Compile Include="src\FSM\ApproximatelyEqualCondition.cs" />
     <Compile Include="src\FSM\BaseAction.cs" />
     <Compile Include="src\FSM\BaseAssignmentAction.cs" />
     <Compile Include="src\FSM\BaseState.cs" />
