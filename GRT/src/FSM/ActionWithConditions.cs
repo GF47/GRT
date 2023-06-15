@@ -4,27 +4,13 @@ namespace GRT.FSM
 {
     public class ActionWithConditions : IAction
     {
+        protected bool completed;
+
         public ICollection<ICondition> Conditions { get; }
 
         public ICollection<IAction> Actions { get; }
 
-        public bool Completed
-        {
-            get
-            {
-                if (Conditions != null)
-                {
-                    foreach (var action in Actions)
-                    {
-                        if (!action.Completed)
-                        {
-                            return false;
-                        }
-                    }
-                }
-                return true;
-            }
-        }
+        public bool Completed => completed;
 
         public ActionWithConditions(ICollection<ICondition> conditions, ICollection<IAction> actions)
         {
@@ -45,17 +31,26 @@ namespace GRT.FSM
                 }
             }
 
-            foreach (var action in Actions)
+            completed = true;
+            if (Actions != null)
             {
-                if (!action.Completed)
+                foreach (var action in Actions)
                 {
-                    action.Invoke();
+                    if (!action.Completed)
+                    {
+                        completed = false;
+                        action.Invoke();
+                    }
                 }
             }
         }
 
         public void Reset()
         {
+            completed = false;
+
+            if (Actions == null) { return; }
+
             foreach (var action in Actions)
             {
                 action.Reset();
@@ -64,6 +59,8 @@ namespace GRT.FSM
 
         public void Start()
         {
+            if (Actions == null) { return; }
+
             foreach (var action in Actions)
             {
                 action.Start();
