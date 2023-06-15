@@ -17,9 +17,12 @@ namespace GRT.FSM
                 var ok = InnerCondition == null || InnerCondition.OK;
 
                 var actions = ok ? SucceedActions : FailedActions;
-                foreach (var action in actions)
+                if (actions != null)
                 {
-                    ExecuteAction(this, action);
+                    foreach (var action in actions)
+                    {
+                        ExecuteAction(this, action);
+                    }
                 }
 
                 return ok;
