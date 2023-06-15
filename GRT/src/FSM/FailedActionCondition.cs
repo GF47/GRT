@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace GRT.FSM
 {
+    [Obsolete("Use the Condition With Action")]
     public abstract class FailedActionCondition : ICondition
     {
         public ICollection<IAction> FailedActions { get; set; }

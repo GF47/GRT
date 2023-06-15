@@ -2,20 +2,20 @@
 
 namespace GRT.FSM
 {
-    public class ActionChain : BaseAction
+    public class ActionChain : IAction
     {
         private int _indicator;
 
         public IList<IAction> Chain { get; }
 
-        public override bool Completed => Chain.Count == 0 || Chain[Chain.Count - 1].Completed;
+        public bool Completed => Chain.Count == 0 || Chain[Chain.Count - 1].Completed;
 
         public ActionChain(IList<IAction> actions)
         {
             Chain = actions ?? new List<IAction>();
         }
 
-        public override void Invoke()
+        public void Invoke()
         {
             if (_indicator < Chain.Count)
             {
@@ -29,7 +29,7 @@ namespace GRT.FSM
             }
         }
 
-        public override void Reset()
+        public void Reset()
         {
             _indicator = 0;
             foreach (var acton in Chain)
@@ -38,7 +38,7 @@ namespace GRT.FSM
             }
         }
 
-        public override void Start()
+        public void Start()
         {
             if (_indicator < Chain.Count)
             {

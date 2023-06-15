@@ -2,11 +2,11 @@
 
 namespace GRT.FSM
 {
-    public class ActionList : BaseAction
+    public class ActionList : IAction
     {
         public IList<IAction> List { get; }
 
-        public override bool Completed
+        public bool Completed
         {
             get
             {
@@ -23,7 +23,7 @@ namespace GRT.FSM
             List = actions ?? new List<IAction>();
         }
 
-        public override void Invoke()
+        public void Invoke()
         {
             foreach (var action in List)
             {
@@ -34,7 +34,7 @@ namespace GRT.FSM
             }
         }
 
-        public override void Reset()
+        public void Reset()
         {
             foreach (var action in List)
             {
@@ -42,7 +42,7 @@ namespace GRT.FSM
             }
         }
 
-        public override void Start()
+        public void Start()
         {
             foreach (var action in List)
             {
