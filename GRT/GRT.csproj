@@ -97,13 +97,13 @@
     <Compile Include="src\FSM\ActionChain.cs" />
     <Compile Include="src\FSM\ActionList.cs" />
     <Compile Include="src\FSM\ActionState.cs" />
-    <Compile Include="src\FSM\ActionWithCondition.cs" />
+    <Compile Include="src\FSM\ActionWithConditions.cs" />
     <Compile Include="src\FSM\ApproximatelyEqualCondition.cs" />
     <Compile Include="src\FSM\BaseAction.cs" />
     <Compile Include="src\FSM\BaseState.cs" />
     <Compile Include="src\FSM\BaseTransition.cs" />
     <Compile Include="src\FSM\CompareCondition.cs" />
-    <Compile Include="src\FSM\ConditionWithAction.cs" />
+    <Compile Include="src\FSM\ConditionWithActions.cs" />
     <Compile Include="src\FSM\DelegateCondition.cs" />
     <Compile Include="src\FSM\FailedActionCondition.cs" />
     <Compile Include="src\FSM\IAction.cs" />
