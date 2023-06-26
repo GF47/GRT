@@ -21,10 +21,10 @@ namespace GRT.Editor
         private class Item
         {
             public string name;
-            public Convert.UnityStructs type;
+            public GConvert.UnityStructs type;
             public object value;
 
-            public Item(string name, Convert.UnityStructs type, object value)
+            public Item(string name, GConvert.UnityStructs type, object value)
             {
                 this.name = name;
                 this.type = type;
@@ -98,58 +98,58 @@ namespace GRT.Editor
                     _config[i].name = tmpName;
                 }
 
-                Convert.UnityStructs tmpType = (Convert.UnityStructs)EditorGUILayout.EnumPopup(_config[i].type, GUILayout.Width(100f));
+                GConvert.UnityStructs tmpType = (GConvert.UnityStructs)EditorGUILayout.EnumPopup(_config[i].type, GUILayout.Width(100f));
                 if (tmpType != _config[i].type)
                 {
                     // _dirtyItems.Add(i);
                     _config[i].type = tmpType;
-                    _config[i].value = Convert.GetDefaultValue(_config[i].type);
+                    _config[i].value = GConvert.GetDefaultValue(_config[i].type);
                 }
 
                 object tmpValue = null;
                 switch (_config[i].type)
                 {
-                    case Convert.UnityStructs.String:
+                    case GConvert.UnityStructs.String:
                         tmpValue = EditorGUILayout.TextField((string)_config[i].value);
                         break;
 
-                    case Convert.UnityStructs.Boolean:
+                    case GConvert.UnityStructs.Boolean:
                         tmpValue = EditorGUILayout.Toggle((bool)_config[i].value);
                         break;
 
-                    case Convert.UnityStructs.Int32:
+                    case GConvert.UnityStructs.Int32:
                         tmpValue = EditorGUILayout.IntField((int)_config[i].value);
                         break;
 
-                    case Convert.UnityStructs.Single:
+                    case GConvert.UnityStructs.Single:
                         tmpValue = EditorGUILayout.FloatField((float)_config[i].value);
                         break;
 
-                    case Convert.UnityStructs.Double:
+                    case GConvert.UnityStructs.Double:
                         tmpValue = EditorGUILayout.DoubleField((double)_config[i].value);
                         break;
 
-                    case Convert.UnityStructs.Vector2:
+                    case GConvert.UnityStructs.Vector2:
                         tmpValue = EditorGUILayout.Vector2Field(string.Empty, (Vector2)_config[i].value);
                         break;
 
-                    case Convert.UnityStructs.Vector3:
+                    case GConvert.UnityStructs.Vector3:
                         tmpValue = EditorGUILayout.Vector3Field(string.Empty, (Vector3)_config[i].value);
                         break;
 
-                    case Convert.UnityStructs.Vector4:
+                    case GConvert.UnityStructs.Vector4:
                         tmpValue = EditorGUILayout.Vector4Field(string.Empty, (Vector4)_config[i].value);
                         break;
 
-                    case Convert.UnityStructs.Color:
+                    case GConvert.UnityStructs.Color:
                         tmpValue = EditorGUILayout.ColorField((Color)_config[i].value);
                         break;
 
-                    case Convert.UnityStructs.Color32:
+                    case GConvert.UnityStructs.Color32:
                         tmpValue = EditorGUILayout.ColorField((Color32)_config[i].value);
                         break;
 
-                    case Convert.UnityStructs.Rect:
+                    case GConvert.UnityStructs.Rect:
                         tmpValue = EditorGUILayout.RectField((Rect)_config[i].value);
                         break;
                 }
@@ -174,7 +174,7 @@ namespace GRT.Editor
 
                 if (_insertItem > -1)
                 {
-                    _config.Insert(i, new Item("new", Convert.UnityStructs.String, string.Empty));
+                    _config.Insert(i, new Item("new", GConvert.UnityStructs.String, string.Empty));
                     _insertItem = -1;
                 }
 
@@ -190,7 +190,7 @@ namespace GRT.Editor
 
             if (GUILayout.Button("添加", EditorStyles.miniButtonLeft))
             {
-                _config.Add(new Item("new", Convert.UnityStructs.String, string.Empty));
+                _config.Add(new Item("new", GConvert.UnityStructs.String, string.Empty));
             }
             if (GUILayout.Button("保存", EditorStyles.miniButtonMid))
             {
@@ -226,7 +226,7 @@ namespace GRT.Editor
                                 {
                                     w.WriteAttributeString(Keywords.NAME, _config[i].name);
                                     w.WriteAttributeString(Keywords.TYPE, _config[i].type.ToString());
-                                    w.WriteAttributeString(Keywords.VALUE, _config[i].value.ToFormattedString(_config[i].type));
+                                    w.WriteAttributeString(Keywords.VALUE, GConvert.ToFormattedString(_config[i].value, _config[i].type));
                                 }
                                 w.WriteEndElement();
                             }
@@ -300,7 +300,7 @@ namespace GRT.Editor
                         var valueAttribute = list[i].SelectSingleNode($"@{Keywords.VALUE}");
                         if (valueAttribute == null) continue;
 
-                        _config.Add(new Item(nameAttribute.Value, Convert.ToUnityStructsEnum(typeAttribute.Value), valueAttribute.Value.ConvertTo(typeAttribute.Value)));
+                        _config.Add(new Item(nameAttribute.Value, GConvert.ToUnityStructsEnum(typeAttribute.Value), valueAttribute.Value.ConvertTo(typeAttribute.Value)));
                     }
                 }
             }

@@ -1,10 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace GRT.GComponents
 {
     /// <summary>
     /// 组件, 实现自定义功能
     /// </summary>
+    [Obsolete("see GRT.GEC")]
     public interface IGComponent
     {
         /// <summary>

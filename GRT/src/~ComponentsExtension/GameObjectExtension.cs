@@ -2,29 +2,45 @@ namespace GRT
 {
     using System;
     using UnityEngine;
+    using UnityEngine.SceneManagement;
 
     public static class GameObjectExtension
     {
         public static (string, string) SplitRootAndSubLayer(string path)
         {
             var index = path.IndexOf('/');
-            return index > -1 ? (path.Substring(0, index), path.Substring(index + 1)) : (path, string.Empty);
+            return index > -1 ? (path.Substring(0, index), path.Substring(index + 1)) : (path, null);
         }
 
         public static (string, string) SplitSceneAndGameObjectPath(string str)
         {
             var i = str.IndexOf(':');
-            return i > 0 ? (str.Substring(0, i), str.Substring(i + 1)) : (string.Empty, str);
+            return i > 0 ? (str.Substring(0, i), str.Substring(i + 1)) : (null, str);
         }
 
-        public static GameObject FindIn(string scene, string path)
+        public static bool IsSameGameObjectLocation(string locationA, string locationB)
         {
-            var s = UnityEngine.SceneManagement.SceneManager.GetSceneByName(scene);
-            if (s.IsValid())
+            var (sceneA, pathA) = SplitSceneAndGameObjectPath(locationA);
+            var (sceneB, pathB) = SplitSceneAndGameObjectPath(locationB);
+
+            if (pathA != pathB)
+            {
+                return false;
+            }
+
+            var activeScene = SceneManager.GetActiveScene().name;
+            return sceneA == sceneB || (string.IsNullOrEmpty(sceneA) && sceneB == activeScene) || (sceneA == activeScene && string.IsNullOrEmpty(pathB));
+        }
+
+        public static GameObject FindIn(string sceneName, string path) => FindIn(SceneManager.GetSceneByName(sceneName), path);
+
+        public static GameObject FindIn(Scene scene, string path)
+        {
+            if (scene.IsValid())
             {
                 var (rootName, subPath) = SplitRootAndSubLayer(path);
 
-                var rootGameObjects = s.GetRootGameObjects();
+                var rootGameObjects = scene.GetRootGameObjects();
                 var root = Array.Find(rootGameObjects, go => go.name == rootName);
                 if (root != null)
                 {
@@ -42,7 +58,7 @@ namespace GRT
                     }
                 }
             }
-            Debug.LogWarning($"there is not a game object called [{path}] in scene [{scene}]");
+            Debug.LogWarning($"there is not a game object called [{path}] in scene [{scene.name}]");
             return null;
         }
 

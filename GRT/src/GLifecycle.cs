@@ -115,11 +115,11 @@ namespace GRT
         public override IGScope AsGScope => this;
 #endif
 
-        public ICollection<IGLife> Lives { get; protected set; } = new List<IGLife>();
+        ICollection<IGLife> IGScope.Lives { get; } = new List<IGLife>();
 
         protected IDictionary<IGLife, bool> PendingLives { get; set; } = new Dictionary<IGLife, bool>();
 
-        public void Attach(IGLife life)
+        void IGScope.Attach(IGLife life)
         {
             if (PendingLives.ContainsKey(life))
             {
@@ -131,7 +131,7 @@ namespace GRT
             }
         }
 
-        public void Detach(IGLife life)
+        void IGScope.Detach(IGLife life)
         {
             if (PendingLives.ContainsKey(life))
             {
@@ -143,7 +143,7 @@ namespace GRT
             }
         }
 
-        public void ResolvePendingLives()
+        void IGScope.ResolvePendingLives()
         {
             if (PendingLives.Count == 0) { return; }
 
@@ -153,11 +153,11 @@ namespace GRT
                 var isAttach = pair.Value;
                 if (isAttach)
                 {
-                    Lives.Add(life);
+                    ((IGScope)this).Lives.Add(life);
                 }
                 else
                 {
-                    Lives.Remove(life);
+                    ((IGScope)this).Lives.Remove(life);
                 }
             }
 
@@ -174,7 +174,7 @@ namespace GRT
         public override IGScope AsGScope => this;
 #endif
 
-        public ICollection<IGLife> Lives { get; protected set; } = new List<IGLife>();
+        ICollection<IGLife> IGScope.Lives { get; } = new List<IGLife>();
 
         protected IDictionary<IGLife, bool> PendingLives { get; set; } = new Dictionary<IGLife, bool>();
 
@@ -183,7 +183,7 @@ namespace GRT
             Ticking?.Invoke(this, delta);
         }
 
-        public void Attach(IGLife life)
+        void IGScope.Attach(IGLife life)
         {
             if (PendingLives.ContainsKey(life))
             {
@@ -195,7 +195,7 @@ namespace GRT
             }
         }
 
-        public void Detach(IGLife life)
+        void IGScope.Detach(IGLife life)
         {
             if (PendingLives.ContainsKey(life))
             {
@@ -207,7 +207,7 @@ namespace GRT
             }
         }
 
-        public void ResolvePendingLives()
+        void IGScope.ResolvePendingLives()
         {
             if (PendingLives.Count == 0) { return; }
 
@@ -217,11 +217,11 @@ namespace GRT
                 var isAttach = pair.Value;
                 if (isAttach)
                 {
-                    Lives.Add(life);
+                    ((IGScope)this).Lives.Add(life);
                 }
                 else
                 {
-                    Lives.Remove(life);
+                    ((IGScope)this).Lives.Remove(life);
                 }
             }
 
@@ -292,7 +292,7 @@ namespace GRT
         public override IGScope AsGScope => this;
 #endif
 
-        public ICollection<IGLife> Lives { get; protected set; } = new List<IGLife>();
+        ICollection<IGLife> IGScope.Lives { get; } = new List<IGLife>();
 
         protected IDictionary<IGLife, bool> PendingLives { get; set; } = new Dictionary<IGLife, bool>();
 
@@ -300,7 +300,7 @@ namespace GRT
         {
         }
 
-        public void Attach(IGLife life)
+        void IGScope.Attach(IGLife life)
         {
             if (PendingLives.ContainsKey(life))
             {
@@ -312,7 +312,7 @@ namespace GRT
             }
         }
 
-        public void Detach(IGLife life)
+        void IGScope.Detach(IGLife life)
         {
             if (PendingLives.ContainsKey(life))
             {
@@ -324,7 +324,7 @@ namespace GRT
             }
         }
 
-        public void ResolvePendingLives()
+        void IGScope.ResolvePendingLives()
         {
             if (PendingLives.Count == 0) { return; }
 
@@ -334,11 +334,11 @@ namespace GRT
                 var isAttach = pair.Value;
                 if (isAttach)
                 {
-                    Lives.Add(life);
+                    ((IGScope)this).Lives.Add(life);
                 }
                 else
                 {
-                    Lives.Remove(life);
+                    ((IGScope)this).Lives.Remove(life);
                 }
             }
 
@@ -355,7 +355,7 @@ namespace GRT
         public override IGScope AsGScope => this;
 #endif
 
-        public ICollection<IGLife> Lives { get; private set; } = new List<IGLife>();
+        ICollection<IGLife> IGScope.Lives { get;} = new List<IGLife>();
 
         protected IDictionary<IGLife, bool> PendingLives { get; set; } = new Dictionary<IGLife, bool>();
 
@@ -368,7 +368,7 @@ namespace GRT
             Ticking?.Invoke(this, delta);
         }
 
-        public void Attach(IGLife life)
+        void IGScope.Attach(IGLife life)
         {
             if (PendingLives.ContainsKey(life))
             {
@@ -380,7 +380,7 @@ namespace GRT
             }
         }
 
-        public void Detach(IGLife life)
+        void IGScope.Detach(IGLife life)
         {
             if (PendingLives.ContainsKey(life))
             {
@@ -392,7 +392,7 @@ namespace GRT
             }
         }
 
-        public void ResolvePendingLives()
+        void IGScope.ResolvePendingLives()
         {
             if (PendingLives.Count == 0) { return; }
 
@@ -402,11 +402,11 @@ namespace GRT
                 var isAttach = pair.Value;
                 if (isAttach)
                 {
-                    Lives.Add(life);
+                    ((IGScope)this).Lives.Add(life);
                 }
                 else
                 {
-                    Lives.Remove(life);
+                    ((IGScope)this).Lives.Remove(life);
                 }
             }
 

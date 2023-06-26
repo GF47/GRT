@@ -1,8 +1,11 @@
-﻿namespace GRT.GComponents
+﻿using System;
+
+namespace GRT.GComponents
 {
     /// <summary>
     /// 延迟绑定接口, 通常系统加载后需要等待Unity场景初始化完毕, 所以需要延迟等待
     /// </summary>
+    [Obsolete("see GRT.GEC")]
     public interface ILazyBindable
     {
         /// <summary>

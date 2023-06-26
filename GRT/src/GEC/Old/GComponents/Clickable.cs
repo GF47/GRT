@@ -1,5 +1,6 @@
 ﻿using GRT.Events;
 using GRT.Events.Triggers;
+using System;
 using UnityEngine;
 
 namespace GRT.GComponents
@@ -7,6 +8,7 @@ namespace GRT.GComponents
     /// <summary>
     /// 可点击组件
     /// </summary>
+    [Obsolete("see GRT.GEC")]
     public class Clickable : IGComponent
     {
         public delegate void ClickableHandler(Clickable sender, GEventArgs e);

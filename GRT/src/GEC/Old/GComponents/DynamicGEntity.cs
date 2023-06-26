@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 
 namespace GRT.GComponents
 {
+    [Obsolete("see GRT.GEC")]
     public class DynamicGEntity : IGEntity
     {
         public string Scene { get; set; }

@@ -24,16 +24,16 @@ namespace GRT.Editor
             for (int i = 0; i < data.Count; i++)
             {
                 var p = new BezierPoint(new Vector3(
-                    Convert.ToFloat(data[i][0]),
-                    Convert.ToFloat(data[i][1]),
-                    Convert.ToFloat(data[i][2])
+                    GConvert.ToFloat(data[i][0]),
+                    GConvert.ToFloat(data[i][1]),
+                    GConvert.ToFloat(data[i][2])
                     ));
                 p.HandleR = new Vector3(
-                    Convert.ToFloat(data[i][3]),
-                    Convert.ToFloat(data[i][4]),
-                    Convert.ToFloat(data[i][5])
+                    GConvert.ToFloat(data[i][3]),
+                    GConvert.ToFloat(data[i][4]),
+                    GConvert.ToFloat(data[i][5])
                     ) + p.Position;
-                p.Percent = Convert.ToFloat(data[i][6]);
+                p.Percent = GConvert.ToFloat(data[i][6]);
                 bezier.Add(p);
             }
             var path = AssetDatabase.GetAssetPath(Selection.objects[0]);

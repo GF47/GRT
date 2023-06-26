@@ -2,6 +2,7 @@
 
 namespace GRT.GComponents
 {
+    [Obsolete("see GRT.GEC")]
     public static class GComponentsUtil
     {
         /// <summary>
@@ -10,6 +11,7 @@ namespace GRT.GComponents
         /// <typeparam name="T">限定为 IGComponent</typeparam>
         /// <param name="entity">实体</param>
         /// <returns>匹配到的指定类型组件</returns>
+        [Obsolete("see GRT.GEC")]
         public static T GetComponent<T>(this IGEntity entity) where T : IGComponent
         {
             foreach (var com in entity.Components)
@@ -28,6 +30,7 @@ namespace GRT.GComponents
         /// <param name="entity">实体</param>
         /// <param name="type">限定为 IGComponent</param>
         /// <returns>匹配到的指定类型组件</returns>
+        [Obsolete("see GRT.GEC")]
         public static IGComponent GetComponent(this IGEntity entity, Type type)
         {
             foreach (var com in entity.Components)
@@ -45,6 +48,7 @@ namespace GRT.GComponents
         /// </summary>
         /// <param name="entity">实体</param>
         /// <param name="com">被添加的组件</param>
+        [Obsolete("see GRT.GEC")]
         public static void AddComponent(this IGEntity entity, IGComponent com)
         {
             if (!entity.Components.Contains(com))
@@ -57,6 +61,7 @@ namespace GRT.GComponents
         /// <summary>
         /// 字符串是否为 [场景名:物体层级路径] 的格式
         /// </summary>
+        [Obsolete("see GRT.GEC")]
         public static bool ContainSceneNameInPath(this string str, out string scene, out string path) => str.CanBeSplitBy(':', out scene, out path);
     }
 }

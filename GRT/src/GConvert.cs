@@ -7,7 +7,7 @@ namespace GRT
     /// <summary>
     /// 将字符串和具体类型互相转化，以及将结构类型与byte数组互相转化
     /// </summary>
-    public static class Convert
+    public static class GConvert
     {
         /// <summary>
         /// 结构类型
@@ -938,7 +938,7 @@ namespace GRT
             return result;
         }
 
-        public static string ToFormattedString(this object value, UnityStructs type)
+        public static string ToFormattedString(object value, UnityStructs type)
         {
             string result;
 
@@ -1000,7 +1000,7 @@ namespace GRT
             return result;
         }
 
-        public static string ToFormattedString(this object value, UnityStructs type, string format)
+        public static string ToFormattedString(object value, UnityStructs type, string format)
         {
             string result = string.Empty;
 

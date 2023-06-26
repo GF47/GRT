@@ -7,6 +7,7 @@ namespace GRT.GComponents
     /// <summary>
     /// 实体, 特定功能组件的集合, 以及所绑定的 Unity 物体
     /// </summary>
+    [Obsolete("see GRT.GEC")]
     public interface IGEntity : ILazyBindable
     {
         /// <summary>

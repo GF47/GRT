@@ -8,6 +8,7 @@ namespace GRT.GComponents
     /// <summary>
     /// 上下文菜单组件
     /// </summary>
+    [Obsolete("see GRT.GEC")]
     public class GContextMenu : IGComponent
     {
         public delegate void ContextMenuPopupHandler(GContextMenu sender, Vector3 pos);

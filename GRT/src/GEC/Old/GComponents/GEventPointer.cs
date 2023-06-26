@@ -1,5 +1,6 @@
 ﻿using GRT.Events;
 using GRT.Events.Triggers;
+using System;
 using UnityEngine;
 
 namespace GRT.GComponents
@@ -7,6 +8,7 @@ namespace GRT.GComponents
     /// <summary>
     /// 管理指针进入, 悬浮, 离开触发事件的组件
     /// </summary>
+    [Obsolete("see GRT.GEC")]
     public class GEventPointer : IGComponent
     {
         public delegate void GEventPointerHandler(GEventPointer sender, GEventArgs e);

@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace GRT.GComponents
 {
+    [Obsolete("see GRT.GEC")]
     public class GCollider : IGComponent
     {
         /// <summary>

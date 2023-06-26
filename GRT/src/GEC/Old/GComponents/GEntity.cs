@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace GRT.GComponents
 {
+    [Obsolete("see GRT.GEC")]
     public class GEntity : IGEntity
     {
         public event Action<GameObject> Binding;
