@@ -52,8 +52,8 @@
     <Compile Include="src\AssetBundles\Old\AssetsMap.cs" />
     <Compile Include="src\AssetBundles\Old\AssetsMapDownLoader.cs" />
     <Compile Include="src\AssetBundles\Old\HttpDownloader.cs" />
+    <Compile Include="src\Attributes\DraggableAssetPathAttribute.cs" />
     <Compile Include="src\Attributes\EnumFlagsAttribute.cs" />
-    <Compile Include="src\Attributes\GetAssetNameAttribute.cs" />
     <Compile Include="src\Attributes\InheritFromAttribute.cs" />
     <Compile Include="src\Attributes\InspectorAliasAttribute.cs" />
     <Compile Include="src\BlackBoard.cs" />

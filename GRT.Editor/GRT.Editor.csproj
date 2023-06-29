@@ -80,6 +80,7 @@
     <Compile Include="src\Editor\GF47TransfomCopyPanel.cs" />
     <Compile Include="src\Editor\GPie\GPiePanel.cs" />
     <Compile Include="src\Editor\Inspectors\BezierSplineInspector.cs" />
+    <Compile Include="src\Editor\Inspectors\DraggableAssetPathDrawer.cs" />
     <Compile Include="src\Editor\Inspectors\EnumFlagsAttributeDrawer.cs" />
     <Compile Include="src\Editor\Inspectors\InheritFromAttributeDrawer.cs" />
     <Compile Include="src\Editor\Inspectors\InspectorAliasDrawer.cs" />
