@@ -45,7 +45,7 @@ namespace GRT.GEC.Unity
             }
 
             collider.gameObject.layer = Layer;
-            collider.gameObject.AddComponent<UComponent<GameObject, GCollider>>().Attach(this);
+            collider.gameObject.AddComponent<UComponent<GCollider>>().Attach(this);
 
             _gColliderRef = new WeakReference<Collider>(collider);
         }

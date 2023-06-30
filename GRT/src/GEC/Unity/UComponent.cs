@@ -1,19 +1,18 @@
 ﻿using System;
+using UnityEngine;
 
 namespace GRT.GEC.Unity
 {
-    public class UComponent<T, TC> : UnityEngine.Component
-        where T : class
-        where TC : class, IGComponent<T>
+    public class UComponent<T> : Component where T : class, IGComponent<GameObject>
     {
 
-        public TC GComponent => _gComponentRef == null ? null : (_gComponentRef.TryGetTarget(out var com) ? com : null);
+        public T GComponent => _gComponentRef == null ? null : (_gComponentRef.TryGetTarget(out var com) ? com : null);
 
-        private WeakReference<TC> _gComponentRef;
+        private WeakReference<T> _gComponentRef;
 
-        public void Attach(TC com)
+        public void Attach(T com)
         {
-            _gComponentRef = new WeakReference<TC>(com);
+            _gComponentRef = new WeakReference<T>(com);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace GRT.GEC.Unity
         }
     }
 
-    public abstract class GHoverTrigger<T> : UComponent<GameObject, GHoverable<T>>, IPointerEnter, IPointerExit, IPointerHover
+    public abstract class GHoverTrigger<T> : UComponent<GHoverable<T>>, IPointerEnter, IPointerExit, IPointerHover
         where T : GHoverTrigger<T>
     {
         public abstract void OnPointerEnter(Camera camera, RaycastHit hit, Vector2 pos);

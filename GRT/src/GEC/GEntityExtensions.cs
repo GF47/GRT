@@ -25,5 +25,20 @@
                 com.GEntity = entity;
             }
         }
+
+        public static bool TryGetComponent<T, TC>(this IGEntity<T> entity, out TC component) where T : class where TC : IGComponent<T>
+        {
+            foreach (var com in entity.Components)
+            {
+                // if (type.isAssignableFrom(com.GetType()))
+                if (com is TC t)
+                {
+                    component = t;
+                    return true;
+                }
+            }
+            component = default;
+            return false;
+        }
     }
 }
