@@ -1,9 +1,8 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace GRT.GEC.Unity
 {
-    public class GCollider : IGComponent<GameObject>, ILoadable<GameObject>
+    public class GCollider : IGComponent<GameObject>, IBorrower<UEntity>
     {
         public IGEntity<GameObject> GEntity { get; set; }
 
@@ -11,16 +10,20 @@ namespace GRT.GEC.Unity
 
         public int Layer { get; set; }
 
-        public Collider Collider => _gColliderRef == null ? null : _gColliderRef.TryGetTarget(out var collider) ? collider : null;
+        public Collider Collider { get; private set; }
 
-        private WeakReference<Collider> _gColliderRef;
+        public ILender<UEntity> Lender { get; private set; }
 
-        public void Load(GameObject target)
+        public void Borrow(ILender<UEntity> lender)
         {
+            Lender = lender;
+
+            var ware = Lender.Wares;
+
             GameObject colliderGO;
-            if (GameObjectExtension.IsSameGameObjectLocation(CustomLocation, GEntity.Location))
+            if (GameObjectExtension.IsSameGameObjectLocation(CustomLocation, ware.Location) && ware.Reference.TryGetTarget(out var go))
             {
-                colliderGO = target;
+                colliderGO = go;
             }
             else
             {
@@ -34,22 +37,25 @@ namespace GRT.GEC.Unity
                 throw new UnityException($"{CustomLocation} is static, you can not use the static collider");
             }
 
-            var collider = colliderGO.GetComponent<Collider>();
+            Collider = colliderGO.GetComponent<Collider>();
 
-            if (collider == null)
+            if (Collider == null)
             {
                 var box = colliderGO.AddComponent<BoxCollider>();
                 box.ResizeToWrapChildren();
 
-                collider = box;
+                Collider = box;
             }
 
-            collider.gameObject.layer = Layer;
-            collider.gameObject.AddComponent<UComponent<GCollider>>().Attach(this);
-
-            _gColliderRef = new WeakReference<Collider>(collider);
+            Collider.gameObject.layer = Layer;
+            Collider.gameObject.AddComponent<UComponent<GCollider>>().Connect(this);
         }
 
-        public GameObject Unload() => Collider?.gameObject; // 没有做还原处理
+        public UEntity Return()
+        {
+            var ware = Lender.Wares;
+            Lender = null;
+            return ware;
+        }
     }
 }

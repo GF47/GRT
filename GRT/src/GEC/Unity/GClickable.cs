@@ -1,41 +1,40 @@
 ﻿using GRT.Events.Triggers;
-using System;
 using UnityEngine;
 
 namespace GRT.GEC.Unity
 {
-    public abstract class GClickable : IGComponent<GameObject>, ILoadable<GameObject>
+    public abstract class GClickable : IGComponent<GameObject>, IBorrower<UEntity>
     {
         public IGEntity<GameObject> GEntity { get; set; }
 
-        private WeakReference<PointerClickTrigger> _triggerRef;
+        public ILender<UEntity> Lender { get; private set; }
 
-        public void Load(GameObject target)
+        private PointerClickTrigger _trigger;
+
+        public void Borrow(ILender<UEntity> lender)
         {
-            var collider = GEntity.GetComponent<GameObject, GCollider>();
+            Lender = lender;
+
+            var collider = Lender.Wares.GetComponent<GameObject, GCollider>();
             if (collider != null)
             {
-                var trigger = collider.Collider.gameObject.AddComponent<PointerClickTrigger>();
-                trigger.InnerTrigger = new MouseButtonTrigger() { button = 0 };
-                trigger.Event.AddListener(OnClick);
-
-                _triggerRef = new WeakReference<PointerClickTrigger>(trigger);
+                _trigger = collider.Collider.gameObject.AddComponent<PointerClickTrigger>();
+                _trigger.InnerTrigger = new MouseButtonTrigger() { button = 0 };
+                _trigger.Event.AddListener(OnClick);
             }
         }
 
-        public GameObject Unload()
+        public UEntity Return()
         {
-            if (_triggerRef != null && _triggerRef.TryGetTarget(out var trigger))
+            if (_trigger != null)
             {
-                var go = trigger.gameObject;
-                trigger.Event.RemoveListener(OnClick);
-                UnityEngine.Object.Destroy(trigger);
-                return go;
+                _trigger.Event.RemoveListener(OnClick);
+                PointerClickTrigger.Destroy(_trigger);
             }
-            else
-            {
-                return null;
-            }
+
+            var wares = Lender.Wares;
+            Lender = null;
+            return wares;
         }
 
         public abstract void OnClick(Camera camera, RaycastHit hit, Vector2 position);

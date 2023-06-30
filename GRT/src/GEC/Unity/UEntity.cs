@@ -4,13 +4,27 @@ using UnityEngine;
 
 namespace GRT.GEC.Unity
 {
-    public class UEntity : IGEntity<GameObject>
+    public class UEntity : IGEntity<GameObject>, ILender<UEntity>
     {
         public WeakReference<GameObject> Reference { get; private set; }
 
         public string Location { get; private set; }
 
         public IList<IGComponent<GameObject>> Components { get; } = new List<IGComponent<GameObject>>();
+
+        public UEntity Wares => this;
+
+        public ICollection<IBorrower<UEntity>> Borrowers { get; } = new List<IBorrower<UEntity>>();
+
+        public void Dun()
+        {
+            foreach (var borrower in Borrowers)
+            {
+                Notary<UEntity>.Return(borrower, this, false);
+            }
+
+            Borrowers.Clear();
+        }
 
         public void Load()
         {
@@ -22,13 +36,11 @@ namespace GRT.GEC.Unity
 
             foreach (var com in Components)
             {
-                if (com is ILoadable<GameObject> loadable)
+                if (com is IBorrower<UEntity> borrower)
                 {
-                    loadable.Load(go);
+                    Notary<UEntity>.Borrow(borrower, this); // 为毛是借出人主动发起???
                 }
             }
         }
-
-        // 想了想好像 unload 不太需要
     }
 }

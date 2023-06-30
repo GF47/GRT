@@ -1,39 +1,38 @@
 ﻿using GRT.Events;
-using System;
 using UnityEngine;
 
 namespace GRT.GEC.Unity
 {
-    public class GHoverable<T> : IGComponent<GameObject>, ILoadable<GameObject>
+    public class GHoverable<T> : IGComponent<GameObject>, IBorrower<UEntity>
         where T : GHoverTrigger<T>
     {
         public IGEntity<GameObject> GEntity { get; set; }
 
-        private WeakReference<T> _triggerRef;
+        public ILender<UEntity> Lender { get; private set; }
 
-        public void Load(GameObject target)
+        private T _trigger;
+
+        public void Borrow(ILender<UEntity> lender)
         {
-            var collider = GEntity.GetComponent<GameObject, GCollider>();
+            Lender = lender;
+
+            var collider = Lender.Wares.GetComponent<GameObject, GCollider>();
             if (collider != null)
             {
-                var trigger = collider.Collider.gameObject.AddComponent<T>();
-
-                _triggerRef = new WeakReference<T>(trigger);
+                _trigger = collider.Collider.gameObject.AddComponent<T>();
             }
         }
 
-        public GameObject Unload()
+        public UEntity Return()
         {
-            if (_triggerRef != null && _triggerRef.TryGetTarget(out var trigger))
+            if (_trigger != null)
             {
-                var go = trigger.gameObject;
-                UnityEngine.Object.Destroy(trigger);
-                return go;
+                GHoverTrigger<T>.Destroy(_trigger);
             }
-            else
-            {
-                return null;
-            }
+
+            var ware = Lender.Wares;
+            Lender = null;
+            return ware;
         }
     }
 

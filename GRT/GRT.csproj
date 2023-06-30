@@ -135,7 +135,6 @@
     <Compile Include="src\GEC\GFSM.cs" />
     <Compile Include="src\GEC\IGComponent.cs" />
     <Compile Include="src\GEC\IGEntity.cs" />
-    <Compile Include="src\GEC\ILoadable.cs" />
     <Compile Include="src\GEC\Unity\GClickable.cs" />
     <Compile Include="src\GEC\Unity\GCollider.cs" />
     <Compile Include="src\GEC\Unity\GHoverable.cs" />
@@ -185,6 +184,7 @@
     <Compile Include="src\Geometry\Utilities.cs" />
     <Compile Include="src\GMath.cs" />
     <Compile Include="src\IGFormattable.cs" />
+    <Compile Include="src\ILender.cs" />
     <Compile Include="src\Ioc\Container.cs" />
     <Compile Include="src\IPercent.cs" />
     <Compile Include="src\IProjecter01.cs" />
