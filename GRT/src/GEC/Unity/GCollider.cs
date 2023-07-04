@@ -14,19 +14,22 @@ namespace GRT.GEC.Unity
 
         public ILender<UEntity> Lender { get; private set; }
 
-        public void Borrow(ILender<UEntity> lender)
+        public bool Borrow(ILender<UEntity> lender)
         {
-            Lender = lender;
-
-            var ware = Lender.Wares;
-
+            bool deal;
             GameObject colliderGO;
-            if (GameObjectExtension.IsSameGameObjectLocation(CustomLocation, ware.Location) && ware.Reference.TryGetTarget(out var go))
+
+            if (GameObjectExtension.IsSameGameObjectLocation(CustomLocation, lender.Wares.Location) && lender.Wares.Reference.TryGetTarget(out var go))
             {
+                Lender = lender;
+                deal = true;
+
                 colliderGO = go;
             }
             else
             {
+                deal = false;
+
                 colliderGO = CustomLocation.CanBeSplitBy(':', out var scene, out var path)
                     ? GameObjectExtension.FindIn(scene, path)
                     : GameObjectExtension.FindIn(UnityEngine.SceneManagement.SceneManager.GetActiveScene(), path);
@@ -49,13 +52,13 @@ namespace GRT.GEC.Unity
 
             Collider.gameObject.layer = Layer;
             Collider.gameObject.AddComponent<UComponent<GCollider>>().Connect(this);
+
+            return deal;
         }
 
-        public UEntity Return()
+        public void Return()
         {
-            var ware = Lender.Wares;
             Lender = null;
-            return ware;
         }
     }
 }

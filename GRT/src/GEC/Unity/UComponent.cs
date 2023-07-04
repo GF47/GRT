@@ -10,7 +10,7 @@ namespace GRT.GEC.Unity
 
         private WeakReference<T> _gComponentRef;
 
-        public void Connect(T com)
+        public virtual void Connect(T com)
         {
             _gComponentRef = new WeakReference<T>(com);
         }

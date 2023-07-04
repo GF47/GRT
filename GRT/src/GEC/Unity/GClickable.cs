@@ -11,20 +11,23 @@ namespace GRT.GEC.Unity
 
         private PointerClickTrigger _trigger;
 
-        public void Borrow(ILender<UEntity> lender)
+        public bool Borrow(ILender<UEntity> lender)
         {
-            Lender = lender;
-
-            var collider = Lender.Wares.GetComponent<GameObject, GCollider>();
-            if (collider != null)
+            var collider = lender.Wares.GetComponent<GameObject, GCollider>();
+            var deal = collider != null;
+            if (deal)
             {
+                Lender = lender;
+
                 _trigger = collider.Collider.gameObject.AddComponent<PointerClickTrigger>();
                 _trigger.InnerTrigger = new MouseButtonTrigger() { button = 0 };
                 _trigger.Event.AddListener(OnClick);
             }
+
+            return deal;
         }
 
-        public UEntity Return()
+        public void Return()
         {
             if (_trigger != null)
             {
@@ -32,9 +35,7 @@ namespace GRT.GEC.Unity
                 PointerClickTrigger.Destroy(_trigger);
             }
 
-            var wares = Lender.Wares;
             Lender = null;
-            return wares;
         }
 
         public abstract void OnClick(Camera camera, RaycastHit hit, Vector2 position);

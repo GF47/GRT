@@ -28,7 +28,7 @@ namespace GRT.Data
         float GetInnerFloat(T node);
         V GetInner<V>(T node, Func<string, (bool, V)> parser, V @default = default);
 
-        IDictionary<string, string> GetAttributes(T node);
+        IEnumerable<KeyValuePair<string, string>> GetAttributes(T node);
         string GetAttribute(T node, string name);
         bool GetAttributeBoolean(T node, string name);
         int GetAttributeInteger(T node, string name);
@@ -38,8 +38,8 @@ namespace GRT.Data
         T GetChild(T node, string name);
         T GetChild(T node, Predicate<T> predicate);
 
-        IList<T> GetChildren(T node);
-        IList<T> GetChildren(T node, string name);
-        IList<T> GetChildren(T node, Predicate<T> predicate);
+        IEnumerable<T> GetChildren(T node);
+        IEnumerable<T> GetChildren(T node, string name);
+        IEnumerable<T> GetChildren(T node, Predicate<T> predicate);
     }
 }

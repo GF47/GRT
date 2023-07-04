@@ -7,13 +7,18 @@ namespace GRT
 {
     public interface IGFormattable
     {
-        IDictionary<string, object> Tags { get; }
+        IDictionary<string, IGStringifiable> Tags { get; }
 
         IList<(string, string)> Template { get; }
 
         void SetValue(string tag, string value);
 
         string Format();
+    }
+
+    public interface IGStringifiable
+    {
+        string Stringify();
     }
 
     public static class GFormattableUtils
@@ -109,7 +114,7 @@ namespace GRT
             {
                 foreach (var pair in formattable.Tags)
                 {
-                    formattable.SetValue(pair.Key, pair.Value.ToString());
+                    formattable.SetValue(pair.Key, pair.Value.Stringify());
                 }
             }
 

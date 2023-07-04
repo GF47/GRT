@@ -10,29 +10,32 @@ namespace GRT.GEC.Unity
 
         public ILender<UEntity> Lender { get; private set; }
 
-        private T _trigger;
+        public T Trigger { get; protected set; }
 
-        public void Borrow(ILender<UEntity> lender)
+        public bool Borrow(ILender<UEntity> lender)
         {
-            Lender = lender;
+            var collider = lender.Wares.GetComponent<GameObject, GCollider>();
+            var deal = collider != null;
 
-            var collider = Lender.Wares.GetComponent<GameObject, GCollider>();
-            if (collider != null)
+            if (deal)
             {
-                _trigger = collider.Collider.gameObject.AddComponent<T>();
+                Lender = lender;
+
+                Trigger = collider.Collider.gameObject.AddComponent<T>();
+                Trigger.Connect(this);
             }
+
+            return deal;
         }
 
-        public UEntity Return()
+        public void Return()
         {
-            if (_trigger != null)
+            if (Trigger != null)
             {
-                GHoverTrigger<T>.Destroy(_trigger);
+                GHoverTrigger<T>.Destroy(Trigger);
             }
 
-            var ware = Lender.Wares;
             Lender = null;
-            return ware;
         }
     }
 

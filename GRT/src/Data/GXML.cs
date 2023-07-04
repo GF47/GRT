@@ -7,7 +7,7 @@ namespace GRT.Data
     {
         public abstract string NameOf(T node);
 
-        public abstract IDictionary<string, string> GetAttributes(T node);
+        public abstract IEnumerable<KeyValuePair<string, string>> GetAttributes(T node);
 
         public abstract string GetAttribute(T node, string name);
 
@@ -62,51 +62,45 @@ namespace GRT.Data
             return default;
         }
 
-        public IList<T> GetChildren(T node, string name)
+        public IEnumerable<T> GetChildren(T node, string name)
         {
             var children = GetChildren(node);
             if (children != null)
             {
-                List<T> list = null;
                 foreach (var child in children)
                 {
                     if (NameOf(child) == name)
                     {
-                        if (list == null) { list = new List<T>(); }
-                        list.Add(child);
+                        yield return child;
                     }
                 }
-                return list;
             }
             else
             {
-                return null;
+                yield break;
             }
         }
 
-        public IList<T> GetChildren(T node, Predicate<T> predicate)
+        public IEnumerable<T> GetChildren(T node, Predicate<T> predicate)
         {
             var children = GetChildren(node);
             if (children != null)
             {
-                List<T> list = null;
                 foreach (var child in children)
                 {
                     if (predicate(child))
                     {
-                        if (list == null) { list = new List<T>(); }
-                        list.Add(child);
+                        yield return child;
                     }
                 }
-                return list;
             }
             else
             {
-                return null;
+                yield break;
             }
         }
 
-        public abstract IList<T> GetChildren(T node);
+        public abstract IEnumerable<T> GetChildren(T node);
 
         public V GetInner<V>(T node, Func<string, (bool, V)> parser, V @default = default)
         {
