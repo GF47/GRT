@@ -46,7 +46,7 @@ namespace GRT.GComponents
         {
             // 如果不专门指定碰撞体的路径, 则直接使用实体自身
             // 有时候碰撞体并不能等同于渲染组件
-            var target = Path == GEntity.Path ? uObject : GameObjectExtension.FindIn(Scene, Path);
+            var target = Path == GEntity.Path ? uObject : GameObjectExtension.Find(Scene, Path);
 
             if (target != null)
             {

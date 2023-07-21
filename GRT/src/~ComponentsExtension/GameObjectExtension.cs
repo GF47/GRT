@@ -6,39 +6,40 @@ namespace GRT
 
     public static class GameObjectExtension
     {
-        public static (string, string) SplitRootAndSubLayer(string path)
+        public static (string, string) SplitRootAndSubPath(string path)
         {
             var index = path.IndexOf('/');
             return index > -1 ? (path.Substring(0, index), path.Substring(index + 1)) : (path, null);
         }
 
-        public static (string, string) SplitSceneAndGameObjectPath(string str)
+        public static bool IsSameLocation(string locationA, string locationB)
         {
-            var i = str.IndexOf(':');
-            return i > 0 ? (str.Substring(0, i), str.Substring(i + 1)) : (null, str);
-        }
-
-        public static bool IsSameGameObjectLocation(string locationA, string locationB)
-        {
-            var (sceneA, pathA) = SplitSceneAndGameObjectPath(locationA);
-            var (sceneB, pathB) = SplitSceneAndGameObjectPath(locationB);
-
-            if (pathA != pathB)
-            {
-                return false;
-            }
+            var sceneASpecified = locationA.CanBeSplitBy(':', out var sceneA, out var pathA);
+            var sceneBSpecified = locationB.CanBeSplitBy(':', out var sceneB, out var pathB);
 
             var activeScene = SceneManager.GetActiveScene().name;
-            return sceneA == sceneB || (string.IsNullOrEmpty(sceneA) && sceneB == activeScene) || (sceneA == activeScene && string.IsNullOrEmpty(pathB));
+
+            return pathA == pathB
+                && (sceneA == sceneB
+                    || (!sceneASpecified && sceneB == activeScene)
+                    || (sceneA == activeScene && !sceneBSpecified));
         }
 
-        public static GameObject FindIn(string sceneName, string path) => FindIn(SceneManager.GetSceneByName(sceneName), path);
+        public static GameObject FindByLocation(string location)
+        {
+            var scene = location.CanBeSplitBy(':', out var sceneName, out var path)
+                ? SceneManager.GetSceneByName(sceneName)
+                : SceneManager.GetActiveScene();
+            return scene.Find(path);
+        }
 
-        public static GameObject FindIn(Scene scene, string path)
+        public static GameObject Find(string sceneName, string path) => SceneManager.GetSceneByName(sceneName).Find(path);
+
+        public static GameObject Find(this Scene scene, string path)
         {
             if (scene.IsValid())
             {
-                var (rootName, subPath) = SplitRootAndSubLayer(path);
+                var (rootName, subPath) = SplitRootAndSubPath(path);
 
                 var rootGameObjects = scene.GetRootGameObjects();
                 var root = Array.Find(rootGameObjects, go => go.name == rootName);
@@ -64,7 +65,7 @@ namespace GRT
 
         /// <summary> 返回目标物体的完整层级
         /// </summary>
-        public static string GetLayer(this GameObject obj)
+        public static string GetPath(this GameObject obj)
         {
             string path = obj.name;
 
@@ -82,7 +83,7 @@ namespace GRT
         /// </summary>
         /// <param name="obj">目标物体</param>
         /// <param name="root">根物体</param>
-        public static string GetRelativeLayer(this GameObject obj, GameObject root)
+        public static string GetRelativePath(this GameObject obj, GameObject root)
         {
             string path = obj.name;
             Transform t = obj.transform.parent;
@@ -191,14 +192,25 @@ namespace GRT
             }
         }
 
+        public static int StringToLayer(string str)
+        {
+            var layer = int.TryParse(str, out var layerOut) ? layerOut : LayerMask.NameToLayer(str);
+            if (layer < 0 || 31 < layer)
+            {
+                layer = 0;
+            }
+
+            return layer;
+        }
+
         public static T GetInterface<T>(this GameObject target) where T : class
         {
-            MonoBehaviour[] scripts = target.GetComponents<MonoBehaviour>();
-            if (scripts != null)
+            Component[] coms = target.GetComponents<Component>();
+            if (coms != null)
             {
-                for (int i = 0; i < scripts.Length; i++)
+                for (int i = 0; i < coms.Length; i++)
                 {
-                    if (scripts[i] is T temp)
+                    if (coms[i] is T temp)
                     {
                         return temp;
                     }
@@ -209,7 +221,7 @@ namespace GRT
 
         public static T[] GetInterfaces<T>(this GameObject target) where T : class
         {
-            MonoBehaviour[] scripts = target.GetComponents<MonoBehaviour>();
+            Component[] scripts = target.GetComponents<Component>();
             if (scripts != null)
             {
                 T[] results = new T[scripts.Length];

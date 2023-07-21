@@ -8,7 +8,7 @@ namespace GRT.GEC.Unity
     {
         public WeakReference<GameObject> Reference { get; private set; }
 
-        public string Location { get; private set; }
+        public string Location { get; set; }
 
         public IList<IGComponent<GameObject>> Components { get; } = new List<IGComponent<GameObject>>();
 
@@ -28,9 +28,7 @@ namespace GRT.GEC.Unity
 
         public void Load()
         {
-            GameObject go = Location.CanBeSplitBy(':', out var scene, out var path)
-                ? GameObjectExtension.FindIn(scene, path)
-                : GameObjectExtension.FindIn(UnityEngine.SceneManagement.SceneManager.GetActiveScene(), path);
+            GameObject go = GameObjectExtension.FindByLocation(Location);
 
             Reference = new WeakReference<GameObject>(go);
 

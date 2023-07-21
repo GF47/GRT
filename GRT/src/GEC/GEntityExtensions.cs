@@ -26,7 +26,9 @@
             }
         }
 
-        public static bool TryGetComponent<T, TC>(this IGEntity<T> entity, out TC component) where T : class where TC : IGComponent<T>
+        public static bool TryGetComponent<T, TC>(this IGEntity<T> entity, out TC component)
+            where T : class
+            where TC : IGComponent<T>
         {
             foreach (var com in entity.Components)
             {

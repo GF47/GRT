@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 
 namespace GRT.GEC.Unity
 {
@@ -19,25 +20,30 @@ namespace GRT.GEC.Unity
             bool deal;
             GameObject colliderGO;
 
-            if (GameObjectExtension.IsSameGameObjectLocation(CustomLocation, lender.Wares.Location) && lender.Wares.Reference.TryGetTarget(out var go))
+            if (string.IsNullOrEmpty(CustomLocation) || GameObjectExtension.IsSameLocation(CustomLocation, lender.Wares.Location))
             {
-                Lender = lender;
-                deal = true;
+                if (lender.Wares.Reference.TryGetTarget(out var go))
+                {
+                    Lender = lender;
+                    deal = true;
 
-                colliderGO = go;
+                    colliderGO = go;
+                }
+                else
+                {
+                    throw new Exception($"can not find the {lender.Wares.Location}");
+                }
             }
             else
             {
                 deal = false;
 
-                colliderGO = CustomLocation.CanBeSplitBy(':', out var scene, out var path)
-                    ? GameObjectExtension.FindIn(scene, path)
-                    : GameObjectExtension.FindIn(UnityEngine.SceneManagement.SceneManager.GetActiveScene(), path);
+                colliderGO = GameObjectExtension.FindByLocation(CustomLocation);
             }
 
             if (colliderGO.isStatic)
             {
-                throw new UnityException($"{CustomLocation} is static, you can not use the static collider");
+                throw new UnityException($"{CustomLocation ?? lender.Wares.Location} is static, you can not use the static collider");
             }
 
             Collider = colliderGO.GetComponent<Collider>();
@@ -50,7 +56,10 @@ namespace GRT.GEC.Unity
                 Collider = box;
             }
 
-            Collider.gameObject.layer = Layer;
+            if (-1 < Layer && Layer < 32)
+            {
+                Collider.gameObject.layer = Layer;
+            }
             Collider.gameObject.AddComponent<UComponent<GCollider>>().Connect(this);
 
             return deal;

@@ -48,7 +48,7 @@ namespace GRT.GComponents
             }
 
             // Path 是自动指定的
-            Path = UObject.GetLayer();
+            Path = UObject.GetPath();
 
             foreach (var com in Components)
             {

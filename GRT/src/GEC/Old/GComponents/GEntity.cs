@@ -21,7 +21,7 @@ namespace GRT.GComponents
 
         public virtual void Bind()
         {
-            UObject = GameObjectExtension.FindIn(Scene, Path);
+            UObject = GameObjectExtension.Find(Scene, Path);
 
             foreach (var com in Components)
             {
