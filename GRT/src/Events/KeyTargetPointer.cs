@@ -17,8 +17,8 @@ namespace GRT.Events
         {
             var trigger = com as ITrigger;
             return trigger != null
-                && trigger.HasInnerTrigger(typeof(KeyTrigger), out var inner)
-                && (inner as KeyTrigger).key == key;
+                && trigger.HasInnerTrigger<KeyTrigger>(out var inner)
+                && inner.key == key;
         }
     }
 }

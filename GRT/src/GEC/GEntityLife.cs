@@ -21,14 +21,7 @@ namespace GRT.GEC
 
         public IGEntity<T> GEntity { get; set; }
 
-        public T Object
-        {
-            get
-            {
-                if (GEntity == null) return null;
-                return GEntity.Reference.TryGetTarget(out var obj) ? obj : null;
-            }
-        }
+        public T Object => GEntity?.Target;
 
         public bool IsAlive { get; protected set; }
 

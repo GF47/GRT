@@ -27,7 +27,7 @@ namespace GRT
             }
         }
 
-        public bool Get<T>(string name, out T value, T @default = default)
+        public bool TryGet<T>(string name, out T value, T @default = default)
         {
             if (items.TryGetValue(name, out object obj))
             {
@@ -47,6 +47,21 @@ namespace GRT
                 value = @default;
                 return false;
             }
+        }
+
+        public T GetFuzzy<T>(T @default, params string[] names)
+        {
+            foreach (var name in names)
+            {
+                if (items.TryGetValue(name, out var obj))
+                {
+                    if (obj is T tValue)
+                    {
+                        return tValue;
+                    }
+                }
+            }
+            return @default;
         }
 
         public void Set<T>(string name, T value)

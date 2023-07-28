@@ -7,6 +7,8 @@ namespace GRT.GEC
     {
         WeakReference<T> Reference { get; }
 
+        T Target { get; }
+
         string Location { get; }
 
         IList<IGComponent<T>> Components { get; }

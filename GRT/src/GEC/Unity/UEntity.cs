@@ -8,6 +8,8 @@ namespace GRT.GEC.Unity
     {
         public WeakReference<GameObject> Reference { get; private set; }
 
+        public GameObject Target => Reference.TryGetTarget(out GameObject target) ? target : null;
+
         public string Location { get; set; }
 
         public IList<IGComponent<GameObject>> Components { get; } = new List<IGComponent<GameObject>>();

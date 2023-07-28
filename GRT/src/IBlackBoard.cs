@@ -20,7 +20,15 @@
         /// <param name="value">获取到的值</param>
         /// <param name="default">如果公告板中无指定键值，则返回的默认值</param>
         /// <returns>公告板中是否有指定的键值</returns>
-        bool Get<T>(string name, out T value, T @default = default);
+        bool TryGet<T>(string name, out T value, T @default = default);
+        /// <summary>
+        /// 模糊查找
+        /// </summary>
+        /// <typeparam name="T">目标类型</typeparam>
+        /// <param name="default">默认值</param>
+        /// <param name="names">可能的名称</param>
+        /// <returns>查找值</returns>
+        T GetFuzzy<T>(T @default, params string[] names);
         /// <summary>
         /// 向公告板中存入键值对
         /// </summary>

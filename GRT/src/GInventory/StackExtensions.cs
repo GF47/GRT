@@ -41,7 +41,9 @@ namespace GRT.GInventory
             foreach (var pair in a.Properties)
             {
                 // 按理说除了位置和旋转都应该深拷贝下来
-                if (pair.Key != Keywords.POS && pair.Key != Keywords.ROT && pair.Key != Keywords.AUTO_SPAWN)
+                if (pair.Key != Keywords.POS
+                    && pair.Key != Keywords.ROT
+                    && !Keywords.IsAutoSpawn(pair.Key))
                 {
                     properties.Add(pair.Key, pair.Value);
                 }
@@ -77,10 +79,26 @@ namespace GRT.GInventory
 
         public static bool AutoSpawn(this IStack stack) =>
             Instantiatable(stack)
-            && stack.Properties.TryGetValue(Keywords.AUTO_SPAWN, out var prop)
+            && TryGetAutoSpawnProperty(stack, out var prop)
             && (prop is bool autoSpawn ? autoSpawn : System.Convert.ToBoolean(prop));
 
+        private static bool TryGetAutoSpawnProperty(IStack stack, out object prop)
+        {
+            var properties = stack.Properties;
+            return properties.TryGetValue(Keywords.AUTO_SPAWN, out prop)
+                || properties.TryGetValue(Keywords.AUTO_SPAWN2, out prop)
+                || properties.TryGetValue(Keywords.AUTO_SPAWN3, out prop);
+        }
+
         public static int PickQuantity(this IStack stack) =>
-            stack.Properties.TryGetValue(Keywords.PICK_QUANTITY, out var prop) ? (prop is int quantity ? quantity : 1) : 1;
+            TryGetPickQuantityProperty(stack, out var prop) ? (prop is int quantity ? quantity : 1) : 1;
+
+        private static bool TryGetPickQuantityProperty(IStack stack, out object prop)
+        {
+            var properties = stack.Properties;
+            return properties.TryGetValue(Keywords.PICK_QUANTITY, out prop)
+                || properties.TryGetValue(Keywords.PICK_QUANTITY2, out prop)
+                || properties.TryGetValue(Keywords.PICK_QUANTITY3, out prop);
+        }
     }
 }

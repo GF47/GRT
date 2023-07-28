@@ -17,8 +17,8 @@ namespace GRT.Events
         {
             var trigger = com as ITrigger;
             return trigger != null
-                && trigger.HasInnerTrigger(typeof(MouseButtonTrigger), out var inner)
-                && (inner as MouseButtonTrigger).button == mouseButton;
+                && trigger.HasInnerTrigger<MouseButtonTrigger>(out var inner)
+                && inner.button == mouseButton;
         }
     }
 }
