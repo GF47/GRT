@@ -60,14 +60,16 @@ namespace GRT.GEC.Unity
             {
                 Collider.gameObject.layer = Layer;
             }
-            Collider.gameObject.AddComponent<UComponent<GCollider>>().Connect(this);
+            Collider.gameObject.AddComponent<GColliderContainer>().Connect(this);
 
             return deal;
         }
 
-        public void Return()
+        public void Repay()
         {
             Lender = null;
         }
     }
+
+    public class GColliderContainer : UBehaviour<GCollider> { }
 }

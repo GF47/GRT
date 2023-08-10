@@ -22,13 +22,13 @@ namespace GRT.GEC.Unity
         {
             foreach (var borrower in Borrowers)
             {
-                Notary<UEntity>.Return(borrower, this, false);
+                Notary<UEntity>.Repay(borrower, this, false);
             }
 
             Borrowers.Clear();
         }
 
-        public void Load()
+        public void SetTarget()
         {
             GameObject go = GameObjectExtension.FindByLocation(Location);
 

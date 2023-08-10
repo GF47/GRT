@@ -17,7 +17,7 @@ namespace GRT
 
         bool Borrow(ILender<T> lender);
 
-        void Return();
+        void Repay();
     }
 
     public static class Notary<T> where T : class
@@ -30,11 +30,11 @@ namespace GRT
             }
         }
 
-        public static void Return(IBorrower<T> borrower, ILender<T> lender, bool removeBorrower = true)
+        public static void Repay(IBorrower<T> borrower, ILender<T> lender, bool removeBorrower = true)
         {
             if (borrower.Lender == lender)
             {
-                borrower.Return();
+                borrower.Repay();
 
                 if (removeBorrower)
                 {

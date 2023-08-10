@@ -27,7 +27,7 @@ namespace GRT.GEC.Unity
             return deal;
         }
 
-        public void Return()
+        public void Repay()
         {
             if (_trigger != null)
             {

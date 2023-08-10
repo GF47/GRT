@@ -308,6 +308,22 @@ namespace GRT.Events
             return false;
         }
 
+        public T Find<T>(Predicate<T> predicate) where T : IPointer
+        {
+            var current = _head.Next;
+            while(current != null)
+            {
+                if (current.Pointer is T tPointer && predicate(tPointer))
+                {
+                    return tPointer;
+                }
+
+                current = current.Next;
+            }
+
+            return default;
+        }
+
         public bool Add(IPointer pointer)
         {
             if (pointer != null)

@@ -3,9 +3,8 @@ using UnityEngine;
 
 namespace GRT.GEC.Unity
 {
-    public class UComponent<T> : Component where T : class, IGComponent<GameObject>
+    public abstract class UBehaviour<T> : MonoBehaviour where T : class, IGComponent<GameObject>
     {
-
         public T GComponent => _gComponentRef == null ? null : (_gComponentRef.TryGetTarget(out var com) ? com : null);
 
         private WeakReference<T> _gComponentRef;
