@@ -19,8 +19,16 @@ namespace GRT
         private int _value;
         public int Value => _value;
 
-        public Int32Cycle(int origin, int count, int step)
+        public int Origin => _origin;
+        public int Length => _length;
+
+        public Int32Cycle(int origin, int count, int step = 1)
         {
+            if (count == 0)
+            {
+                throw new ArgumentException(nameof(count), "count can not be zero");
+            }
+
             _origin = origin;
             _step = step;
             _length = count * _step;
@@ -34,24 +42,11 @@ namespace GRT
             Cycle(ref _value, _origin, _length);
         }
 
-        public void InvertStep(int count = 1)
+        public int Offset(int count)
         {
-            _value -= count * _step;
-            Cycle(ref _value, _origin, _length);
-        }
-
-        public int Previous(int count)
-        {
-            int previous = _value - count * _step;
-            Cycle(ref previous, _origin, _length);
-            return previous;
-        }
-
-        public int Following(int count)
-        {
-            int following = _value + count * _step;
-            Cycle(ref following, _origin, _length);
-            return following;
+            var value = _value + count * _step;
+            Cycle(ref value, _origin, _length);
+            return value;
         }
 
         private static void Cycle(ref int value, int origin, int lenght)
@@ -62,15 +57,10 @@ namespace GRT
 
         public bool Equals(Int32Cycle other)
         {
-            if (_value != other._value) goto RETURN;
-            if (_origin != other._origin) goto RETURN;
-            if (_length != other._length) goto RETURN;
-            if (_step != other._step) goto RETURN;
-
-            return true;
-
-        RETURN:
-            return false;
+            return _value == other._value
+                && _origin == other._origin
+                && _length == other._length
+                && _step == other._step;
         }
 
         public override bool Equals(object obj)

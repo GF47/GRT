@@ -1,41 +1,35 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 
 namespace GRT.GInventory.Quantifiables
 {
     public class Volume : IQuantifiable
     {
-        public const string TYPE = Keywords.VOLUME;
+        public const int MAX = 100;
 
-        public const int MAX_VOLUME = 100;
+        private int _volume;
 
-        private int _value;
+        public string Type => Keywords.VOLUME;
 
-        public string Type => TYPE;
+        public int Value => _volume;
 
-        public int Value => _value;
+        public int Max { get; set; } = MAX;
 
-        public int Max { get; set; } = MAX_VOLUME;
+        public event Action<IStack, int, int> Changing;
 
-        public event Action<IStack, int, int> ValueChanging;
+        public Volume(int volume) => _volume = volume;
 
-        // public void ClearValueChangingEvents() => ValueChanging = null;
+        public IQuantifiable Clone(int volume) => new Volume(volume) { Max = Max };
 
-        public Volume(int value)
+        public void SetValue(IStack stack, int volume)
         {
-            _value = value;
-        }
-
-        public IQuantifiable Clone(int value) => new Volume(value) { Max = Max };
-
-        public void SetValue(IStack stack, int value)
-        {
-            if (_value != value)
+            if (_volume != volume)
             {
-                var old = _value;
-                _value = value;
-                ValueChanging?.Invoke(stack, _value, old);
-                if (_value <= 0)
+                var old = _volume;
+                _volume = volume;
+
+                Changing?.Invoke(stack, _volume, old);
+
+                if (_volume <= 0)
                 {
                     stack.Destroy();
                 }

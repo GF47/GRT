@@ -2,15 +2,12 @@
 
 namespace GRT.GInventory
 {
-    /// <summary>
-    /// 量化数据，堆叠数量或者耐久等
-    /// </summary>
     public interface IQuantifiable
     {
         /// <summary>
-        /// 值改变时触发事件，第一个int为新值，第二个int为旧值
+        /// 值发生改变时触发事件，第一个int值为新，第二个int值为旧
         /// </summary>
-        event Action<IStack, int, int> ValueChanging;
+        event Action<IStack, int, int> Changing;
 
         /// <summary>
         /// 量化数据的类型
@@ -18,22 +15,20 @@ namespace GRT.GInventory
         string Type { get; }
 
         /// <summary>
-        /// 实际数据
+        /// 实际值
         /// </summary>
         int Value { get; }
 
         /// <summary>
-        /// 最大值
+        /// 可取最大值
         /// </summary>
         int Max { get; }
 
         void SetValue(IStack stack, int value);
 
         /// <summary>
-        /// 复制一个指定值的相同量化数据
+        /// 复制一个量化数据，但实际值设为新值
         /// </summary>
         IQuantifiable Clone(int value);
-
-        // void ClearValueChangingEvents();
     }
 }

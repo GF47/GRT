@@ -2,22 +2,21 @@
 
 namespace GRT.GInventory
 {
-    public interface IStack : IDefinition
+    public interface IStack
     {
-        // event Action<IInventory, IInventory> Transferring;
+        int ID { get; }
 
         IDefinition Definition { get; }
-
         IQuantifiable Quantity { get; }
 
-        IDictionary<string, object> Properties { get; set; }
+        IDictionary<string, object> Properties { get; }
 
-        void Spawn(IOwner owner);
+        IInventory Inventory { get; set; }
+
+        void Init(int id, IDefinition definition, IQuantifiable quantifiable, IDictionary<string, object> properties);
 
         void Destroy();
 
-        void PickUp(IOwner owner);
-
-        void PutDown(IOwner owner);
+        IStack Transfer(IInventory targetInventory);
     }
 }

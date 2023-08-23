@@ -4,7 +4,7 @@ namespace GRT
 {
     public static class GString
     {
-        public static bool CanBeSplitBy(this string str, char c, out string left, out string right)
+        public static bool CanBeSplitBy(this string str, char c, out string left, out string right, bool asLeft = false)
         {
             var i = str.IndexOf(c);
             if (i > -1)
@@ -15,8 +15,16 @@ namespace GRT
             }
             else
             {
-                left = null;
-                right = str;
+                if (asLeft)
+                {
+                    left = str;
+                    right = null;
+                }
+                else
+                {
+                    left = null;
+                    right = str;
+                }
                 return false;
             }
         }

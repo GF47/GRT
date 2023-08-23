@@ -185,7 +185,7 @@ namespace GRT
         {
             foreach (var item in _cache)
             {
-                callback.Invoke(item);
+                callback?.Invoke(item);
                 Disposing?.Invoke(item);
             }
             _cache.Clear();

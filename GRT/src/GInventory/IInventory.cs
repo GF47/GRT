@@ -1,14 +1,14 @@
-﻿namespace GRT.GInventory
+﻿using System.Collections.Generic;
+
+namespace GRT.GInventory
 {
     public interface IInventory
     {
-        void OnSelect(IStack stack, IStack old);
+        IDictionary<IStack, IInventoryItem> Stacks { get; }
 
-        void OnStackSpawn(IOwner owner, IStack stack);
+        void Destroy(IStack stack);
 
-        void OnStackDestroy(IStack stack);
-
-        IStack In(IStack stack);
+        IStack In(IStack stack, bool autoMerge = true);
 
         IStack Out(IStack stack);
     }

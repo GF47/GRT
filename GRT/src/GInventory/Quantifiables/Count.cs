@@ -4,37 +4,31 @@ namespace GRT.GInventory.Quantifiables
 {
     public class Count : IQuantifiable
     {
-        public const string TYPE = Keywords.COUNT;
+        public const int MAX = 64;
 
-        public const int MAX_COUNT = 64;
+        private int _count;
 
-        private int _value;
+        public string Type => Keywords.COUNT;
 
-        public string Type => TYPE;
+        public int Value => _count;
 
-        public int Value => _value;
+        public int Max { get; set; } = MAX;
 
-        public int Max { get; set; } = MAX_COUNT;
+        public event Action<IStack, int, int> Changing;
 
-        public event Action<IStack, int, int> ValueChanging;
+        public Count(int count) => _count = count;
 
-        // public void ClearValueChangingEvents() => ValueChanging = null;
+        public IQuantifiable Clone(int count) => new Count(count) { Max = Max };
 
-        public Count(int value)
+        public void SetValue(IStack stack, int count)
         {
-            _value = value;
-        }
-
-        public IQuantifiable Clone(int value) => new Count(value) { Max = Max };
-
-        public void SetValue(IStack stack, int value)
-        {
-            if (_value != value)
+            if (_count != count)
             {
-                var old = _value;
-                _value = value;
-                ValueChanging?.Invoke(stack, _value, old);
-                if (_value <= 0)
+                var old = _count;
+                _count = count;
+
+                Changing?.Invoke(stack, _count, old);
+                if (_count <= 0)
                 {
                     stack.Destroy();
                 }

@@ -4,41 +4,25 @@ namespace GRT.GInventory.Quantifiables
 {
     public class Singleton : IQuantifiable
     {
-        public string Type => Count.TYPE;
+        public string Type => Keywords.COUNT;
 
         public int Value => 1;
 
         public int Max => 1;
 
-        /// <summary>
-        /// 不可能发生改变, 什么事都不做
-        /// </summary>
-        public event Action<IStack, int, int> ValueChanging
-        {
-            add
-            {
-                // warn
-            }
-            remove
-            {
-                // warn
-            }
-        }
-
-        // /// <summary>
-        // /// 不可能发生改变, 什么事都不做
-        // /// </summary>
-        // public void ClearValueChangingEvents()
+        public event Action<IStack, int, int> Changing;
         // {
-        //     // warn
+        //     add { /* warning */ }
+        //     remove { /* warning */ }
         // }
 
-        public IQuantifiable Clone(int value) => new Singleton();
+        public IQuantifiable Clone(int count) => new Singleton();
 
-        public void SetValue(IStack stack, int value)
+        public void SetValue(IStack stack, int count)
         {
-            if (value <= 0)
+            if (count <= 0)
             {
+                Changing?.Invoke(stack, 0, 1);
                 stack.Destroy();
             }
         }

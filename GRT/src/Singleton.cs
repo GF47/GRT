@@ -15,7 +15,7 @@ namespace GRT
     /// 单例基类，没啥卵用
     /// </summary>
     /// <typeparam name="T">自己</typeparam>
-    public class Singleton<T> where T : Singleton<T>, new()
+    public class Singleton<T> where T : Singleton<T>
     {
         /// <summary>
         /// 单例
@@ -26,21 +26,23 @@ namespace GRT
             {
                 if (instance == null)
                 {
-                    if (ConstructFunc == null)
-                    {
-                        throw new NullReferenceException(nameof(T) + "的ConstructFunc为空，请先指定构造方法");
-                    }
-                    instance = ConstructFunc();
+                    instance = Activator.CreateInstance<T>();
+                    // if (ConstructFunc == null)
+                    // {
+                    //     throw new NullReferenceException(nameof(T) + "的ConstructFunc为空，请先指定构造方法");
+                    // }
+                    // instance = ConstructFunc();
                 }
                 return instance;
             }
         }
+
         protected static T instance;
 
         /// <summary>
         /// 这就比较sb了，外部还能实例化一个出来2333
         /// </summary>
-        public static Func<T> ConstructFunc = () => new T();
+        // public static Func<T> ConstructFunc = () => new T();
     }
 
     /// <summary>
@@ -58,18 +60,15 @@ namespace GRT
             {
                 if (instance == null)
                 {
-                    instance = FindObjectOfType<T>();
-                    if (instance == null)
-                    {
-                        var go = new GameObject(nameof(T));
-                        DontDestroyOnLoad(go);
-                        instance = go.AddComponent<T>();
-                        Debug.Log($"{nameof(T)} loaded");
-                    }
+                    var go = new GameObject(nameof(T));
+                    DontDestroyOnLoad(go);
+                    instance = go.AddComponent<T>();
+                    Debug.Log($"{nameof(T)} loaded");
                 }
                 return instance;
             }
         }
+
         protected static T instance;
 
         /// <summary>
@@ -77,10 +76,16 @@ namespace GRT
         /// </summary>
         protected virtual void Awake()
         {
-            if (instance != null && instance != this)
+            if (instance == null)
             {
-                Debug.LogWarning($"Do not init another {nameof(T)}");
-                Destroy(this);
+                instance = this as T;
+            }
+            else
+            {
+                if (instance != this)
+                {
+                    throw new UnityException($"Do not init another {nameof(T)}");
+                }
             }
         }
     }

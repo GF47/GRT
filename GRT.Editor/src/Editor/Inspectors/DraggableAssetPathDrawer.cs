@@ -6,8 +6,6 @@ namespace GRT.Editor.Inspectors
     [CustomPropertyDrawer(typeof(DraggableAssetPathAttribute))]
     public class DraggableAssetPathDrawer : PropertyDrawer
     {
-        GUIContent _customLabel;
-
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             if (property.propertyType == SerializedPropertyType.String)
@@ -30,12 +28,20 @@ namespace GRT.Editor.Inspectors
                     DragAndDrop.AcceptDrag();
                 }
 
-                if (_customLabel == null)
-                {
-                    var customName = (attribute as DraggableAssetPathAttribute).Name;
-                    _customLabel = string.IsNullOrEmpty(customName) ? label : new GUIContent(customName);
-                }
-                EditorGUI.PropertyField(position, property, _customLabel, true);
+                // TODO 需要兼容 text area
+                // var fieldInfo = property.serializedObject.targetObject.GetType().GetField(property.name);
+                // if (fieldInfo.GetCustomAttribute<TextAreaAttribute>(true) != null)
+                // {
+                //     property.stringValue = EditorGUI.TextArea(position, property.stringValue);
+                // }
+                // else
+                // {
+                var draggable = attribute as DraggableAssetPathAttribute;
+                label.text = draggable.Name;
+                label.tooltip = draggable.Tips;
+
+                EditorGUI.PropertyField(position, property, label, true);
+                // }
 
                 EditorGUI.EndProperty();
             }
