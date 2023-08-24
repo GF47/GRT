@@ -24,6 +24,11 @@ namespace GRT.GInventory
         /// </summary>
         int Max { get; }
 
+        /// <summary>
+        /// 单次转移的量
+        /// </summary>
+        int Dose { get; }
+
         void SetValue(IStack stack, int value);
 
         /// <summary>

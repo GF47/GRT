@@ -18,6 +18,8 @@
 
         public const string DOSE = "dose";
 
+        public const string SPAWN = "spawn";
+
         public const string ASSET = "asset";
         public const string PROPERTIES = "properties";
         public const string SKILL = "skill";

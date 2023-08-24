@@ -14,11 +14,13 @@ namespace GRT.GInventory.Quantifiables
 
         public int Max { get; set; } = MAX;
 
+        public int Dose { get; set; } = MAX;
+
         public event Action<IStack, int, int> Changing;
 
         public Volume(int volume) => _volume = volume;
 
-        public IQuantifiable Clone(int volume) => new Volume(volume) { Max = Max };
+        public IQuantifiable Clone(int volume) => new Volume(volume) { Max = Max, Dose = Dose, };
 
         public void SetValue(IStack stack, int volume)
         {

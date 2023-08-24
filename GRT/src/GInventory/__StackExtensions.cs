@@ -46,6 +46,9 @@ namespace GF47.GRT.GInventory
         public static object GetProperty(this IStack stack, string name) =>
             stack.Properties.TryGetValue(name, out var value) ? value : null;
 
+        public static void SetSpawn(this IStack stack, bool spawn) =>
+            stack.SetProperty(Keywords.POS, spawn);
+
         public static void SetPosition(this IStack stack, Vector3 pos) =>
             stack.SetProperty(Keywords.POS, pos);
 
@@ -55,11 +58,14 @@ namespace GF47.GRT.GInventory
         public static void SetScale(this IStack stack, Vector3 scale) =>
             stack.SetProperty(Keywords.SCALE, scale);
 
-        public static Vector3 GetPosition(this IStack stack) =>
-            stack.Properties.TryGetValue(Keywords.POS, out var value) && value is Vector3 pos ? pos : default;
+        public static bool GetSpawn(this IStack stack) =>
+            stack.Properties.TryGetValue(Keywords.POS, out var value) && value is bool spawn ? spawn : default;
 
-        public static Vector3 GetRotation(this IStack stack) =>
-            stack.Properties.TryGetValue(Keywords.ROT, out var value) && value is Vector3 rot ? rot : default;
+        public static Vector3 GetPosition(this IStack stack, Vector3 @default = default) =>
+            stack.Properties.TryGetValue(Keywords.POS, out var value) && value is Vector3 pos ? pos : @default;
+
+        public static Vector3 GetRotation(this IStack stack, Vector3 @default = default) =>
+            stack.Properties.TryGetValue(Keywords.ROT, out var value) && value is Vector3 rot ? rot : @default;
 
         public static Vector3 GetScale(this IStack stack) =>
             stack.Properties.TryGetValue(Keywords.SCALE, out var value) && value is Vector3 scale ? scale : Vector3.one;

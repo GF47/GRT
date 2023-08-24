@@ -3,23 +3,23 @@ using UnityEngine;
 
 namespace GRT.GEC.Unity
 {
-    public class GHoverable<T> : IGComponent<GameObject>, IBorrower<UEntity>
+    public class GHoverable<T> : IGComponent<GameObject>, IUser<GameObject>
         where T : GHoverTrigger<T>
     {
         public IGEntity<GameObject> GEntity { get; set; }
 
-        public ILender<UEntity> Lender { get; private set; }
-
         public T Trigger { get; protected set; }
 
-        public bool Borrow(ILender<UEntity> lender)
+        public IProvider<GameObject> Provider { get; private set; }
+
+        public bool Use(IProvider<GameObject> provider)
         {
-            var collider = lender.Wares.GetComponent<GameObject, GCollider>();
+            var collider = (provider as IGEntity<GameObject>)?.GetComponent<GameObject, GCollider>();
             var deal = collider != null;
 
             if (deal)
             {
-                Lender = lender;
+                Provider = provider;
 
                 Trigger = collider.Collider.gameObject.AddComponent<T>();
                 Trigger.Connect(this);
@@ -28,14 +28,14 @@ namespace GRT.GEC.Unity
             return deal;
         }
 
-        public void Repay()
+        public void Release()
         {
             if (Trigger != null)
             {
                 GHoverTrigger<T>.Destroy(Trigger);
             }
 
-            Lender = null;
+            Provider = null;
         }
     }
 

@@ -44,7 +44,7 @@ namespace GRT.GInventory.DefaultImpl
         {
             if (Stacks.ContainsKey(stack))
             {
-                return stack.Separate<DefaultStack>(stack.Definition.GetDose());
+                return stack.Separate<DefaultStack>(stack.Quantity.Dose);
             }
 
             return stack;

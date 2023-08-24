@@ -18,26 +18,22 @@ namespace GRT.GInventory.Example
 
         public IEnumerable<IStack> LoadSceneTools()
         {
-            var data = new (string, string, string, string, int)[]
+            var data = new (string, string, string, string, int, int)[]
             {
-                ("Cube","正方体","rectangle","Cube", 3),
-                ("Sphere","球体","circle","Sphere", 3),
-                ("Triangle","四面体","triangle","Triangle",3),
+                ("Cube","正方体","rectangle","Cube", 3, 10),
+                ("Sphere","球体","circle","Sphere", 3, 1),
+                ("Triangle","四面体","triangle","Triangle",3, -1),
             };
 
-            foreach (var (dName, dDescription, dIcon, dPrototype, dCount) in data)
+            foreach (var (dName, dDescription, dIcon, dPrototype, dCount, dDose) in data)
             {
-                var def = new DefaultDefinition()
-                {
-                    Name = dName,
-                    Description = dDescription,
-                };
+                var def = new DefaultDefinition(dName, dDescription);
                 def.SetIcon(dIcon);
                 def.SetPrototype(dPrototype);
                 def.Skills.Add(new Shoot());
 
                 var stack = new DefaultStack();
-                stack.Init(IDGenerator.Instance.Generate(), def, new Count(dCount));
+                stack.Init(IDGenerator.Instance.Generate(), def, new Count(dCount) { Dose = dDose });
                 var pos = 5 * UnityEngine.Random.onUnitSphere;
                 pos.y = Math.Abs(pos.y);
                 stack.SetPosition(pos);
@@ -55,16 +51,12 @@ namespace GRT.GInventory.Example
 
             foreach(var (dName, dDescription,dIcon, dPrototype, dCount) in data)
             {
-                var def = new DefaultDefinition()
-                {
-                    Name = dName,
-                    Description = dDescription,
-                };
+                var def = new DefaultDefinition(dName, dDescription);
                 def.SetIcon(dIcon);
                 def.SetPrototype(dPrototype);
 
                 var stack = new DefaultStack();
-                stack.Init(IDGenerator.Instance.Generate(), def, dCount > 0 ? new Count(dCount) : (IQuantifiable)new Singleton());
+                stack.Init(IDGenerator.Instance.Generate(), def, dCount > 0 ? new Count(dCount) { Dose = 1 } : (IQuantifiable)new Singleton());
 
                 yield return stack;
             }

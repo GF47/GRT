@@ -21,7 +21,7 @@ namespace GRT.GEC
 
         public IGEntity<T> GEntity { get; set; }
 
-        public T Object => GEntity?.Target;
+        public T Object => GEntity?.Ware;
 
         public bool IsAlive { get; protected set; }
 

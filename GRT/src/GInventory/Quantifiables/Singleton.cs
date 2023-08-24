@@ -10,6 +10,8 @@ namespace GRT.GInventory.Quantifiables
 
         public int Max => 1;
 
+        public int Dose => 1;
+
         public event Action<IStack, int, int> Changing;
         // {
         //     add { /* warning */ }

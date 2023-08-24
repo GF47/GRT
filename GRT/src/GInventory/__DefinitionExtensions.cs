@@ -30,7 +30,7 @@
         public static string GetIcon(this IDefinition definition) =>
             definition.Properties.TryGetValue(Keywords.ICON, out var value) ? value.ToString() : null;
 
-        public static int GetDose(this IDefinition definition) =>
-            definition.Properties.TryGetValue(Keywords.DOSE, out var value) && value is int dose ? dose : 1;
+        // public static int GetDose(this IDefinition definition, int @default = 1) =>
+        //     definition.Properties.TryGetValue(Keywords.DOSE, out var value) && value is int dose ? dose : @default;
     }
 }

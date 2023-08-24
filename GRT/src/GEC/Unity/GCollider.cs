@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
-using System;
 
 namespace GRT.GEC.Unity
 {
-    public class GCollider : IGComponent<GameObject>, IBorrower<UEntity>
+    public class GCollider : IGComponent<GameObject>, IUser<GameObject>
     {
         public IGEntity<GameObject> GEntity { get; set; }
 
@@ -13,37 +12,29 @@ namespace GRT.GEC.Unity
 
         public Collider Collider { get; private set; }
 
-        public ILender<UEntity> Lender { get; private set; }
+        public IProvider<GameObject> Provider { get; private set; }
 
-        public bool Borrow(ILender<UEntity> lender)
+        public bool Use(IProvider<GameObject> provider)
         {
             bool deal;
             GameObject colliderGO;
 
-            if (string.IsNullOrEmpty(CustomLocation) || GameObjectExtension.IsSameLocation(CustomLocation, lender.Wares.Location))
+            var entity = provider as IGEntity<GameObject>;
+            if (string.IsNullOrEmpty(CustomLocation) || GameObjectExtension.IsSameLocation(CustomLocation, entity.Location))
             {
-                if (lender.Wares.Reference.TryGetTarget(out var go))
-                {
-                    Lender = lender;
-                    deal = true;
-
-                    colliderGO = go;
-                }
-                else
-                {
-                    throw new Exception($"can not find the {lender.Wares.Location}");
-                }
+                Provider = entity;
+                deal = true;
+                colliderGO = entity.Ware;
             }
             else
             {
                 deal = false;
-
                 colliderGO = GameObjectExtension.FindByLocation(CustomLocation);
             }
 
             if (colliderGO.isStatic)
             {
-                throw new UnityException($"{CustomLocation ?? lender.Wares.Location} is static, you can not use the static collider");
+                throw new UnityException($"{CustomLocation ?? entity.Location} is static, you can not use the static collider");
             }
 
             Collider = colliderGO.GetComponent<Collider>();
@@ -65,11 +56,12 @@ namespace GRT.GEC.Unity
             return deal;
         }
 
-        public void Repay()
+        public void Release()
         {
-            Lender = null;
+            Provider = null;
         }
     }
 
-    public class GColliderContainer : UBehaviour<GCollider> { }
+    public class GColliderContainer : UBehaviour<GCollider>
+    { }
 }

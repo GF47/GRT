@@ -178,11 +178,11 @@
     <Compile Include="src\Geometry\Utilities.cs" />
     <Compile Include="src\GMath.cs" />
     <Compile Include="src\IGFormattable.cs" />
-    <Compile Include="src\ILender.cs" />
     <Compile Include="src\ILinkable.cs" />
     <Compile Include="src\Ioc\Container.cs" />
     <Compile Include="src\IPercent.cs" />
     <Compile Include="src\IProjecter01.cs" />
+    <Compile Include="src\IProvider.cs" />
     <Compile Include="src\Net\TcpStringsReceiver.cs" />
     <Compile Include="src\Net\TcpStringsSender.cs" />
     <Compile Include="src\Pool.cs" />

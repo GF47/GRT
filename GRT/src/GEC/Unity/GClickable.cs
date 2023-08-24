@@ -3,21 +3,21 @@ using UnityEngine;
 
 namespace GRT.GEC.Unity
 {
-    public abstract class GClickable : IGComponent<GameObject>, IBorrower<UEntity>
+    public abstract class GClickable : IGComponent<GameObject>, IUser<GameObject>
     {
         public IGEntity<GameObject> GEntity { get; set; }
 
-        public ILender<UEntity> Lender { get; private set; }
+        public IProvider<GameObject> Provider { get; private set; }
 
         private PointerClickTrigger _trigger;
 
-        public bool Borrow(ILender<UEntity> lender)
+        public bool Use(IProvider<GameObject> provider)
         {
-            var collider = lender.Wares.GetComponent<GameObject, GCollider>();
+            var collider = (provider as IGEntity<GameObject>)?.GetComponent<GameObject, GCollider>();
             var deal = collider != null;
             if (deal)
             {
-                Lender = lender;
+                Provider = provider;
 
                 _trigger = collider.Collider.gameObject.AddComponent<PointerClickTrigger>();
                 _trigger.InnerTrigger = new MouseButtonTrigger() { button = 0 };
@@ -27,7 +27,7 @@ namespace GRT.GEC.Unity
             return deal;
         }
 
-        public void Repay()
+        public void Release()
         {
             if (_trigger != null)
             {
@@ -35,7 +35,7 @@ namespace GRT.GEC.Unity
                 PointerClickTrigger.Destroy(_trigger);
             }
 
-            Lender = null;
+            Provider = null;
         }
 
         public abstract void OnClick(Camera camera, RaycastHit hit, Vector2 position);

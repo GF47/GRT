@@ -1,46 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace GRT.GEC.Unity
 {
-    public class UEntity : IGEntity<GameObject>, ILender<UEntity>
+    public class UEntity : IGEntity<GameObject>
     {
-        public WeakReference<GameObject> Reference { get; private set; }
+        private readonly ICollection<IUser<GameObject>> _user = new List<IUser<GameObject>>();
 
-        public GameObject Target => Reference.TryGetTarget(out GameObject target) ? target : null;
+        public GameObject Ware { get; private set; }
 
         public string Location { get; set; }
 
         public IList<IGComponent<GameObject>> Components { get; } = new List<IGComponent<GameObject>>();
 
-        public UEntity Wares => this;
+        public void Provide(IUser<GameObject> user) => _user.Add(user);
 
-        public ICollection<IBorrower<UEntity>> Borrowers { get; } = new List<IBorrower<UEntity>>();
-
-        public void Dun()
+        public void Provide()
         {
-            foreach (var borrower in Borrowers)
-            {
-                Notary<UEntity>.Repay(borrower, this, false);
-            }
-
-            Borrowers.Clear();
-        }
-
-        public void SetTarget()
-        {
-            GameObject go = GameObjectExtension.FindByLocation(Location);
-
-            Reference = new WeakReference<GameObject>(go);
+            Ware = GameObjectExtension.FindByLocation(Location);
 
             foreach (var com in Components)
             {
-                if (com is IBorrower<UEntity> borrower)
+                if (com is IUser<GameObject> user)
                 {
-                    Notary<UEntity>.Borrow(borrower, this); // 为毛是借出人主动发起???
+                    Notary<GameObject>.Notarize(this, user);
                 }
             }
+        }
+
+        public void CancelProvide()
+        {
+            foreach (var user in _user)
+            {
+                Notary<GameObject>.Cancel(this, user);
+            }
+
+            _user.Clear();
         }
     }
 }

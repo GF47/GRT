@@ -62,7 +62,6 @@ namespace GRT.AssetBundles_Old
         public ABUpdater(bool need2Connect2Server = true)
         {
             _need2Connect2Server = need2Connect2Server;
-            AssetBundlesManager.ConstructFunc = () => new AssetBundlesManager();
             Coroutines.StartACoroutine(__Init());
         }
 
