@@ -1,5 +1,4 @@
-﻿using GF47.GRT.GInventory;
-using GRT.GInventory.DefaultImpl;
+﻿using GRT.GInventory.DefaultImpl;
 using GRT.GInventory.Quantifiables;
 using System;
 using System.Collections.Generic;
@@ -22,7 +21,7 @@ namespace GRT.GInventory.Example
             {
                 ("Cube","正方体","rectangle","Cube", 3, 10),
                 ("Sphere","球体","circle","Sphere", 3, 1),
-                ("Triangle","四面体","triangle","Triangle",3, -1),
+                ("Triangle","四面体","triangle","Triangle",3, 1),
             };
 
             foreach (var (dName, dDescription, dIcon, dPrototype, dCount, dDose) in data)

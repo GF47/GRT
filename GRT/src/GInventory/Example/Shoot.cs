@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using GRT;
+using UnityEngine;
 
 namespace GRT.GInventory.Example
 {
@@ -14,7 +15,8 @@ namespace GRT.GInventory.Example
         {
             var newStack = stack?.Transfer(Scene.Instance);
 
-            if (Scene.Instance.Stacks.TryGetValue(newStack, out var itemOut) && itemOut is SceneItem item)
+            var itemOut = Scene.Instance.Items.Find(i => i.Stack == newStack);
+            if (itemOut != null && itemOut is SceneItem item)
             {
                 var camera = Camera.main.transform;
                 item.transform.position = camera.position + camera.up;

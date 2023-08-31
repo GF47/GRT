@@ -1,5 +1,4 @@
-﻿using GF47.GRT.GInventory;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace GRT.GInventory.Example
 {
@@ -9,11 +8,7 @@ namespace GRT.GInventory.Example
 
         public void SetStack(IStack stack)
         {
-            if (Stack != null)
-            {
-                Stack.Quantity.Changing -= Quantity_Changing;
-            }
-
+            if (Stack != null) { Stack.Quantity.Changing -= Quantity_Changing; }
             Stack = stack;
             Stack.Quantity.Changing += Quantity_Changing;
 
@@ -30,6 +25,7 @@ namespace GRT.GInventory.Example
             if (Stack != null)
             {
                 Stack.Quantity.Changing -= Quantity_Changing;
+                Stack = null;
             }
         }
     }

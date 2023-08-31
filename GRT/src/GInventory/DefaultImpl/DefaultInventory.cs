@@ -1,4 +1,4 @@
-﻿using GF47.GRT.GInventory;
+﻿using GRT;
 using System;
 using System.Collections.Generic;
 
@@ -6,14 +6,15 @@ namespace GRT.GInventory.DefaultImpl
 {
     public abstract class DefaultInventory : IInventory
     {
-        public IDictionary<IStack, IInventoryItem> Stacks { get; protected set; } = new Dictionary<IStack, IInventoryItem>();
+        public IList<IInventoryItem> Items { get; protected set; } = new List<IInventoryItem>();
 
         public void Destroy(IStack stack)
         {
-            if (Stacks.TryGetValue(stack, out var item))
+            var item = Items.Find(i => i.Stack == stack);
+            if (item != null)
             {
                 ReleaseItem(stack, item);
-                Stacks.Remove(stack);
+                Items.Remove(item);
             }
         }
 
@@ -21,9 +22,9 @@ namespace GRT.GInventory.DefaultImpl
         {
             if (autoMerge)
             {
-                foreach (var pair in Stacks)
+                foreach (var i in Items)
                 {
-                    var si = pair.Key;
+                    var si = i.Stack;
                     if (si.Definition.ID == stack.Definition.ID)
                     {
                         return si.Merge(stack);
@@ -34,7 +35,7 @@ namespace GRT.GInventory.DefaultImpl
             InstantiateItem(stack, (s, i) =>
             {
                 i.SetStack(s);
-                Stacks.Add(s, i);
+                Items.Add(i);
             });
 
             return stack;
@@ -42,7 +43,8 @@ namespace GRT.GInventory.DefaultImpl
 
         public virtual IStack Out(IStack stack)
         {
-            if (Stacks.ContainsKey(stack))
+            var item = Items.Find(i => i.Stack == stack);
+            if (item != null)
             {
                 return stack.Separate<DefaultStack>(stack.Quantity.Dose);
             }

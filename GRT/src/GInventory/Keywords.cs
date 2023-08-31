@@ -29,6 +29,7 @@
         public const string TIME = "time";
         public const string CLICK = "click";
         public const string PICK = "pick";
+        public const string DROP = "drop";
         public const string THROW = "throw";
     }
 }

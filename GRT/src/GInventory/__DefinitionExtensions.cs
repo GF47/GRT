@@ -27,6 +27,10 @@
         public static void SetPrototype(this IDefinition definition, string prototype) =>
             definition.SetProperty(Keywords.PROTOTYPE, prototype);
 
+
+        public static object GetProperty(this IDefinition definition, string name) =>
+            definition.Properties.TryGetValue(name, out var value) ? value : null;
+
         public static string GetIcon(this IDefinition definition) =>
             definition.Properties.TryGetValue(Keywords.ICON, out var value) ? value.ToString() : null;
 

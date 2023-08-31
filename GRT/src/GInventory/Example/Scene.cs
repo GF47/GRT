@@ -1,5 +1,4 @@
-﻿using GF47.GRT.GInventory;
-using GRT.GInventory.DefaultImpl;
+﻿using GRT.GInventory.DefaultImpl;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,7 +25,7 @@ namespace GRT.GInventory.Example
 
         private IInventory _inner;
 
-        public IDictionary<IStack, IInventoryItem> Stacks => _inner.Stacks;
+        public IList<IInventoryItem> Items => _inner.Items;
 
         public void Destroy(IStack stack) => _inner.Destroy(stack);
 

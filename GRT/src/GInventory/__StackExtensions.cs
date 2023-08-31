@@ -1,9 +1,8 @@
-﻿using GRT.GInventory;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GF47.GRT.GInventory
+namespace GRT.GInventory
 {
     public static class __StackExtensions
     {
@@ -47,7 +46,7 @@ namespace GF47.GRT.GInventory
             stack.Properties.TryGetValue(name, out var value) ? value : null;
 
         public static void SetSpawn(this IStack stack, bool spawn) =>
-            stack.SetProperty(Keywords.POS, spawn);
+            stack.SetProperty(Keywords.SPAWN, spawn);
 
         public static void SetPosition(this IStack stack, Vector3 pos) =>
             stack.SetProperty(Keywords.POS, pos);
@@ -59,7 +58,7 @@ namespace GF47.GRT.GInventory
             stack.SetProperty(Keywords.SCALE, scale);
 
         public static bool GetSpawn(this IStack stack) =>
-            stack.Properties.TryGetValue(Keywords.POS, out var value) && value is bool spawn ? spawn : default;
+            stack.Properties.TryGetValue(Keywords.SPAWN, out var value) && value is bool spawn ? spawn : default;
 
         public static Vector3 GetPosition(this IStack stack, Vector3 @default = default) =>
             stack.Properties.TryGetValue(Keywords.POS, out var value) && value is Vector3 pos ? pos : @default;

@@ -4,7 +4,7 @@ namespace GRT.GInventory
 {
     public interface IInventory
     {
-        IDictionary<IStack, IInventoryItem> Stacks { get; }
+        IList<IInventoryItem> Items { get; }
 
         void Destroy(IStack stack);
 
