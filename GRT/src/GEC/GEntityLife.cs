@@ -3,14 +3,15 @@ using System.Collections.Generic;
 
 namespace GRT.GEC
 {
-    public class GEntityLife<T> : IGComponent<T>, IGLife<T>, IGStartable<T>, IGTickable<T>, IGDisposable<T>, IGScope
+    public class GEntityLife<T, TE> : IGComponent<T, TE>, IGLife<T>, IGStartable<T>, IGTickable<T>, IGDisposable<T>, IGScope
         where T : class
+        where TE : IGEntity<T, TE>
     {
-        public event Action<GEntityLife<T>> Starting;
+        public event Action<GEntityLife<T, TE>> Starting;
 
-        public event Action<GEntityLife<T>> Disposing;
+        public event Action<GEntityLife<T, TE>> Disposing;
 
-        public event Action<GEntityLife<T>, float> Ticking;
+        public event Action<GEntityLife<T, TE>, float> Ticking;
 
 #if FAST_BUT_SHIT
         public IGStartable AsGStartable => this;
@@ -19,7 +20,7 @@ namespace GRT.GEC
         public IGScope AsGScope => this;
 #endif
 
-        public IGEntity<T> GEntity { get; set; }
+        public TE GEntity { get; set; }
 
         public T Object => GEntity?.Ware;
 

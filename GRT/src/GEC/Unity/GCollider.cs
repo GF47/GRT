@@ -2,9 +2,9 @@
 
 namespace GRT.GEC.Unity
 {
-    public class GCollider : IGComponent<GameObject>, IUser<GameObject>
+    public class GCollider : IGComponent<GameObject, UEntity>, IUser<UEntity>
     {
-        public IGEntity<GameObject> GEntity { get; set; }
+        public UEntity GEntity { get; set; }
 
         public string CustomLocation { get; set; }
 
@@ -12,36 +12,36 @@ namespace GRT.GEC.Unity
 
         public Collider Collider { get; private set; }
 
-        public IProvider<GameObject> Provider { get; private set; }
+        public IProvider<UEntity> Provider { get; private set; }
 
-        public bool Use(IProvider<GameObject> provider)
+        public bool Use(IProvider<UEntity> provider)
         {
-            bool deal;
-            GameObject colliderGO;
+            bool ratify;
+            GameObject go;
 
-            var entity = provider as IGEntity<GameObject>;
+            var entity = provider.Ware;
             if (string.IsNullOrEmpty(CustomLocation) || GameObjectExtension.IsSameLocation(CustomLocation, entity.Location))
             {
-                Provider = entity;
-                deal = true;
-                colliderGO = entity.Ware;
+                Provider = provider;
+                ratify = true;
+                go = entity.Ware;
             }
             else
             {
-                deal = false;
-                colliderGO = GameObjectExtension.FindByLocation(CustomLocation);
+                ratify = false;
+                go = GameObjectExtension.FindByLocation(CustomLocation);
             }
 
-            if (colliderGO.isStatic)
+            if (go.isStatic)
             {
                 throw new UnityException($"{CustomLocation ?? entity.Location} is static, you can not use the static collider");
             }
 
-            Collider = colliderGO.GetComponent<Collider>();
+            Collider = go.GetComponent<Collider>();
 
             if (Collider == null)
             {
-                var box = colliderGO.AddComponent<BoxCollider>();
+                var box = go.AddComponent<BoxCollider>();
                 box.ResizeToWrapChildren();
 
                 Collider = box;
@@ -53,15 +53,15 @@ namespace GRT.GEC.Unity
             }
             Collider.gameObject.AddComponent<GColliderContainer>().Connect(this);
 
-            return deal;
+            return ratify;
         }
 
         public void Release()
         {
+            Collider = null;
             Provider = null;
         }
     }
 
-    public class GColliderContainer : UBehaviour<GCollider>
-    { }
+    public class GColliderContainer : UBehaviour<GCollider> { }
 }

@@ -3,28 +3,26 @@ using UnityEngine;
 
 namespace GRT.GEC.Unity
 {
-    public abstract class GClickable : IGComponent<GameObject>, IUser<GameObject>
+    public abstract class GClickable : IGComponent<GameObject, UEntity>, IUser<UEntity>
     {
-        public IGEntity<GameObject> GEntity { get; set; }
+        public UEntity GEntity { get; set; }
 
-        public IProvider<GameObject> Provider { get; private set; }
+        public IProvider<UEntity> Provider { get; private set; }
 
         private PointerClickTrigger _trigger;
 
-        public bool Use(IProvider<GameObject> provider)
+        public bool Use(IProvider<UEntity> provider)
         {
-            var collider = (provider as IGEntity<GameObject>)?.GetComponent<GameObject, GCollider>();
-            var deal = collider != null;
-            if (deal)
+            if (provider.Ware != null && provider.Ware.TryGetComponent(out GCollider collider))
             {
                 Provider = provider;
 
                 _trigger = collider.Collider.gameObject.AddComponent<PointerClickTrigger>();
                 _trigger.InnerTrigger = new MouseButtonTrigger() { button = 0 };
                 _trigger.Event.AddListener(OnClick);
+                return true;
             }
-
-            return deal;
+            return false;
         }
 
         public void Release()

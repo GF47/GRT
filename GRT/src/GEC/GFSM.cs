@@ -3,12 +3,13 @@ using System;
 
 namespace GRT.GEC
 {
-    public class GFSM<T> : IGComponent<T>
+    public class GFSM<T, TE> : IGComponent<T, TE>
         where T : class
+        where TE : IGEntity<T, TE>
     {
         private FiniteStateMachine _fsm;
 
-        public IGEntity<T> GEntity { get; set; }
+        public TE GEntity { get; set; }
 
         public FiniteStateMachine FSM
         {
@@ -27,8 +28,7 @@ namespace GRT.GEC
 
         private void Bind()
         {
-            var lifecycle = GEntity.GetComponent<T, GEntityLife<T>>();
-            if (lifecycle != null)
+            if (GEntity.TryGetComponent(out GEntityLife<T, TE> lifecycle))
             {
                 lifecycle.Starting += Start;
                 lifecycle.Disposing += Dispose;
@@ -41,10 +41,10 @@ namespace GRT.GEC
             }
         }
 
-        private void Tick(GEntityLife<T> life, float delta) => _fsm.Update();
+        private void Tick(GEntityLife<T, TE> _, float __) => _fsm.Update();
 
-        private void Dispose(GEntityLife<T> life) => _fsm.Reset();
+        private void Dispose(GEntityLife<T, TE> _) => _fsm.Reset();
 
-        private void Start(GEntityLife<T> life) => _fsm.Start();
+        private void Start(GEntityLife<T, TE> _) => _fsm.Start();
     }
 }

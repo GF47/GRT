@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace GRT.GEC
 {
-    public interface IGEntity<T> : IProvider<T> where T : class
+    public interface IGEntity<T, TE> : IProvider<T>
+        where T : class
+        where TE : IGEntity<T, TE>
     {
         string Location { get; }
 
-        IList<IGComponent<T>> Components { get; }
+        IList<IGComponent<T, TE>> Components { get; }
     }
 }

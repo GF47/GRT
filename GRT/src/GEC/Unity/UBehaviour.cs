@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GRT.GEC.Unity
 {
-    public abstract class UBehaviour<T> : MonoBehaviour where T : class, IGComponent<GameObject>
+    public abstract class UBehaviour<T> : MonoBehaviour where T : class, IGComponent<GameObject, UEntity>
     {
         public T GComponent => _gComponentRef == null ? null : (_gComponentRef.TryGetTarget(out var com) ? com : null);
 

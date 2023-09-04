@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace GRT.GEC.Unity
 {
-    public class UEntity : IGEntity<GameObject>
+    public class UEntity : IGEntity<GameObject, UEntity>
     {
         private readonly ICollection<IUser<GameObject>> _user = new List<IUser<GameObject>>();
 
@@ -11,22 +12,11 @@ namespace GRT.GEC.Unity
 
         public string Location { get; set; }
 
-        public IList<IGComponent<GameObject>> Components { get; } = new List<IGComponent<GameObject>>();
+        public IList<IGComponent<GameObject, UEntity>> Components { get; } = new List<IGComponent<GameObject, UEntity>>();
 
         public void Provide(IUser<GameObject> user) => _user.Add(user);
 
-        public void Provide()
-        {
-            Ware = GameObjectExtension.FindByLocation(Location);
-
-            foreach (var com in Components)
-            {
-                if (com is IUser<GameObject> user)
-                {
-                    Notary<GameObject>.Notarize(this, user);
-                }
-            }
-        }
+        public virtual async Task LoadWare(GameObject ware = null) => Ware = ware == null ? GameObjectExtension.FindByLocation(Location) : ware;
 
         public void CancelProvide()
         {

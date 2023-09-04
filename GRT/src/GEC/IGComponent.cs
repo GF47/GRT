@@ -1,7 +1,7 @@
 ﻿namespace GRT.GEC
 {
-    public interface IGComponent<T> where T : class
+    public interface IGComponent<T, TE> where T : class where TE : IGEntity<T, TE>
     {
-        IGEntity<T> GEntity { get; set; }
+        TE GEntity { get; set; }
     }
 }

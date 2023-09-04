@@ -2,9 +2,20 @@
 {
     public static class GEntityExtensions
     {
-        public static TC GetComponent<T, TC>(this IGEntity<T> entity)
+        public static T GetWare<T, TE>(this IProvider<TE> provider)
             where T : class
-            where TC : IGComponent<T>
+            where TE : IGEntity<T, TE>
+            => provider?.Ware?.Ware;
+
+        public static bool HasWare<T, TE>(this IProvider<TE> provider, out T ware)
+            where T : class
+            where TE : IGEntity<T, TE>
+            => (ware = GetWare<T, TE>(provider)) != null;
+
+        public static TC GetComponent<T, TE, TC>(this IGEntity<T, TE> entity)
+            where T : class
+            where TE : IGEntity<T, TE>
+            where TC : IGComponent<T, TE>
         {
             foreach (var com in entity.Components)
             {
@@ -16,8 +27,9 @@
             return default;
         }
 
-        public static void AddComponent<T>(this IGEntity<T> entity, IGComponent<T> com)
+        public static void AddComponent<T, TE>(this TE entity, IGComponent<T, TE> com)
             where T : class
+            where TE : IGEntity<T, TE>
         {
             if (!entity.Components.Contains(com))
             {
@@ -26,9 +38,10 @@
             }
         }
 
-        public static bool TryGetComponent<T, TC>(this IGEntity<T> entity, out TC component)
+        public static bool TryGetComponent<T, TE, TC>(this IGEntity<T, TE> entity, out TC component)
             where T : class
-            where TC : IGComponent<T>
+            where TE : IGEntity<T, TE>
+            where TC : IGComponent<T, TE>
         {
             foreach (var com in entity.Components)
             {

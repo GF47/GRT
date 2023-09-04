@@ -3,29 +3,26 @@ using UnityEngine;
 
 namespace GRT.GEC.Unity
 {
-    public class GHoverable<T> : IGComponent<GameObject>, IUser<GameObject>
+    public class GHoverable<T> : IGComponent<GameObject, UEntity>, IUser<UEntity>
         where T : GHoverTrigger<T>
     {
-        public IGEntity<GameObject> GEntity { get; set; }
+        public UEntity GEntity { get; set; }
 
         public T Trigger { get; protected set; }
 
-        public IProvider<GameObject> Provider { get; private set; }
+        public IProvider<UEntity> Provider { get; private set; }
 
-        public bool Use(IProvider<GameObject> provider)
+        public bool Use(IProvider<UEntity> provider)
         {
-            var collider = (provider as IGEntity<GameObject>)?.GetComponent<GameObject, GCollider>();
-            var deal = collider != null;
-
-            if (deal)
+            if (provider.Ware != null & provider.Ware.TryGetComponent(out GCollider collider))
             {
                 Provider = provider;
 
                 Trigger = collider.Collider.gameObject.AddComponent<T>();
                 Trigger.Connect(this);
+                return true;
             }
-
-            return deal;
+            return false;
         }
 
         public void Release()
