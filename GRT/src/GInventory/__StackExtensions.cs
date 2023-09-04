@@ -28,7 +28,7 @@ namespace GRT.GInventory
             return b;
         }
 
-        public static IStack TransferImpl(this IStack stack, IInventory inventory)
+        public static IStack TransferImpl(IStack stack, IInventory inventory)
         {
             var newStack = stack.Inventory?.Out(stack) ?? stack;
             newStack.Inventory = inventory;// 这里不能直接使用原有的 stack, 要操作的 stack 是原本的 Inventory 里分离出来的新 stack

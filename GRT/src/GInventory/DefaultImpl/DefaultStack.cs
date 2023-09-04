@@ -24,6 +24,6 @@ namespace GRT.GInventory.DefaultImpl
 
         public virtual void Destroy() => Inventory.Destroy(this);
 
-        public virtual IStack Transfer(IInventory targetInventory) => this.TransferImpl(targetInventory);
+        public virtual IStack Transfer(IInventory targetInventory) => __StackExtensions.TransferImpl(this, targetInventory);
     }
 }

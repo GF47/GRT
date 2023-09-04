@@ -120,17 +120,6 @@
     <Compile Include="src\FSM\TriggerCondition.cs" />
     <Compile Include="src\FSM\TrueFalseCondition.cs" />
     <Compile Include="src\FSM\Util.cs" />
-    <Compile Include="src\GEC\Old\GComponents\Clickable.cs" />
-    <Compile Include="src\GEC\Old\GComponents\DynamicGEntity.cs" />
-    <Compile Include="src\GEC\Old\GComponents\GCollider.cs" />
-    <Compile Include="src\GEC\Old\GComponents\GComponentsUtil.cs" />
-    <Compile Include="src\GEC\Old\GComponents\GContextMenu.cs" />
-    <Compile Include="src\GEC\Old\GComponents\GEntity.cs" />
-    <Compile Include="src\GEC\Old\GComponents\GEventPointer.cs" />
-    <Compile Include="src\GEC\Old\GComponents\IGComponent.cs" />
-    <Compile Include="src\GEC\Old\GComponents\IGEntity.cs" />
-    <Compile Include="src\GEC\Old\GComponents\ILazyBindable.cs" />
-    <Compile Include="src\GEC\Old\GComponents\IUGBridge.cs" />
     <Compile Include="src\GEC\GEntityExtensions.cs" />
     <Compile Include="src\GEC\GEntityLife.cs" />
     <Compile Include="src\GEC\GFSM.cs" />
@@ -221,6 +210,7 @@
     <Compile Include="src\Updater\UpdateDriver.cs" />
     <Compile Include="src\Updater\Vector3Buffer.cs" />
     <Compile Include="src\GLog.cs" />
+    <Compile Include="src\~CollectionExtensions\__IListExtensions.cs" />
     <Compile Include="src\~ComponentsExtension\CameraExtension.cs" />
     <Compile Include="src\~ComponentsExtension\ColliderExtensions.cs" />
     <Compile Include="src\~ComponentsExtension\GameObjectExtension.cs" />
