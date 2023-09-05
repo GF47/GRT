@@ -67,6 +67,10 @@ namespace GRT.Events
                     {
                         SendPointerExitEvent(LastCollider.gameObject, null, _camera, hit, pos);
                     }
+                    else
+                    {
+                        // 有可能是上一个物体直接被销毁了，需要自行处理
+                    }
                     LastCollider = collider;
                     SendPointerEnterEvent(LastCollider.gameObject, null, _camera, hit, pos);
                 }

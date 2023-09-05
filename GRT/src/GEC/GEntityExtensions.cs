@@ -2,16 +2,6 @@
 {
     public static class GEntityExtensions
     {
-        public static T GetWare<T, TE>(this IProvider<TE> provider)
-            where T : class
-            where TE : IGEntity<T, TE>
-            => provider?.Ware?.Ware;
-
-        public static bool HasWare<T, TE>(this IProvider<TE> provider, out T ware)
-            where T : class
-            where TE : IGEntity<T, TE>
-            => (ware = GetWare<T, TE>(provider)) != null;
-
         public static TC GetComponent<T, TE, TC>(this IGEntity<T, TE> entity)
             where T : class
             where TE : IGEntity<T, TE>

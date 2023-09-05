@@ -24,7 +24,7 @@ namespace GRT.GEC.Unity
             {
                 Provider = provider;
                 ratify = true;
-                go = entity.Ware;
+                go = entity.Puppet;
             }
             else
             {

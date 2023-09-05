@@ -8,7 +8,7 @@ namespace GRT.GInventory.DefaultImpl
     {
         public IList<IInventoryItem> Items { get; protected set; } = new List<IInventoryItem>();
 
-        public void Destroy(IStack stack)
+        public virtual void Destroy(IStack stack)
         {
             var item = Items.Find(i => i.Stack == stack);
             if (item != null)

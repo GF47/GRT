@@ -22,7 +22,7 @@ namespace GRT.GEC
 
         public TE GEntity { get; set; }
 
-        public T Object => GEntity?.Ware;
+        public T Object => GEntity?.Puppet;
 
         public bool IsAlive { get; protected set; }
 
