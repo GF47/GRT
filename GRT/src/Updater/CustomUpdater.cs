@@ -32,6 +32,8 @@ namespace GRT.Updater
             UpdateDriver.Add(this);
             _isAlive = true;
 
+            _delta = 0f;
+
             Starting?.Invoke();
             StartingOneShot?.Invoke();
             StartingOneShot = null;

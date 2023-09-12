@@ -10,7 +10,7 @@ namespace GRT.GInventory.DefaultImpl
 
         public virtual void Destroy(IStack stack)
         {
-            var item = Items.Find(i => i.Stack == stack);
+            var item = Items.FindExt(i => i.Stack == stack);
             if (item != null)
             {
                 ReleaseItem(stack, item);
@@ -43,7 +43,7 @@ namespace GRT.GInventory.DefaultImpl
 
         public virtual IStack Out(IStack stack)
         {
-            var item = Items.Find(i => i.Stack == stack);
+            var item = Items.FindExt(i => i.Stack == stack);
             if (item != null)
             {
                 return stack.Separate<DefaultStack>(stack.Quantity.Dose);

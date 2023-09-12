@@ -1,9 +1,8 @@
-﻿using GRT.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Xml;
 
-namespace Modules
+namespace GRT.Data
 {
     public class SystemXmlTools : GXML<XmlNode>
     {

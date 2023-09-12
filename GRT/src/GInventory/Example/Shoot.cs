@@ -15,7 +15,7 @@ namespace GRT.GInventory.Example
         {
             var newStack = stack?.Transfer(Scene.Instance);
 
-            var itemOut = Scene.Instance.Items.Find(i => i.Stack == newStack);
+            var itemOut = Scene.Instance.Items.FindExt(i => i.Stack == newStack);
             if (itemOut != null && itemOut is SceneItem item)
             {
                 var camera = Camera.main.transform;
