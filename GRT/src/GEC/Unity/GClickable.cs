@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GRT.GEC.Unity
 {
-    public abstract class GClickable : IGComponent<GameObject, UEntity>, IUser<UEntity>
+    public abstract class GClickable : IGComponent<GameObject, UEntity>, IConsumer<UEntity>
     {
         public UEntity GEntity { get; set; }
 

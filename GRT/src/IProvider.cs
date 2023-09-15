@@ -14,15 +14,15 @@
         /// <summary>
         /// 向使用方提供物品
         /// </summary>
-        /// <param name="user">使用方</param>
-        void Provide(IUser<T> user);
+        /// <param name="consumer">使用方</param>
+        void Provide(IConsumer<T> consumer);
     }
 
     /// <summary>
     /// 使用方
     /// </summary>
     /// <typeparam name="T">物品类型</typeparam>
-    public interface IUser<T>
+    public interface IConsumer<T>
     {
         /// <summary>
         /// 供应方
@@ -42,18 +42,24 @@
         void Release();
     }
 
-    public static class Notary<T>
+    public static class Contract<T>
     {
         /// <summary>
-        /// 使用关系成立
+        /// 合同
         /// </summary>
         /// <param name="provider">提供方</param>
-        /// <param name="user">使用方</param>
-        public static void Notarize(IProvider<T> provider, IUser<T> user)
+        /// <param name="consumer">使用方</param>
+        public static bool Notarize(IProvider<T> provider, IConsumer<T> consumer)
         {
-            if (user.Use(provider))
+            if (consumer.Use(provider))
             {
-                provider.Provide(user);
+                provider.Provide(consumer);
+
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -61,12 +67,12 @@
         /// 停止使用关系
         /// </summary>
         /// <param name="provider">提供方</param>
-        /// <param name="user">使用方</param>
-        public static void Cancel(IProvider<T> provider, IUser<T> user)
+        /// <param name="consumer">使用方</param>
+        public static void Cancel(IProvider<T> provider, IConsumer<T> consumer)
         {
-            if (user.Provider == provider)
+            if (consumer.Provider == provider)
             {
-                user.Release();
+                consumer.Release();
             }
         }
     }

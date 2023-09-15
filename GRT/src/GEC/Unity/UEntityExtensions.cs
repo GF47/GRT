@@ -14,9 +14,9 @@ namespace GRT.GEC.Unity
         {
             foreach (var com in provider.Ware.Components)
             {
-                if (com is IUser<UEntity> user)
+                if (com is IConsumer<UEntity> consumer)
                 {
-                    Notary<UEntity>.Notarize(provider, user);
+                    Contract<UEntity>.Notarize(provider, consumer);
                 }
             }
         }

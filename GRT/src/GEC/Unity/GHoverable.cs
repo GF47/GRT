@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GRT.GEC.Unity
 {
-    public class GHoverable<T> : IGComponent<GameObject, UEntity>, IUser<UEntity>
+    public class GHoverable<T> : IGComponent<GameObject, UEntity>, IConsumer<UEntity>
         where T : GHoverTrigger<T>
     {
         public UEntity GEntity { get; set; }

@@ -18,6 +18,7 @@ namespace GRT.Components
         [SerializeField][InspectorAlias("半径最大值")] private float _upperRadius = 200f;
         [SerializeField][InspectorAlias("相机半径")] private float _radius = 100f;
         [SerializeField][InspectorAlias("推拉速率")] private float _zoomInFactor = 20f;
+        [SerializeField][InspectorAlias("是否允许推拉")] private bool _zoomable = true;
 
         [SerializeField][InspectorAlias("旋转按钮")] private MouseButton _rotatingButton = MouseButton.Right;
         [SerializeField][InspectorAlias("经速度")] private float _longitudeFactor = 1f;
@@ -49,6 +50,9 @@ namespace GRT.Components
 
         /// <summary> 推拉速率 </summary>
         public float ZoomInFactor { get => _zoomInFactor; set => _zoomInFactor = value; }
+
+        /// <summary> 是否允许推拉 </summary>
+        public bool Zoomable { get => _zoomable; set => _zoomable = value; }
 
         /// <summary> 旋转按钮 </summary>
         public MouseButton RotatingButton { get => _rotatingButton; set => _rotatingButton = value; }
@@ -193,7 +197,7 @@ namespace GRT.Components
 
             if (_target != null)
             {
-                var radiusDelta = _zoomInFactor * Input.GetAxis("Mouse ScrollWheel");
+                var radiusDelta = _zoomable ? _zoomInFactor * Input.GetAxis("Mouse ScrollWheel") : 0f;
                 if (_camera.orthographic)
                 {
                     _lastOrthographicRatio -= radiusDelta;

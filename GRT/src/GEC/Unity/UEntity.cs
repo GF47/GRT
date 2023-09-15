@@ -6,7 +6,7 @@ namespace GRT.GEC.Unity
 {
     public class UEntity : IGEntity<GameObject, UEntity>, IProvider<UEntity>
     {
-        private readonly ICollection<IUser<UEntity>> _user = new List<IUser<UEntity>>();
+        private readonly ICollection<IConsumer<UEntity>> _consumer = new List<IConsumer<UEntity>>();
 
         public UEntity Ware => this;
 
@@ -16,18 +16,18 @@ namespace GRT.GEC.Unity
 
         public IList<IGComponent<GameObject, UEntity>> Components { get; } = new List<IGComponent<GameObject, UEntity>>();
 
-        public void Provide(IUser<UEntity> user) => _user.Add(user);
+        public void Provide(IConsumer<UEntity> consumer) => _consumer.Add(consumer);
 
         public virtual async Task SetPuppet(GameObject puppet = null) => Puppet = puppet == null ? GameObjectExtension.FindByLocation(Location) : puppet;
 
         public void CancelProvide()
         {
-            foreach (var user in _user)
+            foreach (var consumer in _consumer)
             {
-                Notary<UEntity>.Cancel(this, user);
+                Contract<UEntity>.Cancel(this, consumer);
             }
 
-            _user.Clear();
+            _consumer.Clear();
         }
     }
 }

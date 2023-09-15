@@ -23,6 +23,7 @@ namespace GRT.Events
         public Collider LastCollider { get; private set; }
         public virtual Vector3 PointerPosition => Input.mousePosition;
 
+        public bool Blocking { get; private set; }
         public Blocker Blocker { get; private set; }
         public static Blocker GlobalBlocker { get; } = new Blocker();
 
@@ -53,7 +54,8 @@ namespace GRT.Events
             RaycastHit hit = default;
 
             var pos = PointerPosition;
-            if (!(OffScreen() || Blocker.Blocking(pos) || GlobalBlocker.Blocking(pos)))
+            Blocking = OffScreen() || Blocker.Blocking(pos) || GlobalBlocker.Blocking(pos);
+            if (!Blocking)
             {
                 cased = Physics.Raycast(_camera.ScreenPointToRay(pos), out hit, distance, layer);
             }

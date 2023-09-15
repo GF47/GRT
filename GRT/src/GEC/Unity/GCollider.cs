@@ -2,7 +2,7 @@
 
 namespace GRT.GEC.Unity
 {
-    public class GCollider : IGComponent<GameObject, UEntity>, IUser<UEntity>
+    public class GCollider : IGComponent<GameObject, UEntity>, IConsumer<UEntity>
     {
         public UEntity GEntity { get; set; }
 
