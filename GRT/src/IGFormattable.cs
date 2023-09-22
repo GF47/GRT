@@ -23,10 +23,11 @@ namespace GRT
 
     public static class GFormattableUtils
     {
-        public static List<(string, string)> ParseFormattedString(this string template)
-        {
-            var list = new List<(string, string)>();
+        public static List<(string, string)> ParseFormattedString(this string template) =>
+            new List<(string, string)>(ParseFormattableStringImpl(template));
 
+        private static IEnumerable<(string, string)> ParseFormattableStringImpl(this string template)
+        {
             int a = -1;
             int r = a + 1;
             int i = 0;
@@ -39,7 +40,7 @@ namespace GRT
                         var length = i - r;
                         if (length > 0)
                         {
-                            list.Add((null, template.Substring(r, length)));
+                            yield return (null, template.Substring(r, length));
                         }
 
                         a = i; // 开始配对
@@ -53,7 +54,7 @@ namespace GRT
                         var length = i - a - 1;
                         if (length > 0)
                         {
-                            list.Add((template.Substring(a + 1, length), null));
+                            yield return (template.Substring(a + 1, length), null);
                         }
 
                         a = -1; // 配对完毕
@@ -66,10 +67,8 @@ namespace GRT
 
             if (i - r > 0)
             {
-                list.Add((null, template.Substring(r, i - r)));
+                yield return (null, template.Substring(r, i - r));
             }
-
-            return list;
         }
 
         public static void SetValueImpl(this IGFormattable formattable, string tag, string value, string name = null)
@@ -119,6 +118,33 @@ namespace GRT
             }
 
             callback?.Invoke(formattable.Format());
+        }
+
+        public static string SimpleFormat(this string template, ICollection<KeyValuePair<string, object>> dict)
+        {
+            var sb = new StringBuilder(256);
+            foreach (var (tag, value) in ParseFormattableStringImpl(template))
+            {
+                if (tag == null)
+                {
+                    if (!string.IsNullOrEmpty(value))
+                    {
+                        sb.Append(value);
+                    }
+                }
+                else
+                {
+                    foreach (var pair in dict)
+                    {
+                        if (pair.Key == tag && pair.Value != null)
+                        {
+                            sb.Append(pair.Value.ToString());
+                            break;
+                        }
+                    }
+                }
+            }
+            return sb.ToString();
         }
     }
 }

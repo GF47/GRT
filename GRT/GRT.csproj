@@ -130,6 +130,7 @@
     <Compile Include="src\GEC\Unity\GHoverable.cs" />
     <Compile Include="src\GEC\Unity\UBehaviour.cs" />
     <Compile Include="src\GEC\Unity\UEntity.cs" />
+    <Compile Include="src\GEC\Unity\UEntityExtensions.cs" />
     <Compile Include="src\Geometry\Point.cs" />
     <Compile Include="src\GInventory\DefaultImpl\DefaultDefinition.cs" />
     <Compile Include="src\GInventory\DefaultImpl\DefaultInventory.cs" />

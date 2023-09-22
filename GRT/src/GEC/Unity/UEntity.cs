@@ -18,7 +18,11 @@ namespace GRT.GEC.Unity
 
         public void Provide(IConsumer<UEntity> consumer) => _consumer.Add(consumer);
 
+#pragma warning disable CS1998 // 异步方法缺少 "await" 运算符，将以同步方式运行
+
         public virtual async Task SetPuppet(GameObject puppet = null) => Puppet = puppet == null ? GameObjectExtension.FindByLocation(Location) : puppet;
+
+#pragma warning restore CS1998 // 异步方法缺少 "await" 运算符，将以同步方式运行
 
         public void CancelProvide()
         {

@@ -86,6 +86,7 @@
     <Compile Include="src\Editor\Inspectors\InspectorAliasDrawer.cs" />
     <Compile Include="src\Editor\Inspectors\TweenDriverInspector.cs" />
     <Compile Include="src\Editor\TextureCompresser.cs" />
+    <Compile Include="src\Editor\TimelineExtensions.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

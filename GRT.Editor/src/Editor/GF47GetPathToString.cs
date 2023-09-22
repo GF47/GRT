@@ -114,7 +114,7 @@ namespace GRT.Editor
         /**
          * 获取场景物体的层级
          */
-        [MenuItem("GameObject/Get Transform Hierarchy", false, 0)]
+        [MenuItem("GameObject/GRT/Get Transform Hierarchy", false, 0)]
         private static void GetTransformHierarchy()
         {
             var trans = Selection.activeTransform;
