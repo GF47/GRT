@@ -56,10 +56,18 @@ namespace GRT
                 {
                     if (template[i] == '}')
                     {
-                        var length = i - a - 1;
+                        var length = i - r;
                         if (length > 0)
                         {
-                            result.Add(new KeyValuePair<string, string>(template.Substring(a + 1, length), null));
+                            var equal = template.IndexOf('=', r, length);
+                            if (equal != -1)
+                            {
+                                result.Add(new KeyValuePair<string, string>(template.Substring(r, equal - r), template.Substring(equal + 1, i - equal - 1)));
+                            }
+                            else
+                            {
+                                result.Add(new KeyValuePair<string, string>(template.Substring(r, length), null));
+                            }
                         }
 
                         a = -1; // 配对完毕

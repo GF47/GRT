@@ -42,19 +42,19 @@ namespace GRT.Editor
                     case ActivationTrack activationTrack:
                         var go = activationTrack.GetBinding<GameObject>(director);
                         location = go == null ? string.Empty : $"{go.scene.name}:{go.GetPath()}";
-                        sb.AppendLine($"<track id=\"{activationTrack.GetInstanceID()}\" location=\"{location}\"/>");
+                        sb.AppendLine($"<track name=\"{activationTrack.name}\" location=\"{location}\"/>");
                         break;
 
                     case AnimationTrack animationTrack:
                         var animator = animationTrack.GetBinding<Animator>(director);
                         location = animator == null ? string.Empty : $"{animator.gameObject.scene.name}:{animator.gameObject.GetPath()}";
-                        sb.AppendLine($"<track id=\"{animationTrack.GetInstanceID()}\" location=\"{location}\"/>");
+                        sb.AppendLine($"<track name=\"{animationTrack.name}\" location=\"{location}\"/>");
                         break;
 
                     case SignalTrack signalTrack:
                         var receiver = signalTrack.GetBinding<GameObject>(director);
                         location = receiver == null ? string.Empty : $"{receiver.scene.name}:{receiver.GetPath()}";
-                        sb.AppendLine($"<track id=\"{signalTrack.GetInstanceID()}\" location=\"{location}\"/>");
+                        sb.AppendLine($"<track name=\"{signalTrack.name}\" location=\"{location}\"/>");
                         break;
 
                     case AudioTrack audioTrack:
