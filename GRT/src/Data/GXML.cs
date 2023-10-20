@@ -275,5 +275,49 @@ namespace GRT.Data
         public abstract IEnumerable<T> GetChildren(T node);
 
         #endregion child
+
+        #region serialize
+
+        public abstract T CreateRoot(string name);
+
+        public abstract T CreateChild(T node, string childName);
+
+        #region inner
+
+        public abstract void SetInnerString(T node, string value);
+
+        public void SetInnerBoolean(T node, bool value) =>
+            SetInnerString(node, value ? bool.TrueString : bool.FalseString);
+
+        public void SetInnerInteger(T node, int value) =>
+            SetInnerString(node, value.ToString());
+
+        public void SetInnerFloat(T node, float value, int @decimal = 2) =>
+            SetInnerString(node, value.ToString($"F{@decimal}"));
+
+        public virtual void SetInner<V>(T node, V value) =>
+            SetInnerString(node, value.ToString());
+
+        #endregion inner
+
+        #region attribute
+
+        public abstract void SetAttribute(T node, string name, string value);
+
+        public void SetAttributeBoolean(T node, string name, bool value) =>
+            SetAttribute(node, name, value ? bool.TrueString : bool.FalseString);
+
+        public void SetAttributeInteger(T node, string name, int value) =>
+            SetAttribute(node, name, value.ToString());
+
+        public void SetAttributeFloat(T node, string name, float value, int @decimal = 2) =>
+            SetAttribute(node, name, value.ToString($"F{@decimal}"));
+
+        public virtual void SetAttribute<V>(T node, string name, V value) =>
+            SetAttribute(node, name, value.ToString());
+
+        #endregion attribute
+
+        #endregion serialize
     }
 }

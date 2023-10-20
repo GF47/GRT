@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;USE_SYSTEM_XML</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -62,6 +62,8 @@
     <Compile Include="src\Configuration\Keywords.cs" />
     <Compile Include="src\Coroutine\IdleUntil.cs" />
     <Compile Include="src\Data\GXML.cs" />
+    <Compile Include="src\Data\GXMLAttributes.cs" />
+    <Compile Include="src\Data\GXMLSerializer.cs" />
     <Compile Include="src\Data\IGXML.cs" />
     <Compile Include="src\Data\SystemXmlTools.cs" />
     <Compile Include="src\Events\Blocker.cs" />

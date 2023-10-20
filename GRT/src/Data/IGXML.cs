@@ -90,5 +90,41 @@ namespace GRT.Data
         IEnumerable<T> GetChildren(T node, Predicate<T> predicate);
 
         #endregion child
+
+        #region serialize
+
+        T CreateRoot(string name);
+
+        T CreateChild(T node, string childName);
+
+        #region inner
+
+        void SetInnerString(T node, string value);
+
+        void SetInnerBoolean(T node, bool value);
+
+        void SetInnerInteger(T node, int value);
+
+        void SetInnerFloat(T node, float value, int @decimal = 2);
+
+        void SetInner<V>(T node, V value);
+
+        #endregion inner
+
+        #region attribute
+
+        void SetAttribute(T node, string name, string value);
+
+        void SetAttributeBoolean(T node, string name, bool value);
+
+        void SetAttributeInteger(T node, string name, int value);
+
+        void SetAttributeFloat(T node, string name, float value, int @decimal = 2);
+
+        void SetAttribute<V>(T node, string name, V value);
+
+        #endregion attribute
+
+        #endregion serialize
     }
 }

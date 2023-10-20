@@ -1,4 +1,9 @@
-﻿using System;
+﻿// #define USE_SYSTEM_XML
+// #undef USE_SYSTEM_XML
+
+#if USE_SYSTEM_XML
+
+using System;
 using System.Collections.Generic;
 using System.Xml;
 
@@ -89,5 +94,32 @@ namespace GRT.Data
                 yield break;
             }
         }
+
+        public override XmlNode CreateRoot(string name)
+        {
+            var doc = new XmlDocument();
+            var root = doc.CreateElement(name);
+            doc.PrependChild(root);
+            return root;
+        }
+
+        public override XmlNode CreateChild(XmlNode node, string childName)
+        {
+            var child = node.OwnerDocument.CreateElement(childName);
+            node.AppendChild(child);
+            return child;
+        }
+
+        public override void SetInnerString(XmlNode node, string value) => node.InnerText = value;
+
+        public override void SetAttribute(XmlNode node, string name, string value)
+        {
+            var doc = node.OwnerDocument;
+            var attr = doc.CreateAttribute(name);
+            attr.Value = value;
+            node.Attributes.SetNamedItem(attr);
+        }
     }
 }
+
+#endif
