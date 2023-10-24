@@ -240,9 +240,9 @@ namespace GRT.Data
                 Constructor = constructor;
             }
 
-            public string Stringify(object obj, int @decimal = 2, string @default = default) => Stringifier(obj, @decimal, @default);
+            public string Stringify(object obj, int @decimal = 2, string @default = default) => Stringifier?.Invoke(obj, @decimal, @default);
 
-            public object Construct(string str) => Constructor(str);
+            public object Construct(string str) => Constructor?.Invoke(str);
         }
 
         private string Stringify(object obj, int @decimal = 2, string @default = default)
