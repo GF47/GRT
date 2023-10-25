@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GRT.GEC;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -35,13 +36,13 @@ namespace GRT.Data
 
         #region read
 
-        public object Read(T node, Type typeInfo, IGXAttribute refAttribute = default)
+        public object Read(T node, Type typeInfo, IGXAttribute refAttribute = default, Func<object> constructor = default)
         {
             if (Attribute.GetCustomAttribute(typeInfo, typeof(GXNodeAttribute)) is GXNodeAttribute defAttribute)
             {
                 if (XML.NameOf(node) == GetValidName(refAttribute?.Name, defAttribute.Name, typeInfo.Name))
                 {
-                    var obj = Activator.CreateInstance(typeInfo);
+                    var obj = constructor?.Invoke() ?? Activator.CreateInstance(typeInfo);
 
                     var propertyInfos = typeInfo.GetProperties(FLAGS);
                     foreach (var info in propertyInfos)
@@ -92,9 +93,23 @@ namespace GRT.Data
         private void ReadArray(object obj, T node, MemberInfo info, IGXAttribute itemRefAttribute = default)
         {
             var memberType = GetMemberType(info);
-            if (typeof(IList).IsAssignableFrom(memberType))
+            if (memberType.IsArray)
             {
-                var argType = memberType.GenericTypeArguments[0]; // only support one level list, not array
+                var elementType = memberType.GetElementType();
+                var list = Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType)) as IList;
+                var defAttribute = Attribute.GetCustomAttribute(elementType, typeof(GXNodeAttribute)) as GXNodeAttribute;
+                foreach (var item in XML.GetChildren(node, GetValidName(itemRefAttribute?.Name, defAttribute?.Name, elementType.Name)))
+                {
+                    list.Add(Read(item, elementType, itemRefAttribute));
+                }
+
+                var array = Array.CreateInstance(elementType, list.Count);
+                list.CopyTo(array, 0);
+                SetMemberValue(info, obj, array);
+            }
+            else if (IsList(memberType))
+            {
+                var argType = memberType.GenericTypeArguments[0];
                 var list = Activator.CreateInstance(memberType) as IList;
                 var defAttribute = Attribute.GetCustomAttribute(argType, typeof(GXNodeAttribute)) as GXNodeAttribute;
                 foreach (var item in XML.GetChildren(node, GetValidName(itemRefAttribute?.Name, defAttribute?.Name, argType.Name)))
@@ -183,6 +198,24 @@ namespace GRT.Data
         #endregion write
 
         #region utils
+
+        private static bool IsList(Type type)
+        {
+            if (typeof(IList).IsAssignableFrom(type))
+            {
+                return true;
+            }
+
+            foreach (var i in type.GetInterfaces())
+            {
+                if (i.IsGenericType && typeof(IList<>) == i.GetGenericTypeDefinition())
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
 
         private static string GetValidName(params string[] names)
         {
