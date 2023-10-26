@@ -1,18 +1,56 @@
-﻿using GRT.GEC;
+﻿#if UNITY_WEBGL
+#define GXML_GEN_CODE
+#endif
+
+// #define GXML_GEN_CODE
+// #undef GXML_GEN_CODE
+
 using System;
-using System.Collections;
 using System.Collections.Generic;
+
+#if !GXML_GEN_CODE
+using System.Collections;
 using System.Reflection;
+#endif
 
 namespace GRT.Data
 {
-    public interface IGXSerializable<T>
+    public interface IGXSerializableFactory<T>
     {
-        T Serialize();
+        T Serialize(IGXML<T> xml, object @object, T parentNode = default);
 
-        void Deserialize(T data);
+        object Deserialize(IGXML<T> xml, T data);
     }
 
+    public interface IGXSerializableFactory<T, TO> : IGXSerializableFactory<T>
+    {
+        T Serialize(IGXML<T> xml, TO @object, T parentNode = default);
+
+        TO DeserializeExplicitly(IGXML<T> xml, T data);
+    }
+
+#if GXML_GEN_CODE
+
+    public class GXMLSerializer<T>
+    {
+        public IGXML<T> XML { get; private set; }
+
+        public Dictionary<Type, IGXSerializableFactory<T>> Factorys { get; private set; }
+
+        public GXMLSerializer(IGXML<T> xml, Dictionary<Type, IGXSerializableFactory<T>> factorys = null)
+        {
+            XML = xml;
+            Factorys = factorys ?? new Dictionary<Type, IGXSerializableFactory<T>>();
+        }
+
+        public object Read(T node, Type typeInfo) =>
+            Factorys.TryGetValue(typeInfo, out var factory) ? factory.Deserialize(XML, node) : default;
+
+        public T Write(object obj, T parentNode) =>
+            Factorys.TryGetValue(obj.GetType(), out var factory) ? factory.Serialize(XML, obj, parentNode) : default;
+    }
+
+#else
     public class GXMLSerializer<T>
     {
         private const BindingFlags FLAGS = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
@@ -296,4 +334,6 @@ namespace GRT.Data
 
         #endregion utils
     }
+
+#endif
 }
