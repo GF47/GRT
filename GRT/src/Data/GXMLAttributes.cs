@@ -35,14 +35,20 @@ namespace GRT.Data
     public interface IGXAttribute
     {
         string Name { get; set; }
+
         string Default { get; set; }
+
         int Decimal { get; set; }
     }
 
     public struct GXAttributeMock : IGXAttribute
     {
+        public const string NULL = "null";
+
         public string Name { get; set; }
+
         public string Default { get; set; }
+
         public int Decimal { get; set; }
     }
 }
