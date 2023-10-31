@@ -2,7 +2,7 @@
 #define GXML_GEN_CODE
 #endif
 
-// #define GXML_GEN_CODE
+#define GXML_GEN_CODE
 // #undef GXML_GEN_CODE
 
 using System;
@@ -21,14 +21,14 @@ namespace GRT.Data
     {
         T Serialize(IGXML<T> xml, object @object, T parentNode, IGXAttribute refAttribute = default);
 
-        object Deserialize(IGXML<T> xml, T data, IGXAttribute refAttribute = default, Func<object> constructor = default);
+        object Deserialize(IGXML<T> xml, T node, IGXAttribute refAttribute = default, Func<object> constructor = default);
     }
 
     public interface IGXSerializableFactory<T, TO> : IGXSerializableFactory<T>
     {
         T Serialize(IGXML<T> xml, TO @object, T parentNode, IGXAttribute refAttribute = default);
 
-        TO DeserializeExplicitly(IGXML<T> xml, T data, IGXAttribute refAttribute = default, Func<object> constructor = default);
+        TO DeserializeExplicitly(IGXML<T> xml, T node, IGXAttribute refAttribute = default, Func<object> constructor = default);
     }
 
     public class GXConverter
@@ -74,7 +74,7 @@ namespace GRT.Data
             }
         }
 
-        public TO ConstructExplicitly<TO>(string str, TO @default) => Construct(str, out var value) ? (TO)value : @default;
+        public TO ConstructExplicitly<TO>(string str, TO @default = default) => Construct(str, out var value) ? (TO)value : @default;
     }
 
 #if GXML_GEN_CODE
@@ -96,7 +96,7 @@ namespace GRT.Data
             {
                 { typeof(bool),   new GXConverter((vb, d, de) => vb?.ToString() ?? de, sb => new GXConverter.Result(bool.TryParse(sb,  out var result), result)) },
                 { typeof(int),    new GXConverter((vi, d, de) => vi?.ToString() ?? de, si => new GXConverter.Result(int.TryParse(si,   out var result), result)) },
-                { typeof(float),  new GXConverter((vf, d, de) => vf?.ToString() ?? de, sf => new GXConverter.Result(float.TryParse(sf, out var result), result)) },
+                { typeof(float),  new GXConverter((vf, d, de) => (vf is float f) ? f.ToString($"F{d}") : de, sf => new GXConverter.Result(float.TryParse(sf, out var result), result)) },
                 { typeof(string), new GXConverter((vs, d, de) => vs?.ToString() ?? de, ss => new GXConverter.Result(true, ss)) }
             };
             Factories = factories ?? new Dictionary<Type, IGXSerializableFactory<T>>();
@@ -104,11 +104,31 @@ namespace GRT.Data
             Instance = this;
         }
 
-        public object Read(T node, Type typeInfo, IGXAttribute refAttribute = default, Func<object> constructor = default) =>
-            Factories.TryGetValue(typeInfo, out var factory) ? factory.Deserialize(XML, node, refAttribute, constructor) : default;
+        public T Write(object obj, T parentNode, IGXAttribute refAttribute = default)
+        {
+            if (Stringify(obj, out var result, refAttribute))
+            {
+                var node = XML.CreateChild(parentNode, GetValidName(refAttribute?.Name, obj.GetType().Name));
+                XML.SetInnerString(node, result);
+                return node;
+            }
+            else
+            {
+                return Factories.TryGetValue(obj.GetType(), out var factory) ? factory.Serialize(XML, obj, parentNode, refAttribute) : default;
+            }
+        }
 
-        public T Write(object obj, T parentNode, IGXAttribute refAttribute = default) =>
-            Factories.TryGetValue(obj.GetType(), out var factory) ? factory.Serialize(XML, obj, parentNode, refAttribute) : default;
+        public object Read(T node, Type typeInfo, IGXAttribute refAttribute = default, Func<object> constructor = default)
+        {
+            if (Construct(XML.GetInnerString(node), typeInfo, out var result))
+            {
+                return result;
+            }
+            else
+            {
+                return Factories.TryGetValue(typeInfo, out var factory) ? factory.Deserialize(XML, node, refAttribute, constructor) : default;
+            }
+        }
 
         public static string GetValidName(params string[] names)
         {
@@ -134,6 +154,27 @@ namespace GRT.Data
                 : obj.ToString();
         }
 
+        public bool Stringify(object obj, out string result, IGXAttribute attribute = default)
+        {
+            if (obj == null)
+            {
+                result = attribute?.Default;
+                return false;
+            }
+
+            if (CustomConverters.TryGetValue(obj.GetType(), out var converter))
+            {
+                var decimal_ = attribute == null ? 2 : attribute.Decimal;
+                result = converter.Stringify(obj, decimal_, attribute?.Default);
+                return true;
+            }
+            else
+            {
+                result = obj.ToString();
+                return false;
+            }
+        }
+
         public bool Construct(string str, Type type, out object result)
         {
             if (!string.IsNullOrWhiteSpace(str)
@@ -149,7 +190,7 @@ namespace GRT.Data
             }
         }
 
-        public TO Construct<TO>(string str, TO @default) => Construct(str, typeof(TO), out var result) ? (TO)result : @default;
+        public TO Construct<TO>(string str, TO @default = default) => Construct(str, typeof(TO), out var result) ? (TO)result : @default;
     }
 
 #else
@@ -172,12 +213,87 @@ namespace GRT.Data
             {
                 { typeof(bool),   new GXConverter((vb, d, de) => vb?.ToString() ?? de, sb => new GXConverter.Result(bool.TryParse(sb,  out var result), result)) },
                 { typeof(int),    new GXConverter((vi, d, de) => vi?.ToString() ?? de, si => new GXConverter.Result(int.TryParse(si,   out var result), result)) },
-                { typeof(float),  new GXConverter((vf, d, de) => vf?.ToString() ?? de, sf => new GXConverter.Result(float.TryParse(sf, out var result), result)) },
+                { typeof(float),  new GXConverter((vf, d, de) => (vf is float f) ? f.ToString($"F{d}") : de, sf => new GXConverter.Result(float.TryParse(sf, out var result), result)) },
                 { typeof(string), new GXConverter((vs, d, de) => vs?.ToString() ?? de, ss => new GXConverter.Result(true, ss)) }
             };
 
             Instance = this;
         }
+
+        #region write
+
+        public T Write(object obj, T parentNode, IGXAttribute refAttribute = default)
+        {
+            if (obj == null) { return default; }
+
+            var typeInfo = obj.GetType();
+
+            if (Attribute.GetCustomAttribute(typeInfo, typeof(GXNodeAttribute)) is GXNodeAttribute defAttribute)
+            {
+                // 可序列化
+
+                var node = XML.CreateChild(parentNode, GetValidName(refAttribute?.Name, defAttribute.Name, typeInfo.Name));
+
+                var fieldInfos = typeInfo.GetFields(FLAGS);
+                foreach (var info in fieldInfos)
+                {
+                    WriteMember(obj, node, info);
+                }
+
+                var propertyInfos = typeInfo.GetProperties(FLAGS);
+                foreach (var info in propertyInfos)
+                {
+                    WriteMember(obj, node, info);
+                }
+
+                return node;
+            }
+            else
+            {
+                // 普通数据类型
+
+                var refName = GetValidName(refAttribute?.Name, typeInfo.Name);
+                var refDecimal = refAttribute?.Decimal ?? 2;
+                var refDefaultValue = refAttribute?.Default;
+
+                var node = XML.CreateChild(parentNode, refName);
+                XML.SetInnerString(node, Stringify(obj, refDecimal, refDefaultValue));
+
+                return node;
+            }
+        }
+
+        private void WriteMember(object obj, T node, MemberInfo info)
+        {
+            if (Attribute.GetCustomAttribute(info, typeof(GXArrayAttribute)) is GXArrayAttribute ara)
+            {
+                var itemRefAttribute = Attribute.GetCustomAttribute(info, typeof(GXNodeAttribute)) as GXNodeAttribute;
+                WriteArray(obj, string.IsNullOrWhiteSpace(ara.Container) ? node : XML.CreateChild(node, ara.Container), info, itemRefAttribute);
+            }
+            else if (Attribute.GetCustomAttribute(info, typeof(GXNodeAttribute)) is GXNodeAttribute refAttribute)
+            {
+                var v = GetMemberValue(info, obj);
+                Write(v, node, refAttribute);
+            }
+            else if (Attribute.GetCustomAttribute(info, typeof(GXAttributeAttribute)) is GXAttributeAttribute ata)
+            {
+                var v = GetMemberValue(info, obj);
+                XML.SetAttribute(node, GetValidName(ata.Name, info.Name), Stringify(v, ata.Decimal, ata.Default));
+            }
+        }
+
+        private void WriteArray(object obj, T node, MemberInfo info, IGXAttribute itemRefAttribute = default)
+        {
+            if (typeof(ICollection).IsAssignableFrom(GetMemberType(info)) && GetMemberValue(info, obj) is ICollection collection)
+            {
+                foreach (var item in collection)
+                {
+                    Write(item, node, itemRefAttribute);
+                }
+            }
+        }
+
+        #endregion write
 
         #region read
 
@@ -278,81 +394,6 @@ namespace GRT.Data
         }
 
         #endregion read
-
-        #region write
-
-        public T Write(object obj, T parentNode, IGXAttribute refAttribute = default)
-        {
-            if (obj == null) { return default; }
-
-            var typeInfo = obj.GetType();
-
-            if (Attribute.GetCustomAttribute(typeInfo, typeof(GXNodeAttribute)) is GXNodeAttribute defAttribute)
-            {
-                // 可序列化
-
-                var node = XML.CreateChild(parentNode, GetValidName(refAttribute?.Name, defAttribute.Name, typeInfo.Name));
-
-                var fieldInfos = typeInfo.GetFields(FLAGS);
-                foreach (var info in fieldInfos)
-                {
-                    WriteMember(obj, node, info);
-                }
-
-                var propertyInfos = typeInfo.GetProperties(FLAGS);
-                foreach (var info in propertyInfos)
-                {
-                    WriteMember(obj, node, info);
-                }
-
-                return node;
-            }
-            else
-            {
-                // 普通数据类型
-
-                var refName = GetValidName(refAttribute?.Name, typeInfo.Name);
-                var refDecimal = refAttribute?.Decimal ?? 2;
-                var refDefaultValue = refAttribute?.Default;
-
-                var node = XML.CreateChild(parentNode, refName);
-                XML.SetInnerString(node, Stringify(obj, refDecimal, refDefaultValue));
-
-                return node;
-            }
-        }
-
-        private void WriteMember(object obj, T node, MemberInfo info)
-        {
-            if (Attribute.GetCustomAttribute(info, typeof(GXArrayAttribute)) is GXArrayAttribute ara)
-            {
-                var itemRefAttribute = Attribute.GetCustomAttribute(info, typeof(GXNodeAttribute)) as GXNodeAttribute;
-                WriteArray(obj, string.IsNullOrWhiteSpace(ara.Container) ? node : XML.CreateChild(node, ara.Container), info, itemRefAttribute);
-            }
-            else if (Attribute.GetCustomAttribute(info, typeof(GXNodeAttribute)) is GXNodeAttribute refAttribute)
-            {
-                var v = GetMemberValue(info, obj);
-                Write(v, node, refAttribute);
-            }
-            else if (Attribute.GetCustomAttribute(info, typeof(GXAttributeAttribute)) is GXAttributeAttribute ata)
-            {
-                var v = GetMemberValue(info, obj);
-                XML.SetAttribute(node, GetValidName(ata.Name, info.Name), Stringify(v, ata.Decimal, ata.Default));
-            }
-        }
-
-        private void WriteArray(object obj, T node, MemberInfo info, IGXAttribute itemRefAttribute = default)
-        {
-            if (typeof(ICollection).IsAssignableFrom(GetMemberType(info)) && GetMemberValue(info, obj) is ICollection collection)
-            {
-                foreach (var item in collection)
-                {
-                    Write(item, node, itemRefAttribute);
-                }
-            }
-        }
-
-        #endregion write
 
         #region utils
 

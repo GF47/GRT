@@ -43,12 +43,42 @@ namespace GRT.Data
 
     public struct GXAttributeMock : IGXAttribute
     {
-        public const string NULL = "null";
-
         public string Name { get; set; }
 
         public string Default { get; set; }
 
         public int Decimal { get; set; }
+    }
+
+    public static class GXAttributeExtensions
+    {
+        public const string NULL = "null";
+
+        public static (string, string, int) GetProperties(this IGXAttribute attribute, string defaultName = default, string defaultDefault = default, int defaultDecimal = 2)
+        {
+            if (attribute == null)
+            {
+                return (defaultName, defaultDefault, defaultDecimal);
+            }
+            else
+            {
+                return (GetValidName(attribute.Name, defaultName), attribute.Default ?? defaultDefault, attribute.Decimal);
+            }
+        }
+
+        public static string GetValidName(params string[] names)
+        {
+            foreach (var name in names)
+            {
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    continue;
+                }
+
+                return name;
+            }
+
+            throw new ArgumentException("no valid name", nameof(names));
+        }
     }
 }
