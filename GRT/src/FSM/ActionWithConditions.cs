@@ -10,6 +10,8 @@ namespace GRT.FSM
 
         public ICollection<IAction> Actions { get; }
 
+        public bool RepeatConditionIfFailed { get; set; } = false;
+
         public bool Completed => completed;
 
         public ActionWithConditions(ICollection<ICondition> conditions, ICollection<IAction> actions)
@@ -26,6 +28,7 @@ namespace GRT.FSM
                 {
                     if (!condition.OK)
                     {
+                        if (!RepeatConditionIfFailed) { completed = true; }
                         return;
                     }
                 }
@@ -49,21 +52,34 @@ namespace GRT.FSM
         {
             completed = false;
 
-            if (Actions == null) { return; }
-
-            foreach (var action in Actions)
+            if (Actions != null)
             {
-                action.Reset();
+                foreach (var action in Actions)
+                {
+                    action.Reset();
+                }
+            }
+
+            if (Conditions != null)
+            {
+                foreach (var condition in Conditions)
+                {
+                    if (condition is IResetable resetable)
+                    {
+                        resetable.Reset();
+                    }
+                }
             }
         }
 
         public void Start()
         {
-            if (Actions == null) { return; }
-
-            foreach (var action in Actions)
+            if (Actions != null)
             {
-                action.Start();
+                foreach (var action in Actions)
+                {
+                    action.Start();
+                }
             }
         }
     }

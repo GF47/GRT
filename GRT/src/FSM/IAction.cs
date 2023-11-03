@@ -1,10 +1,14 @@
 ﻿namespace GRT.FSM
 {
-    public interface IAction
+    public interface IResetable
+    {
+        void Reset();
+    }
+
+    public interface IAction : IResetable
     {
         bool Completed { get; }
         void Start();
         void Invoke();
-        void Reset();
     }
 }

@@ -2,7 +2,7 @@
 
 namespace GRT.FSM
 {
-    public abstract class ConditionWithActions : ICondition
+    public abstract class ConditionWithActions : ICondition, IResetable
     {
         public ICollection<IAction> SucceedActions { get; protected set; }
 
@@ -31,8 +31,7 @@ namespace GRT.FSM
 
         public bool CheckWithoutInvokingActions()
         {
-            var ok = InnerConditions == null || InnerConditions.Count == 0;
-            if (ok)
+            if (InnerConditions != null)
             {
                 foreach (var condition in InnerConditions)
                 {
@@ -46,5 +45,35 @@ namespace GRT.FSM
         }
 
         protected abstract void InvokeAction(ICondition condition, IAction action);
+
+        public void Reset()
+        {
+            if (InnerConditions != null)
+            {
+                foreach(var condition in InnerConditions)
+                {
+                    if (condition is IResetable resetable)
+                    {
+                        resetable.Reset();
+                    }
+                }
+            }
+
+            if (FailedActions != null)
+            {
+                foreach (var action in FailedActions)
+                {
+                    action.Reset();
+                }
+            }
+
+            if (SucceedActions != null)
+            {
+                foreach (var action in SucceedActions)
+                {
+                    action.Reset();
+                }
+            }
+        }
     }
 }
