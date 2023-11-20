@@ -1,4 +1,8 @@
-﻿using System;
+﻿// #define UNITY_EDITOR
+
+#if UNITY_EDITOR
+
+using System;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
@@ -96,3 +100,5 @@ namespace GRT.Editor
         }
     }
 }
+
+#endif

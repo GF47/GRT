@@ -81,7 +81,7 @@ namespace GRT.Data
 
     public class GXMLSerializer<T>
     {
-        public static GXMLSerializer<T> Instance { get; private set; }
+        public static GXMLSerializer<T> Instance { get; protected set; }
 
         public IGXML<T> XML { get; private set; }
 
@@ -197,7 +197,7 @@ namespace GRT.Data
 
     public class GXMLSerializer<T>
     {
-        public static GXMLSerializer<T> Instance { get; private set; }
+        public static GXMLSerializer<T> Instance { get; protected set; }
 
         private const BindingFlags FLAGS = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 

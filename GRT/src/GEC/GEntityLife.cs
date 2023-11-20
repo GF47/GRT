@@ -51,50 +51,10 @@ namespace GRT.GEC
             Ticking?.Invoke(this, delta);
         }
 
-        void IGScope.Attach(IGLife life)
-        {
-            if (PendingLives.ContainsKey(life))
-            {
-                PendingLives[life] = true;
-            }
-            else
-            {
-                PendingLives.Add(life, true);
-            }
-        }
+        void IGScope.___Attach(IGLife life) => PendingLives.AttachImpl(life);
 
-        void IGScope.Detach(IGLife life)
-        {
-            if (PendingLives.ContainsKey(life))
-            {
-                PendingLives[life] = false;
-            }
-            else
-            {
-                PendingLives.Add(life, false);
-            }
-        }
+        void IGScope.___Detach(IGLife life) => PendingLives.DetachImpl(life);
 
-        void IGScope.ResolvePendingLives()
-        {
-            if (PendingLives.Count > 0)
-            {
-                foreach (var pair in PendingLives)
-                {
-                    var life = pair.Key;
-                    var isAttach = pair.Value;
-                    if (isAttach)
-                    {
-                        Lives.Add(life);
-                    }
-                    else
-                    {
-                        Lives.Remove(life);
-                    }
-                }
-
-                PendingLives.Clear();
-            }
-        }
+        void IGScope.___ResolvePendingLives() => this.ResolvePendingLivesImpl(PendingLives);
     }
 }

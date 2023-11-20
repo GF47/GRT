@@ -2,9 +2,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Text;
 using UnityEditor;
+using UnityEngine;
 
 namespace GRT.Editor.GXSerialization
 {
@@ -15,9 +19,83 @@ namespace GRT.Editor.GXSerialization
         [MenuItem("Assets/Project/Generate GXML Factories")]
         private static void Generate()
         {
+            var dirPath = DIRECTORY_PATH;
+            if (Directory.Exists(dirPath))
+            {
+                Directory.Delete(dirPath, true);
+            }
+            Directory.CreateDirectory(dirPath);
+
+            var types = from assembly in AppDomain.CurrentDomain.GetAssemblies()
+                        where !(assembly.ManifestModule is ModuleBuilder)
+                        from type in assembly.GetTypes()
+                        where type.IsDefined(typeof(GXNodeAttribute), false)
+                        select type;
+
+            var sb = new StringBuilder();
+            sb.Append(TEMPLATE_USING);
+            sb.Append(TEMPLATE_NAMESPACE_A);
+            {
+                sb.Append(REGISTER_CLASS_A());
+                {
+                    sb.Append(GET_FACTORIES_METHOD_A);
+                    {
+                        foreach (var type in types)
+                        {
+                            sb.Append(FACTORY_KV_PAIR(type.FULL_NAME()));
+                            GenerateCSFile(type, dirPath);
+                        }
+                    }
+                    sb.Append(GET_FACTORIES_METHOD_B);
+                }
+                sb.Append(REGISTER_CLASS_B);
+            }
+            sb.Append(TEMPLATE_NAMESPACE_B);
+
+            using (var fs = new FileStream($"{dirPath}/GXRegister.cs".Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar), FileMode.CreateNew, FileAccess.Write))
+            {
+                using (var sw = new StreamWriter(fs, Encoding.UTF8))
+                {
+                    sw.Write(sb.ToString());
+                }
+            }
+
+            AssetDatabase.Refresh();
         }
 
-        private static string Generate(Type type)
+        private static void GenerateCSFile(Type type, string directoryPath)
+        {
+            using (var fs = new FileStream(FILE_PATH(type, directoryPath), FileMode.CreateNew, FileAccess.Write))
+            {
+                using (var sw = new StreamWriter(fs, Encoding.UTF8))
+                {
+                    sw.Write(GenerateClass(type));
+                }
+            }
+        }
+
+        private static string DIRECTORY_PATH => $"{Application.dataPath}/Scripts/GXFactories".Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+
+        private static string FILE_PATH(Type type, string directoryPath) => $"{directoryPath}/{type.FULL_NAME().Replace('.', '_')}_GXFactory.cs".Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+
+        private static string REGISTER_CLASS_A() => @"
+    public static class GXRegister<T>
+    {";
+
+        private const string REGISTER_CLASS_B = @"
+    }";
+
+        private const string GET_FACTORIES_METHOD_A = @"
+        public static Dictionary<Type, IGXSerializableFactory<T>> GetFactories() => new Dictionary<Type, IGXSerializableFactory<T>>()
+        {";
+
+        private const string GET_FACTORIES_METHOD_B = @"
+        };";
+
+        private static string FACTORY_KV_PAIR(string fullName) => $@"
+            {{ typeof({fullName}), new {fullName.Replace('.', '_')}_GXFactory<T>() }},";
+
+        private static string GenerateClass(Type type)
         {
             var sb = new StringBuilder();
             sb.Append(TEMPLATE_USING);
@@ -319,12 +397,24 @@ namespace GXFactories
             throw new ArgumentException("member is not a array or list", nameof(info));
         }
 
+#if CSHARP_7_3_OR_NEWER
         private static Type GetMemberType(MemberInfo info) => info switch
         {
             FieldInfo fieldInfo => fieldInfo.FieldType,
             PropertyInfo propertyInfo => propertyInfo.PropertyType,
             _ => null,
         };
+#else
+        private static Type GetMemberType(MemberInfo info)
+        {
+            switch (info)
+            {
+                case FieldInfo fieldInfo : return fieldInfo.FieldType;
+                case PropertyInfo propertyInfo: return propertyInfo.PropertyType;
+                default: return null;
+            }
+        }
+#endif
 
         public static string GetDefault(params string[] strings)
         {

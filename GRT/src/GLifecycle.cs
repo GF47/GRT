@@ -41,9 +41,9 @@ namespace GRT
 
         #region holy shit
 
-        void Attach(IGLife life);
-        void Detach(IGLife life);
-        void ResolvePendingLives();
+        void ___Attach(IGLife life);
+        void ___Detach(IGLife life);
+        void ___ResolvePendingLives();
 
         #endregion
     }
@@ -119,50 +119,11 @@ namespace GRT
 
         protected IDictionary<IGLife, bool> PendingLives { get; set; } = new Dictionary<IGLife, bool>();
 
-        void IGScope.Attach(IGLife life)
-        {
-            if (PendingLives.ContainsKey(life))
-            {
-                PendingLives[life] = true;
-            }
-            else
-            {
-                PendingLives.Add(life, true);
-            }
-        }
+        void IGScope.___Attach(IGLife life) => PendingLives.AttachImpl(life);
 
-        void IGScope.Detach(IGLife life)
-        {
-            if (PendingLives.ContainsKey(life))
-            {
-                PendingLives[life] = false;
-            }
-            else
-            {
-                PendingLives.Add(life, false);
-            }
-        }
+        void IGScope.___Detach(IGLife life) => PendingLives.DetachImpl(life);
 
-        void IGScope.ResolvePendingLives()
-        {
-            if (PendingLives.Count == 0) { return; }
-
-            foreach (var pair in PendingLives)
-            {
-                var life = pair.Key;
-                var isAttach = pair.Value;
-                if (isAttach)
-                {
-                    ((IGScope)this).Lives.Add(life);
-                }
-                else
-                {
-                    ((IGScope)this).Lives.Remove(life);
-                }
-            }
-
-            PendingLives.Clear();
-        }
+        void IGScope.___ResolvePendingLives() => this.ResolvePendingLivesImpl(PendingLives);
     }
 
     public class MiniGLifecycleWithTickAndScope : MiniGLifecycle, IGTickable, IGScope
@@ -183,50 +144,11 @@ namespace GRT
             Ticking?.Invoke(this, delta);
         }
 
-        void IGScope.Attach(IGLife life)
-        {
-            if (PendingLives.ContainsKey(life))
-            {
-                PendingLives[life] = true;
-            }
-            else
-            {
-                PendingLives.Add(life, true);
-            }
-        }
+        void IGScope.___Attach(IGLife life) => PendingLives.AttachImpl(life);
 
-        void IGScope.Detach(IGLife life)
-        {
-            if (PendingLives.ContainsKey(life))
-            {
-                PendingLives[life] = false;
-            }
-            else
-            {
-                PendingLives.Add(life, false);
-            }
-        }
+        void IGScope.___Detach(IGLife life) => PendingLives.DetachImpl(life);
 
-        void IGScope.ResolvePendingLives()
-        {
-            if (PendingLives.Count == 0) { return; }
-
-            foreach (var pair in PendingLives)
-            {
-                var life = pair.Key;
-                var isAttach = pair.Value;
-                if (isAttach)
-                {
-                    ((IGScope)this).Lives.Add(life);
-                }
-                else
-                {
-                    ((IGScope)this).Lives.Remove(life);
-                }
-            }
-
-            PendingLives.Clear();
-        }
+        void IGScope.___ResolvePendingLives() => this.ResolvePendingLivesImpl(PendingLives);
     }
 
     public class MiniGLifecycle<T> : IGStartable<T>, IGDisposable<T>
@@ -300,50 +222,11 @@ namespace GRT
         {
         }
 
-        void IGScope.Attach(IGLife life)
-        {
-            if (PendingLives.ContainsKey(life))
-            {
-                PendingLives[life] = true;
-            }
-            else
-            {
-                PendingLives.Add(life, true);
-            }
-        }
+        void IGScope.___Attach(IGLife life) => PendingLives.AttachImpl(life);
 
-        void IGScope.Detach(IGLife life)
-        {
-            if (PendingLives.ContainsKey(life))
-            {
-                PendingLives[life] = false;
-            }
-            else
-            {
-                PendingLives.Add(life, false);
-            }
-        }
+        void IGScope.___Detach(IGLife life) => PendingLives.DetachImpl(life);
 
-        void IGScope.ResolvePendingLives()
-        {
-            if (PendingLives.Count == 0) { return; }
-
-            foreach (var pair in PendingLives)
-            {
-                var life = pair.Key;
-                var isAttach = pair.Value;
-                if (isAttach)
-                {
-                    ((IGScope)this).Lives.Add(life);
-                }
-                else
-                {
-                    ((IGScope)this).Lives.Remove(life);
-                }
-            }
-
-            PendingLives.Clear();
-        }
+        void IGScope.___ResolvePendingLives() => this.ResolvePendingLivesImpl(PendingLives);
     }
 
     public class MiniGLifecycleWithTickAndScope<T> : MiniGLifecycle<T>, IGTickable<T>, IGScope
@@ -368,50 +251,11 @@ namespace GRT
             Ticking?.Invoke(this, delta);
         }
 
-        void IGScope.Attach(IGLife life)
-        {
-            if (PendingLives.ContainsKey(life))
-            {
-                PendingLives[life] = true;
-            }
-            else
-            {
-                PendingLives.Add(life, true);
-            }
-        }
+        void IGScope.___Attach(IGLife life) => PendingLives.AttachImpl(life);
 
-        void IGScope.Detach(IGLife life)
-        {
-            if (PendingLives.ContainsKey(life))
-            {
-                PendingLives[life] = false;
-            }
-            else
-            {
-                PendingLives.Add(life, false);
-            }
-        }
+        void IGScope.___Detach(IGLife life) => PendingLives.DetachImpl(life);
 
-        void IGScope.ResolvePendingLives()
-        {
-            if (PendingLives.Count == 0) { return; }
-
-            foreach (var pair in PendingLives)
-            {
-                var life = pair.Key;
-                var isAttach = pair.Value;
-                if (isAttach)
-                {
-                    ((IGScope)this).Lives.Add(life);
-                }
-                else
-                {
-                    ((IGScope)this).Lives.Remove(life);
-                }
-            }
-
-            PendingLives.Clear();
-        }
+        void IGScope.___ResolvePendingLives() => this.ResolvePendingLivesImpl(PendingLives);
     }
 
     public static class GLifecycleExtensions
@@ -438,7 +282,7 @@ namespace GRT
 
             if (life is IGScope scope)
             {
-                scope.ResolvePendingLives();
+                scope.___ResolvePendingLives();
                 foreach (var lifeInScope in scope.Lives)
                 {
                     lifeInScope.LifeStart();
@@ -469,7 +313,7 @@ namespace GRT
 
             if (life is IGScope scope)
             {
-                scope.ResolvePendingLives();
+                scope.___ResolvePendingLives();
                 foreach (var lifeInScope in scope.Lives)
                 {
                     lifeInScope.LifeTick(delta);
@@ -495,7 +339,7 @@ namespace GRT
 #else
             if (life is IGScope scope)
             {
-                scope.ResolvePendingLives();
+                scope.___ResolvePendingLives();
                 foreach (var lifeInScope in scope.Lives)
                 {
                     lifeInScope.LifeDispose();
@@ -509,10 +353,10 @@ namespace GRT
 #endif
         }
 
-        public static void AttachTo(this IGLife life, IGScope scope, bool autoStart = true)
+        public static void AttachToScope(this IGLife life, IGScope scope, bool autoStart = true)
         {
-            life.Scope?.Detach(life);
-            scope.Attach(life);
+            life.Scope?.___Detach(life);
+            scope.___Attach(life);
             life.Scope = scope;
 
             if (autoStart && scope.IsAlive && !life.IsAlive)
@@ -525,13 +369,64 @@ namespace GRT
         {
             if (life.Scope != null)
             {
-                life.Scope.Detach(life);
+                life.Scope.___Detach(life);
                 life.Scope = null;
 
                 if (life.IsAlive && autoDispose)
                 {
                     life.LifeDispose();
                 }
+            }
+        }
+
+        public static void AttachImpl(this IDictionary<IGLife, bool> pendingLives, IGLife life)
+        {
+            if (pendingLives != null)
+            {
+                if (pendingLives.ContainsKey(life))
+                {
+                    pendingLives[life] = true;
+                }
+                else
+                {
+                    pendingLives.Add(life, true);
+                }
+            }
+        }
+
+        public static void DetachImpl(this IDictionary<IGLife, bool> pendingLives, IGLife life)
+        {
+            if (pendingLives != null)
+            {
+                if (pendingLives.ContainsKey(life))
+                {
+                    pendingLives[life] = false;
+                }
+                else
+                {
+                    pendingLives.Add(life, false);
+                }
+            }
+        }
+
+        public static void ResolvePendingLivesImpl(this IGScope scope, IDictionary<IGLife, bool> pendingLives)
+        {
+            if (pendingLives != null && pendingLives.Count > 0)
+            {
+                foreach (var pair in pendingLives)
+                {
+                    var life = pair.Key;
+                    var isAttach = pair.Value;
+                    if (isAttach)
+                    {
+                        scope.Lives.Add(life);
+                    }
+                    else
+                    {
+                        scope.Lives.Remove(life);
+                    }
+                }
+                pendingLives.Clear();
             }
         }
 
