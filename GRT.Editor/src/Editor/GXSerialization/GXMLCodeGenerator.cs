@@ -327,7 +327,19 @@ namespace GXFactories
 
         private static string FULL_NAME(this Type type)
         {
-            var name = $"{type.Namespace}.{type.Name}";
+            Type parent = type.DeclaringType;
+            var relationShip = "";
+            while (parent != null)
+            {
+                relationShip = $"{parent.NAME()}.";
+                parent= parent.DeclaringType;
+            }
+            return $"{type.Namespace}.{relationShip}{type.NAME()}";
+        }
+
+        private static string NAME(this Type type)
+        {
+            var name = type.Name;
             if (type.IsGenericType)
             {
                 name += "<";
@@ -398,12 +410,14 @@ namespace GXFactories
         }
 
 #if CSHARP_7_3_OR_NEWER
+
         private static Type GetMemberType(MemberInfo info) => info switch
         {
             FieldInfo fieldInfo => fieldInfo.FieldType,
             PropertyInfo propertyInfo => propertyInfo.PropertyType,
             _ => null,
         };
+
 #else
         private static Type GetMemberType(MemberInfo info)
         {

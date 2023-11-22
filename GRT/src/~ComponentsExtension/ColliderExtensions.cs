@@ -18,7 +18,8 @@ namespace GRT
             }
 
             box.center = box.transform.worldToLocalMatrix.MultiplyPoint((max + min) / 2f);
-            box.size = box.transform.worldToLocalMatrix.MultiplyVector(max - min);
+            var size = box.transform.worldToLocalMatrix.MultiplyVector(max - min);
+            box.size = new Vector3(Mathf.Abs(size.x), Mathf.Abs(size.y), Mathf.Abs(size.z));
         }
     }
 }
