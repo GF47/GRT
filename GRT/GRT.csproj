@@ -213,6 +213,7 @@
     <Compile Include="src\Updater\UpdateDriver.cs" />
     <Compile Include="src\Updater\Vector3Buffer.cs" />
     <Compile Include="src\GLog.cs" />
+    <Compile Include="src\~CollectionExtensions\__IEnumerableExtensions.cs" />
     <Compile Include="src\~CollectionExtensions\__IListExtensions.cs" />
     <Compile Include="src\~ComponentsExtension\CameraExtension.cs" />
     <Compile Include="src\~ComponentsExtension\ColliderExtensions.cs" />
