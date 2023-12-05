@@ -268,7 +268,7 @@ namespace GRT
             var scope = life.AsGScope;
             if (scope != null)
             {
-                scope.ResolvePendingLives();
+                scope.___ResolvePendingLives();
                 foreach (var lifeInScope in scope.Lives)
                 {
                     lifeInScope.LifeStart();
@@ -299,7 +299,7 @@ namespace GRT
             var scope = life.AsGScope;
             if (scope != null)
             {
-                scope.ResolvePendingLives();
+                scope.___ResolvePendingLives();
                 foreach (var lifeInScope in scope.Lives)
                 {
                     lifeInScope.LifeTick(delta);
@@ -328,7 +328,7 @@ namespace GRT
             var scope = life.AsGScope;
             if (scope != null)
             {
-                scope.ResolvePendingLives();
+                scope.___ResolvePendingLives();
                 foreach (var lifeInScope in scope.Lives)
                 {
                     lifeInScope.LifeDispose();
@@ -409,7 +409,7 @@ namespace GRT
             }
         }
 
-        public static void ResolvePendingLivesImpl(this IGScope scope, IDictionary<IGLife, bool> pendingLives)
+        public static void ResolvePendingLivesImpl(this IGScope scope, ICollection<KeyValuePair<IGLife, bool>> pendingLives)
         {
             if (pendingLives != null && pendingLives.Count > 0)
             {

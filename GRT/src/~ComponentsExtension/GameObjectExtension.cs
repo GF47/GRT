@@ -6,11 +6,8 @@ namespace GRT
 
     public static class GameObjectExtension
     {
-        public static (string, string) SplitRootAndSubPath(string path)
-        {
-            var index = path.IndexOf('/');
-            return index > -1 ? (path.Substring(0, index), path.Substring(index + 1)) : (path, null);
-        }
+        public static (string, string) SplitRootAndSubPath(string path) =>
+            path.CanBeSplitBy('/', out var left, out var right, true) ? (left, right) : (path, null);
 
         public static bool IsSameLocation(string locationA, string locationB)
         {
@@ -65,7 +62,7 @@ namespace GRT
 
         /// <summary> 返回目标物体的完整层级
         /// </summary>
-        public static string GetPath(this GameObject obj)
+        public static string GetPath(this GameObject obj, bool addSceneName = false)
         {
             string path = obj.name;
 
@@ -76,7 +73,7 @@ namespace GRT
                 path = $"{t.name}/{path}"; 
                 t = t.parent;
             }
-            return path;
+            return addSceneName ? $"{obj.scene.name}:{path}" : path;
         }
 
         /// <summary> 返回目标物体的相对层级
@@ -107,10 +104,9 @@ namespace GRT
             if (parent != null)
             {
                 Transform t = go.transform;
-                t.parent = parent.transform;
-                t.localPosition = Vector3.zero;
-                t.localRotation = Quaternion.identity;
-                t.localScale = Vector3.one;
+                t.SetParent(parent.transform, false);
+                // t.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+                // t.localScale = Vector3.one;
                 go.layer = parent.layer;
             }
             return go;
@@ -128,10 +124,7 @@ namespace GRT
             if (go != null && parent != null)
             {
                 Transform t = go.transform;
-                t.parent = parent.transform;
-                t.localPosition = Vector3.zero;
-                t.localRotation = Quaternion.identity;
-                t.localScale = Vector3.one;
+                t.SetParent(parent.transform, false);
                 go.layer = parent.layer;
             }
             return go;
@@ -145,7 +138,7 @@ namespace GRT
         public static T AddChild<T>(this GameObject parent) where T : Component
         {
             GameObject go = AddChild(parent);
-            go.name = typeof(T).ToString();
+            go.name = typeof(T).Name;
             return go.AddComponent<T>();
         }
 
@@ -156,24 +149,15 @@ namespace GRT
         /// <returns>查找到的 T 组件</returns>
         public static T FindInParent<T>(this GameObject target) where T : Component
         {
-            if (target == null) return null;
+            T com = null;
 
-            if (target.TryGetComponent<T>(out var component))
+            var t = target == null ? null : target.transform;
+            while (t != null && !t.gameObject.TryGetComponent(out com))
             {
-                return component;
+                t = t.parent;
             }
-            else
-            {
-                Transform t = target.transform.parent;
 
-                while (t != null && component == null)
-                {
-                    component = t.gameObject.GetComponent<T>();
-                    t = t.parent;
-                }
-
-                return component;
-            }
+            return com;
         }
 
         /// <summary> 设置物体的层级，包括子物体

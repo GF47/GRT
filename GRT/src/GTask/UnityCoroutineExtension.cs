@@ -11,15 +11,15 @@ namespace GRT.GTask
         {
             var awaiter = new IEnumeratorAwaiter();
 
-            if (SynchronizationContext.Current == Coroutines.UnityContext)
+            if (SynchronizationContext.Current == GCoroutine.UnityContext)
             {
-                Coroutines.StartACoroutineWithCallback(enumerator, () => awaiter.Complete());
+                GCoroutine.StartACoroutineWithCallback(enumerator, () => awaiter.Complete());
             }
             else
             {
-                Coroutines.UnityContext.Post(_ =>
+                GCoroutine.UnityContext.Post(_ =>
                 {
-                    Coroutines.StartACoroutineWithCallback(enumerator, () => awaiter.Complete());
+                    GCoroutine.StartACoroutineWithCallback(enumerator, () => awaiter.Complete());
                 }, null);
             }
 
@@ -29,15 +29,15 @@ namespace GRT.GTask
         public static IEnumeratorAwaiter GetAwaiter(this YieldInstruction instruction)
         {
             var awaiter = new IEnumeratorAwaiter();
-            if (SynchronizationContext.Current == Coroutines.UnityContext)
+            if (SynchronizationContext.Current == GCoroutine.UnityContext)
             {
-                Coroutines.StartACoroutineWithCallback(Execute(instruction), () => awaiter.Complete());
+                GCoroutine.StartACoroutineWithCallback(Execute(instruction), () => awaiter.Complete());
             }
             else
             {
-                Coroutines.UnityContext.Post(_ =>
+                GCoroutine.UnityContext.Post(_ =>
                 {
-                    Coroutines.StartACoroutineWithCallback(Execute(instruction), () => awaiter.Complete());
+                    GCoroutine.StartACoroutineWithCallback(Execute(instruction), () => awaiter.Complete());
                 }, null);
             }
 

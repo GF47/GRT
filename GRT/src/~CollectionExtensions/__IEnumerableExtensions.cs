@@ -5,6 +5,18 @@ namespace GRT
 {
     public static class __IEnumerableExtensions
     {
+        public static T FindExt<T>(this IEnumerable<T> collection, Predicate<T> predicate)
+        {
+            foreach (var item in collection)
+            {
+                if (predicate(item))
+                {
+                    return item;
+                }
+            }
+            return default;
+        }
+
         public static T[] GetSpan<T>(this IEnumerable<T> collection, Predicate<T> match, int length, T @default = default)
         {
             var array = new T[length];

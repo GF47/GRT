@@ -5,19 +5,6 @@ namespace GRT
 {
     public static class __IListExtensions
     {
-        public static T FindExt<T>(this IList<T> list, Predicate<T> predicate)
-        {
-            for (int i = 0; i < list.Count; i++)
-            {
-                var item = list[i];
-                if (predicate(item))
-                {
-                    return item;
-                }
-            }
-            return default;
-        }
-
         public static int IndexOfExt<T>(this IList<T> list, Predicate<T> predicate)
         {
             for (int i = 0; i < list.Count; i++)

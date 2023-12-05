@@ -16,9 +16,9 @@ namespace GRT
     /// <summary>
     /// 执行Unity携程的公共类
     /// </summary>
-    public class Coroutines : MonoBehaviour
+    public class GCoroutine : MonoBehaviour
     {
-        private static Coroutines _instance;
+        private static GCoroutine _instance;
 
         private static SynchronizationContext _context;
 
@@ -37,8 +37,8 @@ namespace GRT
 
         public static void Init(GameObject root)
         {
-            _instance = root.AddComponent<Coroutines>();
-            Debug.Log($"{nameof(Coroutines)} loaded on {_instance.name}");
+            _instance = root.AddComponent<GCoroutine>();
+            Debug.Log($"{nameof(GCoroutine)} loaded on {_instance.name}");
         }
 
         /// <summary> 在一段携程执行完成后，执行指定的回调 </summary>

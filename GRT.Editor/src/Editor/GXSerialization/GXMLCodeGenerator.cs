@@ -409,16 +409,6 @@ namespace GXFactories
             throw new ArgumentException("member is not a array or list", nameof(info));
         }
 
-#if CSHARP_7_3_OR_NEWER
-
-        private static Type GetMemberType(MemberInfo info) => info switch
-        {
-            FieldInfo fieldInfo => fieldInfo.FieldType,
-            PropertyInfo propertyInfo => propertyInfo.PropertyType,
-            _ => null,
-        };
-
-#else
         private static Type GetMemberType(MemberInfo info)
         {
             switch (info)
@@ -428,7 +418,6 @@ namespace GXFactories
                 default: return null;
             }
         }
-#endif
 
         public static string GetDefault(params string[] strings)
         {

@@ -29,10 +29,8 @@ namespace GRT
             }
         }
 
-        public static List<KeyValuePair<string, string>> ParseTaggedString(this string template)
+        public static IEnumerable<(string, string)> ParseTaggedString(this string template)
         {
-            var result = new List<KeyValuePair<string, string>>();
-
             int a = -1;
             int r = a + 1;
             int i = 0;
@@ -45,7 +43,7 @@ namespace GRT
                         var length = i - r;
                         if (length > 0)
                         {
-                            result.Add(new KeyValuePair<string, string>(null, template.Substring(r, length)));
+                            yield return (null, template.Substring(r, length));
                         }
 
                         a = i; // 开始配对
@@ -62,11 +60,11 @@ namespace GRT
                             var equal = template.IndexOf('=', r, length);
                             if (equal != -1)
                             {
-                                result.Add(new KeyValuePair<string, string>(template.Substring(r, equal - r), template.Substring(equal + 1, i - equal - 1)));
+                                yield return (template.Substring(r, equal - r), template.Substring(equal + 1, i - equal - 1));
                             }
                             else
                             {
-                                result.Add(new KeyValuePair<string, string>(template.Substring(r, length), null));
+                                yield return (template.Substring(r, length), null);
                             }
                         }
 
@@ -80,10 +78,8 @@ namespace GRT
 
             if (i - r > 0)
             {
-                result.Add(new KeyValuePair<string, string>(null, template.Substring(r, i - r)));
+                yield return (null, template.Substring(r, i - r));
             }
-
-            return result;
         }
     }
 }

@@ -31,5 +31,10 @@
         public const string PICK = "pick";
         public const string DROP = "drop";
         public const string THROW = "throw";
+
+        public const string AUTO_SELECT = "auto_select";
+        public const string AUTO_SELECT_2 = "auto-select";
+        public const string AUTO_SELECT_3 = "autoSelect";
+        public static bool IsAutoSelect(string str) => str == AUTO_SELECT || str == AUTO_SELECT_2 || str == AUTO_SELECT_3;
     }
 }

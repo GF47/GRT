@@ -34,7 +34,7 @@ namespace GRT.Editor
                 isActive = false;
             }
 
-            if (GUILayout.Button("A = View Camera & B = View Camera Target", GUILayout.Width(200f)))
+            if (GUILayout.Button("A = View Camera\nB = View Camera Target", GUILayout.Width(200f)))
             {
                 a = view.camera.transform.position;
                 b = view.pivot;

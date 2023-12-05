@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
+using UnityEngine;
 
 namespace GRT
 {
@@ -14,22 +14,36 @@ namespace GRT
         /// </summary>
         public T Content { get; set; }
 
-        public event Action Awaking;
-        public event Action Starting;
-        public event Action Enabled;
-        public event Action Updating;
-        public event Action LateUpdating;
-        public event Action FixedUpdating;
-        public event Action Disabled;
-        public event Action Destroyed;
+        public event Action<T> Awaking;
 
-        private void Awake() { Awaking?.Invoke(); }
-        private void Start() { Starting?.Invoke(); }
-        private void OnEnable() { Enabled?.Invoke(); }
-        private void Update() { Updating?.Invoke(); }
-        private void LateUpdate() { LateUpdating?.Invoke(); }
-        private void FixedUpdate() { FixedUpdating?.Invoke(); }
-        private void OnDisable() { Disabled?.Invoke(); }
-        private void OnDestroy() { Destroyed?.Invoke(); }
+        public event Action<T> Starting;
+
+        public event Action<T> Enabled;
+
+        public event Action<T> Updating;
+
+        public event Action<T> LateUpdating;
+
+        public event Action<T> FixedUpdating;
+
+        public event Action<T> Disabled;
+
+        public event Action<T> Destroyed;
+
+        private void Awake() => Awaking?.Invoke(Content);
+
+        private void Start() => Starting?.Invoke(Content);
+
+        private void OnEnable() => Enabled?.Invoke(Content);
+
+        private void Update() => Updating?.Invoke(Content);
+
+        private void LateUpdate() => LateUpdating?.Invoke(Content);
+
+        private void FixedUpdate() => FixedUpdating?.Invoke(Content);
+
+        private void OnDisable() => Disabled?.Invoke(Content);
+
+        private void OnDestroy() => Destroyed?.Invoke(Content);
     }
 }
