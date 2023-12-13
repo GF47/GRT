@@ -133,5 +133,33 @@ namespace GRT.Editor
                 UnityEngine.Debug.Log("you've selected nothing");
             }
         }
+
+        /**
+         * 获取场景物体的 [场景名:层级]
+         */
+        [MenuItem("GameObject/GRT/Get Transform Hierarchy With Scene Name", false, 0)]
+        private static void GetTransformHierarchyWithSceneName()
+        {
+            var trans = Selection.activeTransform;
+            if (trans != null)
+            {
+                var parent = trans.parent;
+                var hierarchy = trans.name;
+                while (parent != null)
+                {
+                    trans = parent;
+                    hierarchy = trans.name + '/' + hierarchy;
+                    parent = trans.parent;
+                }
+
+                hierarchy = trans.gameObject.scene.name + ':' + hierarchy;
+                UnityEngine.Debug.Log(hierarchy);
+                EditorGUIUtility.systemCopyBuffer = hierarchy;
+            }
+            else
+            {
+                UnityEngine.Debug.Log("you've selected nothing");
+            }
+        }
     }
 }

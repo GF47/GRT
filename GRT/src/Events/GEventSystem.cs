@@ -6,8 +6,6 @@ namespace GRT.Events
 {
     public class GEventSystem : MonoBehaviour
     {
-        public static GEventSystem Current { get; private set; }
-
         private Camera _camera;
         private PointersLinkedList _pointers;
 
@@ -34,22 +32,13 @@ namespace GRT.Events
             Blocker = new Blocker();
         }
 
-        // private void OnEnable()
-        // {
-        //     Current = this;
-        // }
-
         private void OnDisable()
         {
-            if (Current == this) { Current = null; }
-
             _pointers.ForEach(pointer => pointer.Reset(this));
         }
 
         private void Update()
         {
-            if (Current != this) { Current = this; }
-
             bool cased = false;
             RaycastHit hit = default;
 

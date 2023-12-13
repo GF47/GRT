@@ -12,36 +12,50 @@ namespace GRT.Editor.Inspectors
             {
                 EditorGUI.BeginProperty(position, label, property);
                 var e = Event.current;
-                if (position.Contains(e.mousePosition) && (e.type & EventType.DragUpdated) > 0)
+                if (position.Contains(e.mousePosition))
                 {
-                    DragAndDrop.visualMode = DragAndDropVisualMode.Link;
-                    var paths = DragAndDrop.paths;
-                    if (paths != null && paths.Length > 0)
+                    // if ((e.type & EventType.DragUpdated) > 0)
+                    // {
+                    //     DragAndDrop.visualMode = DragAndDropVisualMode.Link;
+                    //     var paths = DragAndDrop.paths;
+                    //     if (paths != null && paths.Length > 0)
+                    //     {
+                    //         var path = paths[0];
+                    //         if (property.stringValue != path)
+                    //         {
+                    //             property.stringValue = path;
+                    //             property.serializedObject.ApplyModifiedProperties();
+                    //         }
+                    //     }
+                    //     DragAndDrop.AcceptDrag();
+                    // }
+                    // else
+                    if ((e.type & EventType.DragPerform) > 0)
                     {
-                        var path = paths[0];
-                        if (property.stringValue != path)
+                        DragAndDrop.visualMode = DragAndDropVisualMode.Link;
+                        var objects = DragAndDrop.objectReferences;
+                        if (objects != null && objects.Length > 0)
                         {
-                            property.stringValue = path;
+                            var obj = objects[0];
+                            if (EditorUtility.IsPersistent(obj))
+                            {
+                                property.stringValue = AssetDatabase.GetAssetPath(obj);
+                            }
+                            else if (obj is GameObject go)
+                            {
+                                property.stringValue = GameObjectExtension.GetPath(go, true);
+                            }
                             property.serializedObject.ApplyModifiedProperties();
                         }
+                        DragAndDrop.AcceptDrag();
                     }
-                    DragAndDrop.AcceptDrag();
                 }
 
-                // TODO 需要兼容 text area
-                // var fieldInfo = property.serializedObject.targetObject.GetType().GetField(property.name);
-                // if (fieldInfo.GetCustomAttribute<TextAreaAttribute>(true) != null)
-                // {
-                //     property.stringValue = EditorGUI.TextArea(position, property.stringValue);
-                // }
-                // else
-                // {
                 var draggable = attribute as DraggableAssetPathAttribute;
                 label.text = draggable.Name;
                 label.tooltip = draggable.Tips;
 
                 EditorGUI.PropertyField(position, property, label, true);
-                // }
 
                 EditorGUI.EndProperty();
             }

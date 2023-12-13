@@ -15,8 +15,7 @@ namespace GRT.Events
 
         protected override bool IsInterestedIn(Component com)
         {
-            var trigger = com as ITrigger;
-            return trigger != null
+            return com is ITrigger trigger
                 && trigger.HasInnerTrigger<KeyTrigger>(out var inner)
                 && inner.key == key;
         }

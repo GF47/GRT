@@ -194,9 +194,9 @@ namespace GRT.Tween
             }
         }
 
-        public TweenDriver Reset(bool resetDelay = true)
+        public TweenDriver TweenDriverReset(bool resetDelay = true)
         {
-            _tpLoop.Reset();
+            _tpLoop?.Reset();
 
             if (resetDelay) { _isStarted = false; }
             Duration = _duration;
@@ -224,7 +224,7 @@ namespace GRT.Tween
             td.ResetEase(td._ease);
             td.ResetLoop(td._loop);
             td.ResetDirection(td._direction);
-            td.Reset();
+            td.TweenDriverReset();
             td.Stopping = null;
             td.StoppingOneShot = null;
             td.enabled = true;
