@@ -9,18 +9,17 @@ namespace GRT.Editor
     [CreateAssetMenu(fileName = "GPie")]
     public class GPiePanel : ScriptableObject
     {
-        private static bool _isActive;
         private static Vector2 _position;
         private static Item[] _current;
         private static Item2[] _currentSub;
 
-        [Shortcut("g_pie_panel", KeyCode.G, displayName = "GPie Panel")]
-        private static void Init()
+        [ClutchShortcut("g_pie_panel", KeyCode.G, defaultShortcutModifiers: ShortcutModifiers.None, displayName = "GPie Panel")]
+        private static void Init(ShortcutArguments args)
         {
-            if (!_isActive)
-            {
-                Clear();
+            Clear();
 
+            if (args.stage == ShortcutStage.Begin)
+            {
                 var pie = AssetDatabase.LoadAssetAtPath<GPiePanel>("Assets/GRT/GPie.asset");
                 if (pie == null)
                 {
@@ -29,34 +28,36 @@ namespace GRT.Editor
                         new Item()
                         {
                             name = "GF47",
-                            children= new Item2[]
+                            children = new Item2[]
                             {
                                 new Item2() { name = "Hello" },
                                 new Item2() { name = "World" },
                             }
                         },
-                        new Item() { name="Unity" },
+                        new Item()
+                        {
+                            name = "Play default scene",
+                        },
                     };
+                    _current[1].action = new UnityEvent();
+                    _current[1].action.AddListener(PlayDefaultScene);
                 }
                 else
                 {
                     _current = pie._items;
                 }
 
-                _isActive = true;
                 SceneView.duringSceneGui += OnSceneView;
                 _position = GetCurrentMousePosition(true);
+            }
+            else if (args.stage == ShortcutStage.End)
+            {
+
             }
         }
 
         private static void OnSceneView(SceneView view)
         {
-            if (Event.current.keyCode == KeyCode.Escape)
-            {
-                Clear();
-                return;
-            }
-
             Handles.BeginGUI();
             {
                 GUI.Box(new Rect(_position.x, _position.y, 20f, 20f), "O");
@@ -150,8 +151,6 @@ namespace GRT.Editor
 
         private static void Clear()
         {
-            _isActive = false;
-
             SceneView.duringSceneGui -= OnSceneView;
             _current = null;
             _currentSub = null;
@@ -187,5 +186,16 @@ namespace GRT.Editor
 
         [SerializeField]
         private Item[] _items;
+
+        public static void PlayDefaultScene()
+        {
+            if (EditorBuildSettings.scenes.Length > 0)
+            {
+                UnityEditor.SceneManagement.EditorSceneManager.OpenScene(EditorBuildSettings.scenes[0].path);
+            }
+            EditorApplication.EnterPlaymode();
+        }
+
+        public void Example_PlayDefaultScene() => PlayDefaultScene();
     }
 }

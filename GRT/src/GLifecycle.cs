@@ -42,10 +42,12 @@ namespace GRT
         #region holy shit
 
         void ___Attach(IGLife life);
+
         void ___Detach(IGLife life);
+
         void ___ResolvePendingLives();
 
-        #endregion
+        #endregion holy shit
     }
 
     public interface IGLife<T> : IGLife
@@ -238,7 +240,7 @@ namespace GRT
         public override IGScope AsGScope => this;
 #endif
 
-        ICollection<IGLife> IGScope.Lives { get;} = new List<IGLife>();
+        ICollection<IGLife> IGScope.Lives { get; } = new List<IGLife>();
 
         protected IDictionary<IGLife, bool> PendingLives { get; set; } = new Dictionary<IGLife, bool>();
 
@@ -443,6 +445,21 @@ namespace GRT
             return default;
         }
 
+        public static bool Contain<T>(this IGScope scope, out T value, Predicate<T> predicate = null) where T : IGLife
+        {
+            foreach (var life in scope.Lives)
+            {
+                if (life is T target && (predicate == null || predicate(target)))
+                {
+                    value = target;
+                    return true;
+                }
+            }
+
+            value = default;
+            return false;
+        }
+
         public static T FindInParent<T>(this IGLife life, Predicate<T> predicate = null) where T : IGLife
         {
             if (life.Scope != null)
@@ -473,6 +490,21 @@ namespace GRT
             }
 
             return default;
+        }
+
+        public static bool Contain(this IGScope scope, out object value, Type type)
+        {
+            foreach (var life in scope.Lives)
+            {
+                if (type.IsAssignableFrom(life.GetType()))
+                {
+                    value = life;
+                    return true;
+                }
+            }
+
+            value = null;
+            return false;
         }
 
         public static object FindInParent(this IGLife life, Type type)

@@ -1,10 +1,6 @@
 ﻿using System;
-using UnityEngine;
 using UnityEditor;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UnityEngine;
 
 namespace GRT.Editor
 {
@@ -26,7 +22,7 @@ namespace GRT.Editor
         private static void SceneView_duringSceneGui(SceneView view)
         {
             Handles.BeginGUI();
-            GUILayout.BeginArea(new Rect(0f, 0f, 256f, 128f), EditorStyles.textArea);
+            GUILayout.BeginArea(new Rect(0f, 0f, 256f, 160), EditorStyles.textArea);
             {
                 GUILayout.BeginHorizontal();
                 {
@@ -204,7 +200,6 @@ namespace GRT.Editor
                                     max = Vector3.Max(max, colliders[j].bounds.max);
                                     min = Vector3.Min(min, colliders[j].bounds.min);
                                 }
-
                             }
                         }
 
@@ -214,6 +209,16 @@ namespace GRT.Editor
                         Undo.FlushUndoRecordObjects();
 
                         Selection.activeGameObject = go;
+                    }
+                }
+
+                if (GUILayout.Button("Scale => BoxColliderSize", GUILayout.Width(240f)))
+                {
+                    var go = Selection.activeGameObject;
+                    if (go != null && go.TryGetComponent(out BoxCollider bc))
+                    {
+                        bc.size = go.transform.localScale;
+                        go.transform.localScale = Vector3.one;
                     }
                 }
             }

@@ -240,6 +240,7 @@ namespace GRT.Components
             if (_target != null)
             {
                 _radius = Vector3.Distance(Position, TargetPosition);
+                if (_radius < _lowerRadius || _radius > _upperRadius) { _radius = (_lowerRadius + _upperRadius) / 2f; }
                 _currentRadius = _radius;
                 Position = Rotation * new Vector3(0f, 0f, -_currentRadius) + TargetPosition;
 
