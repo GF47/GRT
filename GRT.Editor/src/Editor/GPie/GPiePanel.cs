@@ -140,7 +140,7 @@ namespace GRT.Editor.GPie
                 if (_current != _origin && _current is BranchedItem branchedItem && branchedItem.Submenu != null && branchedItem.Submenu.Length > 0)
                 {
                     _origin = branchedItem;
-                    _originPosition = GetMousePosition(false);
+                    _originPosition = new Vector2(rect.x + rect.width / 2f, rect.y + rect.height / 2f);
                 }
             }
             else
