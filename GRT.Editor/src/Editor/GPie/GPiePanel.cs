@@ -19,20 +19,16 @@ namespace GRT.Editor.GPie
                 {
                     _instance = CreateInstance<GPiePanel>();
 
-                    var uePlayDefaultScene = new UnityEvent<string>();
-                    uePlayDefaultScene.AddListener(Example_PlayDefaultScene);
-
-                    var ueGF47HelloWorld = new UnityEvent<string>();
-                    ueGF47HelloWorld.AddListener(s => Debug.Log($"GF47: {s}"));
+                    var debug = new UnityAction<string>(s => Debug.Log($"GF47: {s}"));
 
                     _instance._items = new BranchedItem[]
                     {
-                        new BranchedItem("GF47", ueGF47HelloWorld, new SealedItem[]
+                        new BranchedItem("GF47", new StringUEvent(debug), "Hello World!", new SealedItem[]
                         {
-                            new SealedItem("Hello", ueGF47HelloWorld, "Hello"),
-                            new SealedItem("World", ueGF47HelloWorld, "World"),
-                        }, "Hello World!"),
-                        new BranchedItem("Play Default Scene", uePlayDefaultScene),
+                            new SealedItem("Hello", new StringUEvent(debug), "Hello"),
+                            new SealedItem("World", new StringUEvent(debug), "World"),
+                        }),
+                        new BranchedItem("Play Default Scene", new StringUEvent(_instance.Example_PlayDefaultScene)),
                     };
                 }
 
@@ -169,11 +165,26 @@ namespace GRT.Editor.GPie
 
         #region items
 
+        [Serializable]
+        private class StringUEvent : UnityEvent<string>
+        {
+            public StringUEvent(UnityAction<string> action)
+            {
+                if (action != null)
+                {
+                    AddListener(action);
+                }
+            }
+
+            public StringUEvent()
+            { }
+        }
+
         private interface IItem
         {
             string Name { get; }
 
-            UnityEvent<string> UEvent { get; }
+            StringUEvent UEvent { get; }
 
             string Argument { get; }
         }
@@ -185,7 +196,7 @@ namespace GRT.Editor.GPie
 
             public SealedItem[] Submenu => _submenu;
 
-            public BranchedItem(string name, UnityEvent<string> uEvent, SealedItem[] submenu = null, string argument = null) : base(name, uEvent, argument)
+            public BranchedItem(string name, StringUEvent uEvent, string argument = null, SealedItem[] submenu = null) : base(name, uEvent, argument)
             {
                 _submenu = submenu;
             }
@@ -196,13 +207,13 @@ namespace GRT.Editor.GPie
         {
             [SerializeField] private string _name;
             [SerializeField] private string _argument;
-            [SerializeField] private UnityEvent<string> _uEvent;
+            [SerializeField] private StringUEvent _uEvent;
 
             public string Name => _name;
-            public UnityEvent<string> UEvent => _uEvent;
             public string Argument => _argument;
+            public StringUEvent UEvent => _uEvent;
 
-            public SealedItem(string name, UnityEvent<string> uEvent, string argument = null)
+            public SealedItem(string name, StringUEvent uEvent, string argument = null)
             {
                 _name = name;
                 _uEvent = uEvent;
@@ -214,13 +225,15 @@ namespace GRT.Editor.GPie
 
         #endregion items
 
-        public static void ExecuteMenuItem(string menu) => EditorApplication.ExecuteMenuItem(menu);
+        /***************示例：执行菜单项*******************************/
+
+        public void ExecuteMenuItem(string menu) => EditorApplication.ExecuteMenuItem(menu);
 
         /***************示例：打开发布设置中的第一个场景*******************************/
 
         #region examples
 
-        public static void Example_PlayDefaultScene(string path)
+        public void Example_PlayDefaultScene(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
             {
