@@ -17,19 +17,23 @@ namespace GRT.Editor.GPie
             {
                 if (_instance == null)
                 {
-                    _instance = CreateInstance<GPiePanel>();
-
-                    var debug = new UnityAction<string>(s => Debug.Log($"GF47: {s}"));
-
-                    _instance._items = new BranchedItem[]
+                    _instance = AssetDatabase.LoadAssetAtPath<GPiePanel>("Assets/GPie.asset");
+                    if (_instance == null)
                     {
-                        new BranchedItem("GF47", new StringUEvent(debug), "Hello World!", new SealedItem[]
+                        _instance = CreateInstance<GPiePanel>();
+
+                        var debug = new UnityAction<string>(s => Debug.Log($"GF47: {s}"));
+
+                        _instance._items = new BranchedItem[]
                         {
-                            new SealedItem("Hello", new StringUEvent(debug), "Hello"),
-                            new SealedItem("World", new StringUEvent(debug), "World"),
-                        }),
-                        new BranchedItem("Play Default Scene", new StringUEvent(_instance.Example_PlayDefaultScene)),
-                    };
+                            new BranchedItem("GF47", new StringUEvent(debug), "Hello World!", new SealedItem[]
+                            {
+                                new SealedItem("Hello", new StringUEvent(debug), "Hello"),
+                                new SealedItem("World", new StringUEvent(debug), "World"),
+                            }),
+                            new BranchedItem("Play Default Scene", new StringUEvent(_instance.Example_PlayDefaultScene)),
+                        };
+                    }
                 }
 
                 return _instance;
