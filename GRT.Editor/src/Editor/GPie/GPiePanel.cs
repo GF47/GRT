@@ -4,159 +4,160 @@ using UnityEditor.ShortcutManagement;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace GRT.Editor
+namespace GRT.Editor.GPie
 {
     [CreateAssetMenu(fileName = "GPie")]
     public class GPiePanel : ScriptableObject
     {
-        private static Vector2 _position;
-        private static Item[] _current;
-        private static Item2[] _currentSub;
+        #region instance
+
+        public static GPiePanel Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = CreateInstance<GPiePanel>();
+
+                    var uePlayDefaultScene = new UnityEvent<string>();
+                    uePlayDefaultScene.AddListener(Example_PlayDefaultScene);
+
+                    var ueGF47HelloWorld = new UnityEvent<string>();
+                    ueGF47HelloWorld.AddListener(s => Debug.Log($"GF47: {s}"));
+
+                    _instance._items = new BranchedItem[]
+                    {
+                        new BranchedItem("GF47", ueGF47HelloWorld, new SealedItem[]
+                        {
+                            new SealedItem("Hello", ueGF47HelloWorld, "Hello"),
+                            new SealedItem("World", ueGF47HelloWorld, "World"),
+                        }, "Hello World!"),
+                        new BranchedItem("Play Default Scene", uePlayDefaultScene),
+                    };
+                }
+
+                return _instance;
+            }
+        }
+
+        private static GPiePanel _instance;
+
+        [ContextMenu("Use this GPie Panel")]
+        private void SetInstance()
+        {
+            _instance = this;
+            Debug.LogWarning($"[{AssetDatabase.GetAssetPath(this)}] was used");
+        }
+
+        #endregion instance
+
+        private static IItem _current;
+
+        private static BranchedItem _origin;
+
+        private static Vector2 _originPosition;
 
         [ClutchShortcut("g_pie_panel", KeyCode.G, defaultShortcutModifiers: ShortcutModifiers.None, displayName = "GPie Panel")]
         private static void Init(ShortcutArguments args)
         {
-            Clear();
-
             if (args.stage == ShortcutStage.Begin)
             {
-                var pie = AssetDatabase.LoadAssetAtPath<GPiePanel>("Assets/GRT/GPie.asset");
-                if (pie == null)
-                {
-                    _current = new Item[]
-                    {
-                        new Item()
-                        {
-                            name = "GF47",
-                            children = new Item2[]
-                            {
-                                new Item2() { name = "Hello" },
-                                new Item2() { name = "World" },
-                            }
-                        },
-                        new Item()
-                        {
-                            name = "Play default scene",
-                        },
-                    };
-                    _current[1].action = new UnityEvent();
-                    _current[1].action.AddListener(PlayDefaultScene);
-                }
-                else
-                {
-                    _current = pie._items;
-                }
+                Clear();
 
-                SceneView.duringSceneGui += OnSceneView;
-                _position = GetCurrentMousePosition(true);
+                SceneView.duringSceneGui += Draw;
+                _originPosition = GetMousePosition(true);
             }
             else if (args.stage == ShortcutStage.End)
             {
+                if (_current != null && _current.UEvent != null)
+                {
+                    _current.UEvent.Invoke(_current.Argument);
+                }
 
+                Clear();
             }
         }
 
-        private static void OnSceneView(SceneView view)
+        private static void Draw(SceneView sceneView)
         {
             Handles.BeginGUI();
             {
-                GUI.Box(new Rect(_position.x, _position.y, 20f, 20f), "O");
+                _current = null;
 
-                if (_currentSub != null && _currentSub.Length > 0)
+                var h = EditorGUIUtility.singleLineHeight + 4f;
+                var halfh = EditorGUIUtility.singleLineHeight / 2f;
+
+                if (_origin != null)
                 {
-                    DrawItem2();
+                    DrawItem(new Rect(_originPosition.x - 64f, _originPosition.y - halfh, 128f, h), _origin);
+                    DrawItems(_origin.Submenu);
                 }
                 else
                 {
-                    DrawItem();
+                    DrawItem(new Rect(_originPosition.x - halfh, _originPosition.y + halfh, h, h), null);
+                    DrawItems(Instance._items);
                 }
             }
             Handles.EndGUI();
         }
 
-        private static void DrawItem()
+        private static void DrawItems(IItem[] items)
         {
             var rot = 0f;
-            var delta = 2f * Mathf.PI / Mathf.Max(_current.Length, 1f);
+            var delta = 2f * Mathf.PI / Mathf.Max(items.Length, 1f);
 
-            // var pos = Event.current.mousePosition;
-            // var indicator = (int)((Mathf.Atan2(pos.y - _position.y, _position.x - pos.x) + Mathf.PI) / delta + 0.5f);
-
-            var items = _current;
-            for (int i = 0; i < items.Length; i++)
+            foreach (var item in items)
             {
-                var item = items[i];
-
                 var w = 128f;
-                var h = 24f;
-                var x = _position.x + 128f * Mathf.Cos(rot) - w * Mathf.Sin(rot / 2f);
-                var y = _position.y - 128f * Mathf.Sin(rot) - h * (rot / 2f > Mathf.PI ? 1f : 0.5f);
+                var h = EditorGUIUtility.singleLineHeight;
+                var x = _originPosition.x + 128f * Mathf.Cos(rot) - w * Mathf.Sin(rot / 2f);
+                var y = _originPosition.y - 128f * Mathf.Sin(rot) - h * (rot / 2f > Mathf.PI ? 1f : 0.5f);
 
-                // var color = GUI.color;
-                // if (indicator == i) { GUI.color = Color.yellow; }
-                {
-                    if (GUI.Button(new Rect(x, y, w, h), item.name))
-                    {
-                        item.action?.Invoke();
-
-                        if (item.children != null && item.children.Length > 0)
-                        {
-                            _position = GetCurrentMousePosition(false);
-                            _currentSub = item.children;
-                        }
-                        else
-                        {
-                            Clear();
-                        }
-                    }
-                }
-                // GUI.color = color;
+                var rect = new Rect(x, y, w, h);
+                DrawItem(rect, item);
 
                 rot += delta;
             }
         }
 
-        private static void DrawItem2()
+        private static void DrawItem(Rect rect, IItem item)
         {
-            var rot = 0f;
-            var delta = 2f * Mathf.PI / Mathf.Max(_currentSub.Length, 1f);
-
-            // var pos = Event.current.mousePosition;
-            // var indicator = (int)((Mathf.Atan2(pos.y - _position.y, _position.x - pos.x) + Mathf.PI) / delta + 0.5f);
-
-            var items = _currentSub;
-            for (int i = 0; i < items.Length; i++)
+            if (item == null)
             {
-                var item = items[i];
-
-                var w = 128f;
-                var h = 24f;
-                var x = _position.x + 128f * Mathf.Cos(rot) - w * Mathf.Sin(rot / 2f);
-                var y = _position.y - 128f * Mathf.Sin(rot) - h * (rot / 2f > Mathf.PI ? 1f : 0.5f);
-
-                // var color = GUI.color;
-                // if (indicator == i) { GUI.color = Color.yellow; }
+                GUI.Label(rect, string.Empty, EditorStyles.toggle);
+            }
+            else if (rect.Contains(GetMousePosition(false)))
+            {
+                var defaultColor = GUI.color;
+                GUI.color = Color.yellow;
                 {
-                    if (GUI.Button(new Rect(x, y, w, h), item.name))
-                    {
-                        item.action?.Invoke();
-                        Clear();
-                    }
+                    GUI.Label(rect, item.Name, EditorStyles.miniButton);
                 }
-                // GUI.color = color;
+                GUI.color = defaultColor;
 
-                rot += delta;
+                _current = item;
+
+                if (_current != _origin && _current is BranchedItem branchedItem && branchedItem.Submenu != null && branchedItem.Submenu.Length > 0)
+                {
+                    _origin = branchedItem;
+                    _originPosition = GetMousePosition(false);
+                }
+            }
+            else
+            {
+                GUI.Label(rect, item.Name, EditorStyles.miniButton);
             }
         }
 
         private static void Clear()
         {
-            SceneView.duringSceneGui -= OnSceneView;
+            SceneView.duringSceneGui -= Draw;
+
             _current = null;
-            _currentSub = null;
+            _origin = null;
         }
 
-        private static Vector2 GetCurrentMousePosition(bool shit)
+        private static Vector2 GetMousePosition(bool shit)
         {
             var pos = Event.current.mousePosition;
             if (shit)
@@ -166,36 +167,76 @@ namespace GRT.Editor
             return pos;
         }
 
-        /**************************************************************/
+        #region items
 
-        [Serializable]
-        private class Item
+        private interface IItem
         {
-            public string name;
-            public UnityEvent action;
+            string Name { get; }
 
-            public Item2[] children;
+            UnityEvent<string> UEvent { get; }
+
+            string Argument { get; }
         }
 
         [Serializable]
-        public class Item2
+        private class BranchedItem : SealedItem
         {
-            public string name;
-            public UnityEvent action;
+            private readonly SealedItem[] _submenu;
+
+            public SealedItem[] Submenu => _submenu;
+
+            public BranchedItem(string name, UnityEvent<string> uEvent, SealedItem[] submenu = null, string argument = null) : base(name, uEvent, argument)
+            {
+                _submenu = submenu;
+            }
         }
 
         [SerializeField]
-        private Item[] _items;
-
-        public static void PlayDefaultScene()
+        private class SealedItem : IItem
         {
-            if (EditorBuildSettings.scenes.Length > 0)
+            [SerializeField] private string _name;
+            [SerializeField] private string _argument;
+            [SerializeField] private UnityEvent<string> _uEvent;
+
+            public string Name => _name;
+            public UnityEvent<string> UEvent => _uEvent;
+            public string Argument => _argument;
+
+            public SealedItem(string name, UnityEvent<string> uEvent, string argument = null)
             {
-                UnityEditor.SceneManagement.EditorSceneManager.OpenScene(EditorBuildSettings.scenes[0].path);
+                _name = name;
+                _uEvent = uEvent;
+                _argument = argument;
             }
+        }
+
+        [SerializeField] private BranchedItem[] _items;
+
+        #endregion items
+
+        public static void ExecuteMenuItem(string menu) => EditorApplication.ExecuteMenuItem(menu);
+
+        /***************示例：打开发布设置中的第一个场景*******************************/
+
+        #region examples
+
+        public static void Example_PlayDefaultScene(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                if (EditorBuildSettings.scenes.Length > 0)
+                {
+                    UnityEditor.SceneManagement.EditorSceneManager.OpenScene(EditorBuildSettings.scenes[0].path);
+                }
+            }
+            else
+            {
+                UnityEditor.SceneManagement.EditorSceneManager.OpenScene(path);
+            }
+
             EditorApplication.EnterPlaymode();
         }
 
-        public void Example_PlayDefaultScene() => PlayDefaultScene();
+        #endregion examples
     }
 }
