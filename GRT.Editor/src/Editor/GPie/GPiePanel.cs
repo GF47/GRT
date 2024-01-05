@@ -31,7 +31,7 @@ namespace GRT.Editor.GPie
                                 new SealedItem("Hello", new StringUEvent(debug), "Hello"),
                                 new SealedItem("World", new StringUEvent(debug), "World"),
                             }),
-                            new BranchedItem("Play Default Scene", new StringUEvent(_instance.Example_PlayDefaultScene)),
+                            new BranchedItem("Play Default Scene", new StringUEvent(_instance.PlayDefaultScene)),
                         };
                     }
                 }
@@ -196,7 +196,7 @@ namespace GRT.Editor.GPie
         [Serializable]
         private class BranchedItem : SealedItem
         {
-            private readonly SealedItem[] _submenu;
+            [SerializeField] private SealedItem[] _submenu;
 
             public SealedItem[] Submenu => _submenu;
 
@@ -206,7 +206,7 @@ namespace GRT.Editor.GPie
             }
         }
 
-        [SerializeField]
+        [Serializable]
         private class SealedItem : IItem
         {
             [SerializeField] private string _name;
@@ -233,11 +233,13 @@ namespace GRT.Editor.GPie
 
         public void ExecuteMenuItem(string menu) => EditorApplication.ExecuteMenuItem(menu);
 
+        public void OpenScene(string path) => UnityEditor.SceneManagement.EditorSceneManager.OpenScene(path);
+
         /***************示例：打开发布设置中的第一个场景*******************************/
 
         #region examples
 
-        public void Example_PlayDefaultScene(string path)
+        public void PlayDefaultScene(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
             {
