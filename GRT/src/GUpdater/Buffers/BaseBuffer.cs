@@ -59,7 +59,7 @@ namespace GRT.GUpdater.Buffers
             get => _percent; set
             {
                 _percent = Math.Max(Math.Min(value, 1f), 0f);
-                Value = Project(_percent);
+                Value = Interpolate(_percent);
 
                 if (value >= 1f) { Stop(); }
             }
@@ -76,7 +76,7 @@ namespace GRT.GUpdater.Buffers
             Duration = duration;
         }
 
-        public abstract T Project(float percent);
+        public abstract T Interpolate(float percent);
 
         protected abstract bool IsEqual(T a, T b);
 

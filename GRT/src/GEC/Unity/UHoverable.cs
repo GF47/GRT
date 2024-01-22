@@ -3,10 +3,10 @@ using UnityEngine;
 
 namespace GRT.GEC.Unity
 {
-    public class GHoverable<T> : IGComponent<GameObject, UEntity>, IConsumer<UEntity>
-        where T : GHoverTrigger<T>
+    public class UHoverable<T> : IGComponent<GameObject, UEntity>, IConsumer<UEntity>
+        where T : UHoverTrigger<T>
     {
-        public UEntity GEntity { get; set; }
+        public UEntity Entity { get; set; }
 
         public T Trigger { get; protected set; }
 
@@ -14,11 +14,11 @@ namespace GRT.GEC.Unity
 
         public bool Use(IProvider<UEntity> provider)
         {
-            if (provider.Ware != null & provider.Ware.TryGetComponent(out GCollider collider))
+            if (provider.Ware != null && provider.Ware.TryGetComponent(out UCollider collider))
             {
                 Provider = provider;
 
-                Trigger = collider.Collider.gameObject.AddComponent<T>();
+                Trigger = collider.RawCollider.gameObject.AddComponent<T>();
                 Trigger.Connect(this);
                 return true;
             }
@@ -29,15 +29,15 @@ namespace GRT.GEC.Unity
         {
             if (Trigger != null)
             {
-                GHoverTrigger<T>.Destroy(Trigger);
+                UHoverTrigger<T>.Destroy(Trigger);
             }
 
             Provider = null;
         }
     }
 
-    public abstract class GHoverTrigger<T> : UBehaviour<GHoverable<T>>, IPointerEnter, IPointerExit, IPointerHover
-        where T : GHoverTrigger<T>
+    public abstract class UHoverTrigger<T> : UBehaviour<UHoverable<T>>, IPointerEnter, IPointerExit, IPointerHover
+        where T : UHoverTrigger<T>
     {
         public abstract void OnPointerEnter(Camera camera, RaycastHit hit, Vector2 pos);
 

@@ -9,7 +9,7 @@ namespace GRT.GEC
     {
         private FiniteStateMachine _fsm;
 
-        public TE GEntity { get; set; }
+        public TE Entity { get; set; }
 
         public FiniteStateMachine FSM
         {
@@ -17,7 +17,7 @@ namespace GRT.GEC
             {
                 if (_fsm != null)
                 {
-                    throw new InvalidOperationException($"{GEntity.Location}: There is already has a fsm component, assign repeatedly is not allowed");
+                    throw new InvalidOperationException($"{Entity.Location}: There is already has a fsm component, assign repeatedly is not allowed");
                 }
 
                 _fsm = value;
@@ -28,7 +28,7 @@ namespace GRT.GEC
 
         private void Bind()
         {
-            if (GEntity.TryGetComponent(out GEntityLife<T, TE> lifecycle))
+            if (Entity.TryGetComponent(out GEntityLife<T, TE> lifecycle))
             {
                 lifecycle.Starting += Start;
                 lifecycle.Disposing += Dispose;

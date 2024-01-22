@@ -40,7 +40,7 @@ namespace GRT.Tween
 
         public override Vector3 Current { get => _self.position; protected set => _self.position = value; }
 
-        public override Vector3 Project(float percent)
+        public override Vector3 Interpolate(float percent)
         {
             if (_useInterpolation) { InterpolatedTranslate(percent); }
             else { LinearTranslate(percent); }

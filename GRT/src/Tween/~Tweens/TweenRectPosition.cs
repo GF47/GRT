@@ -8,7 +8,7 @@ namespace GRT.Tween
 
         public override Vector3 Current { get => _target.anchoredPosition3D; protected set => _target.anchoredPosition3D = value; }
 
-        public override Vector3 Project(float percent) => Current = Vector3.Lerp(From, To, percent);
+        public override Vector3 Interpolate(float percent) => Current = Vector3.Lerp(From, To, percent);
 
         private void Awake()
         {

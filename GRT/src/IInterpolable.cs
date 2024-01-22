@@ -1,9 +1,9 @@
 ﻿namespace GRT
 {
-    public interface IProjecter01<T>
+    public interface IInterpolable<T>
     {
         T From { get; set; }
         T To { get; set; }
-        T Project(float percent);
+        T Interpolate(float percent);
     }
 }

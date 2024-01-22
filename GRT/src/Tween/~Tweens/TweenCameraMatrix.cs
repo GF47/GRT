@@ -23,7 +23,7 @@ namespace GRT.Tween
             }
         }
 
-        public override float Project(float percent)
+        public override float Interpolate(float percent)
         {
             var p = Mathf.Lerp(From, To, percent);
             Current = p;

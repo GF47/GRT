@@ -8,7 +8,7 @@ namespace GRT.Tween
 
         public override Vector3 Current { get => _target.position; protected set => _target.position = value; }
 
-        public override Vector3 Project(float percent)
+        public override Vector3 Interpolate(float percent)
         {
             Current = Vector3.Lerp(From, To, percent);
             return Current;

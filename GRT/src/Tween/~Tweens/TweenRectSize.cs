@@ -8,7 +8,7 @@ namespace GRT.Tween
 
         public override Vector2 Current { get => _target.sizeDelta; protected set => _target.sizeDelta = value; }
 
-        public override Vector2 Project(float percent) => Current = Vector2.Lerp(From, To, percent);
+        public override Vector2 Interpolate(float percent) => Current = Vector2.Lerp(From, To, percent);
 
         private void Awake()
         {

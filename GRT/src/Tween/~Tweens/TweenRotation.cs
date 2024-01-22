@@ -11,7 +11,7 @@ namespace GRT.Tween
 
         public override Vector3 Current { get => _target.eulerAngles; protected set => _target.eulerAngles = value; }
 
-        public override Vector3 Project(float percent)
+        public override Vector3 Interpolate(float percent)
         {
             _target.rotation = Quaternion.Slerp(_from, _to, percent);
             return Current;

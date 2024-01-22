@@ -24,7 +24,7 @@
             if (!entity.Components.Contains(com))
             {
                 entity.Components.Add(com);
-                com.GEntity = entity;
+                com.Entity = entity;
             }
         }
 

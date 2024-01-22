@@ -2,7 +2,7 @@
 
 namespace GRT.Tween
 {
-    public abstract class Tween<T> : MonoBehaviour, IProjecter01<T>, IPercent
+    public abstract class Tween<T> : MonoBehaviour, IInterpolable<T>, IPercent
     {
         [SerializeField] protected T from;
         [SerializeField] protected T to;
@@ -18,12 +18,12 @@ namespace GRT.Tween
             get => _percent;
             set
             {
-                Project(_percent = value);
+                Interpolate(_percent = value);
             }
         }
 
         public abstract T Current { get; protected set; }
 
-        public abstract T Project(float percent);
+        public abstract T Interpolate(float percent);
     }
 }

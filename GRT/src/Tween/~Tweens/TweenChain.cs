@@ -17,7 +17,7 @@ namespace GRT.Tween
 
         public override float Current { get => Percent; protected set { } }
 
-        public override float Project(float percent)
+        public override float Interpolate(float percent)
         {
             var i = Mathf.FloorToInt(percent / _step);
 

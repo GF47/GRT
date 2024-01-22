@@ -27,7 +27,7 @@ namespace GRT.Tween
             }
         }
 
-        public override float Project(float percent)
+        public override float Interpolate(float percent)
         {
             Current = percent;
             return Current;

@@ -2,15 +2,15 @@
 
 namespace GRT.GEC.Unity
 {
-    public class GCollider : IGComponent<GameObject, UEntity>, IConsumer<UEntity>
+    public class UCollider : IGComponent<GameObject, UEntity>, IConsumer<UEntity>
     {
-        public UEntity GEntity { get; set; }
+        public UEntity Entity { get; set; }
 
         public string CustomLocation { get; set; }
 
         public int Layer { get; set; }
 
-        public Collider Collider { get; private set; }
+        public Collider RawCollider { get; private set; }
 
         public IProvider<UEntity> Provider { get; private set; }
 
@@ -37,31 +37,31 @@ namespace GRT.GEC.Unity
                 throw new UnityException($"{CustomLocation ?? entity.Location} is static, you can not use the static collider");
             }
 
-            Collider = go.GetComponent<Collider>();
+            RawCollider = go.GetComponent<Collider>();
 
-            if (Collider == null)
+            if (RawCollider == null)
             {
                 var box = go.AddComponent<BoxCollider>();
                 box.ResizeToWrapChildren();
 
-                Collider = box;
+                RawCollider = box;
             }
 
             if (-1 < Layer && Layer < 32)
             {
-                Collider.gameObject.layer = Layer;
+                RawCollider.gameObject.layer = Layer;
             }
-            Collider.gameObject.AddComponent<GColliderContainer>().Connect(this);
+            RawCollider.gameObject.AddComponent<UColliderContainer>().Connect(this);
 
             return ratify;
         }
 
         public void Release()
         {
-            Collider = null;
+            RawCollider = null;
             Provider = null;
         }
     }
 
-    public class GColliderContainer : UBehaviour<GCollider> { }
+    public class UColliderContainer : UBehaviour<UCollider> { }
 }

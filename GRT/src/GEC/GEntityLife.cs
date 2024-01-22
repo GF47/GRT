@@ -20,9 +20,9 @@ namespace GRT.GEC
         public IGScope AsGScope => this;
 #endif
 
-        public TE GEntity { get; set; }
+        public TE Entity { get; set; }
 
-        public T Object => GEntity?.Puppet;
+        public T Object => Entity?.Puppet;
 
         public bool IsAlive { get; protected set; }
 

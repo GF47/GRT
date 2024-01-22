@@ -10,7 +10,7 @@ namespace GRT.Tween
 
         public override float Current { get => _camera.fieldOfView; protected set => _camera.fieldOfView = value; }
 
-        public override float Project(float percent)
+        public override float Interpolate(float percent)
         {
             Current = Mathf.Lerp(From, To, percent);
             return Current;

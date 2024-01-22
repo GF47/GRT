@@ -11,7 +11,7 @@ namespace GRT.Tween
 
         public override Transform Current { get => _target; protected set { } }
 
-        public override Transform Project(float percent)
+        public override Transform Interpolate(float percent)
         {
             if (to != null)
             {

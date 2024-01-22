@@ -9,7 +9,7 @@ namespace GRT.GUpdater.Buffers
         {
         }
 
-        public override int Project(float percent) => IsEqual(From, To) ? To : (From + (int)(percent * (To - From)));
+        public override int Interpolate(float percent) => IsEqual(From, To) ? To : (From + (int)(percent * (To - From)));
 
         protected override bool IsEqual(int a, int b) => a == b;
     }
@@ -20,7 +20,7 @@ namespace GRT.GUpdater.Buffers
         {
         }
 
-        public override float Project(float percent) => IsEqual(From, To) ? To : (From + (percent * (To - From)));
+        public override float Interpolate(float percent) => IsEqual(From, To) ? To : (From + (percent * (To - From)));
 
         protected override bool IsEqual(float a, float b) => Math.Abs(a - b) < 1e-6f;
     }
@@ -31,7 +31,7 @@ namespace GRT.GUpdater.Buffers
         {
         }
 
-        public override Vector2 Project(float percent) => Vector2.Lerp(From, To, percent);
+        public override Vector2 Interpolate(float percent) => Vector2.Lerp(From, To, percent);
 
         protected override bool IsEqual(Vector2 a, Vector2 b) => (a - b).magnitude < 1e-6f;
     }
@@ -42,7 +42,7 @@ namespace GRT.GUpdater.Buffers
         {
         }
 
-        public override Vector3 Project(float percent) => Vector3.Lerp(From, To, percent);
+        public override Vector3 Interpolate(float percent) => Vector3.Lerp(From, To, percent);
 
         protected override bool IsEqual(Vector3 a, Vector3 b)
         {
@@ -56,7 +56,7 @@ namespace GRT.GUpdater.Buffers
         {
         }
 
-        public override Quaternion Project(float percent) => Quaternion.Slerp(From, To, percent);
+        public override Quaternion Interpolate(float percent) => Quaternion.Slerp(From, To, percent);
 
         protected override bool IsEqual(Quaternion a, Quaternion b)
         {

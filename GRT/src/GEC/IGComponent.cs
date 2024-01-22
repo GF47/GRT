@@ -2,6 +2,6 @@
 {
     public interface IGComponent<T, TE> where T : class where TE : IGEntity<T, TE>
     {
-        TE GEntity { get; set; }
+        TE Entity { get; set; }
     }
 }

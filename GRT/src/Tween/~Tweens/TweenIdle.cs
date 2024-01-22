@@ -8,7 +8,7 @@ namespace GRT.Tween
         public override float To { get => to; set => to = value; }
         public override float Current { get; protected set; }
 
-        public override float Project(float percent)
+        public override float Interpolate(float percent)
         {
             Current = Mathf.Lerp(From, To, percent);
             return Current;

@@ -1,6 +1,6 @@
 ﻿namespace GRT.GUpdater.Buffers
 {
-    public interface IBuffer<T> : IGUpdater, IProjecter01<T>, IPercent
+    public interface IBuffer<T> : IGUpdater, IInterpolable<T>, IPercent
     {
         T Value { get; set; }
 
