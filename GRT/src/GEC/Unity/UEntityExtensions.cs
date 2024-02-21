@@ -4,10 +4,10 @@ namespace GRT.GEC.Unity
 {
     public static class UEntityExtensions
     {
-        public static bool TryGetPoppet(this IProvider<UEntity> provider, out GameObject poppet)
+        public static bool TryGetPuppet(this IProvider<UEntity> provider, out GameObject puppet)
         {
-            poppet = provider?.Ware?.Puppet;
-            return poppet != null;
+            puppet = provider?.Ware?.Puppet;
+            return puppet != null;
         }
 
         public static void ProvideToComponents(this IProvider<UEntity> provider)

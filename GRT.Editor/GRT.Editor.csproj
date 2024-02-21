@@ -89,7 +89,9 @@
     <Compile Include="src\Editor\TextureCompresser.cs" />
     <Compile Include="src\Editor\TimelineExtensions.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="src\Editor\GPie\README.md" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GRT\GRT.csproj">
       <Project>{67ec1af7-92f7-4c8e-8ae9-8f3c8bc8498f}</Project>

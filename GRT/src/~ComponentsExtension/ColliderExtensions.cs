@@ -10,6 +10,11 @@ namespace GRT
             var min = Vector3.positiveInfinity;
 
             var renderers = box.gameObject.GetComponentsInChildren<Renderer>();
+            if (renderers == null || renderers.Length == 0)
+            {
+                throw new UnityException($"{box.gameObject.GetPath(true)} has no renderer, can not be wrapped by a box collider");
+            }
+
             for (int i = 0; i < renderers.Length; i++)
             {
                 // bounds.Encapsulate(renderers[i].bounds);
@@ -17,8 +22,10 @@ namespace GRT
                 min = Vector3.Min(min, renderers[i].bounds.min);
             }
 
-            box.center = box.transform.worldToLocalMatrix.MultiplyPoint((max + min) / 2f);
-            var size = box.transform.worldToLocalMatrix.MultiplyVector(max - min);
+            var matrix = box.transform.worldToLocalMatrix;
+
+            box.center = matrix.MultiplyPoint((max + min) / 2f);
+            var size = matrix.MultiplyVector(max - min);
             box.size = new Vector3(Mathf.Abs(size.x), Mathf.Abs(size.y), Mathf.Abs(size.z));
         }
     }

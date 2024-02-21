@@ -10,6 +10,7 @@ using System;
 
 namespace GRT
 {
+    [Obsolete("use the [ Int32Range ]")]
     public struct Int32Cycle : IEquatable<Int32Cycle>
     {
         private readonly int _origin;

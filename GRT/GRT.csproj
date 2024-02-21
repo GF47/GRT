@@ -152,6 +152,9 @@
     <Compile Include="src\GInventory\__DefinitionExtensions.cs" />
     <Compile Include="src\GInventory\__StackExtensions.cs" />
     <Compile Include="src\GLifecycle.cs" />
+    <Compile Include="src\GLogic\ICell.cs" />
+    <Compile Include="src\GLogic\ICondition.cs" />
+    <Compile Include="src\GLogic\MiniFSM.cs" />
     <Compile Include="src\GRandom.cs" />
     <Compile Include="src\GString.cs" />
     <Compile Include="src\GTask\Interfaces.cs" />
@@ -219,6 +222,8 @@
     <Compile Include="src\~ValueTypesExtension\Int32Extension.cs" />
     <Compile Include="src\~ValueTypesExtension\QuaternionExtension.cs" />
     <Compile Include="src\~ValueTypesExtension\SingleExtension.cs" />
+    <Compile Include="src\~ValueTypesExtension\ValueRange.cs" />
+    <Compile Include="src\~ValueTypesExtension\ValueRangeExtensions.cs" />
     <Compile Include="src\~ValueTypesExtension\Vector3Extension.cs" />
   </ItemGroup>
   <ItemGroup />

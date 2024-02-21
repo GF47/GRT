@@ -15,21 +15,5 @@ namespace GRT
             }
             return UnityEngine.Random.Range(min, max + 1);
         }
-
-        /// <summary>
-        /// 将整形数值限制在阈值内
-        /// </summary>
-        public static int Clamp(this int t, int min, int max)
-        {
-            if (t >= max)
-            {
-                return max;
-            }
-            if (t <= min)
-            {
-                return min;
-            }
-            return t;
-        }
     }
 }

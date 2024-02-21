@@ -15,21 +15,5 @@ namespace GRT
             }
             return UnityEngine.Random.Range(min, max);
         }
-
-        /// <summary>
-        /// 将浮点型数值限制在阈值内
-        /// </summary>
-        public static float Clamp(this float t, float min, float max)
-        {
-            if (t >= max)
-            {
-                return max;
-            }
-            if (t <= min)
-            {
-                return min;
-            }
-            return t;
-        }
     }
 }

@@ -187,6 +187,33 @@ namespace GRT
             return layer;
         }
 
+        public static Bounds WrapChildren(this GameObject go)
+        {
+            var max = Vector3.negativeInfinity;
+            var min = Vector3.positiveInfinity;
+
+            var renderers = go.GetComponentsInChildren<Renderer>();
+            if (renderers == null || renderers.Length == 0)
+            {
+                throw new UnityException($"{go.GetPath(true)} has no renderer, can not be wrapped by a box collider");
+            }
+
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                // bounds.Encapsulate(renderers[i].bounds);
+                max = Vector3.Max(max, renderers[i].bounds.max);
+                min = Vector3.Min(min, renderers[i].bounds.min);
+            }
+
+            var matrix = go.transform.worldToLocalMatrix;
+
+            var center = matrix.MultiplyPoint((max + min) / 2f);
+            var size = matrix.MultiplyVector(max - min);
+            size = new Vector3(Mathf.Abs(size.x), Mathf.Abs(size.y), Mathf.Abs(size.z));
+
+            return new Bounds(center, size);
+        }
+
         public static T GetInterface<T>(this GameObject target) where T : class
         {
             Component[] coms = target.GetComponents<Component>();

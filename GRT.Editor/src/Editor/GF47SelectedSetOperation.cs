@@ -30,8 +30,8 @@ namespace GRT.Editor
                 alignment = TextAnchor.MiddleRight,
             };
             window._labelFieldStyle.normal.textColor = Color.white;
-            window.position = new Rect(300f, 300f, 512f, 128f);
-            window.minSize = new Vector2(512f, 128f);
+            window.position = new Rect(300f, 300f, 512f, 120f);
+            window.minSize = new Vector2(420f, 24f);
             window.Show();
         }
 

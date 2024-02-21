@@ -28,47 +28,58 @@ namespace GRT.Editor
         {
             Handles.BeginGUI();
 
-            if (GUILayout.Button("Delete Ruler", GUILayout.Width(200f)))
+            if (GUILayout.Button("Delete Ruler", GUILayout.Width(100f)))
             {
                 SceneView.duringSceneGui -= SceneView_duringSceneGui;
                 isActive = false;
             }
 
+            var defaultLabelWidth = EditorGUIUtility.labelWidth;
+            EditorGUIUtility.labelWidth = 22f;
+
+            #region A
+            GUILayout.BeginVertical(EditorStyles.textArea, GUILayout.Width(200f));
+            a = EditorGUILayout.Vector3Field("A", a, GUILayout.Width(200f));
+
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Copy", GUILayout.Width(100f))) { WriteToSystemBuffer(a); }
+            if (GUILayout.Button("Paste", GUILayout.Width(100f))) { a = CopyFromSystemBuffer(a); }
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("View Target", GUILayout.Width(100f))) { a = view.pivot; }
+            if (GUILayout.Button("Object Pivot", GUILayout.Width(100f))) { a = Selection.activeTransform.position; }
+            GUILayout.EndHorizontal();
+
+            GUILayout.EndVertical();
+            #endregion
+
+            #region B
+            GUILayout.BeginVertical(EditorStyles.textArea, GUILayout.Width(200f));
+            b = EditorGUILayout.Vector3Field("B", b, GUILayout.Width(200f));
+
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Copy", GUILayout.Width(100f))) { WriteToSystemBuffer(b); }
+            if (GUILayout.Button("Paste", GUILayout.Width(100f))) { b = CopyFromSystemBuffer(b); }
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("View Target", GUILayout.Width(100f))) { b = view.pivot; }
+            if (GUILayout.Button("Object Pivot", GUILayout.Width(100f))) { b = Selection.activeTransform.position; }
+            GUILayout.EndHorizontal();
+
+            GUILayout.EndVertical();
+            #endregion
+
+            EditorGUIUtility.labelWidth = defaultLabelWidth;
+
+            GUILayout.Space(5);
             if (GUILayout.Button("A = View Camera\nB = View Camera Target", GUILayout.Width(200f)))
             {
                 a = view.camera.transform.position;
                 b = view.pivot;
             }
-
-            if (GUILayout.Button("Place A at view target", GUILayout.Width(200f))) { a = view.pivot; }
-
-            GUILayout.BeginHorizontal();
-            a = new Vector3(
-                EditorGUILayout.FloatField(a.x, GUILayout.Width(56f)),
-                EditorGUILayout.FloatField(a.y, GUILayout.Width(56f)),
-                EditorGUILayout.FloatField(a.z, GUILayout.Width(56f)));
-            if (GUILayout.Button("P", GUILayout.Width(22)))
-            {
-                var astr = a.ToString("F4");
-                Debug.Log(astr);
-                EditorGUIUtility.systemCopyBuffer = astr;
-            }
-            GUILayout.EndHorizontal();
-
-            if (GUILayout.Button("Place B at view target", GUILayout.Width(200f))) { b = view.pivot; }
-
-            GUILayout.BeginHorizontal();
-            b = new Vector3(
-                EditorGUILayout.FloatField(b.x, GUILayout.Width(56f)),
-                EditorGUILayout.FloatField(b.y, GUILayout.Width(56f)),
-                EditorGUILayout.FloatField(b.z, GUILayout.Width(56f)));
-            if (GUILayout.Button("P", GUILayout.Width(22)))
-            {
-                var bstr = b.ToString("F4");
-                Debug.Log(bstr);
-                EditorGUIUtility.systemCopyBuffer = bstr;
-            }
-            GUILayout.EndHorizontal();
+            GUILayout.Space(5);
 
             if (GUILayout.Button("Get Length", GUILayout.Width(200f)))
             {
@@ -79,9 +90,7 @@ namespace GRT.Editor
 
             if (GUILayout.Button("Get A -> B Offset", GUILayout.Width(200f)))
             {
-                var offset = (b - a).ToString("F4");
-                Debug.Log(offset);
-                EditorGUIUtility.systemCopyBuffer = offset;
+                WriteToSystemBuffer(b - a);
             }
 
             Handles.EndGUI();
@@ -94,6 +103,16 @@ namespace GRT.Editor
             Handles.color = Color.white;
 
             Handles.Label(0.5f * (a + b), $"a:{a}\nb:{b}\nLenght:{(b - a).magnitude}");
+        }
+
+        private static Vector3 CopyFromSystemBuffer(Vector3 @default) =>
+            GConvert.ToVector3(EditorGUIUtility.systemCopyBuffer, @default.x, @default.y, @default.z);
+
+        private static void WriteToSystemBuffer(Vector3 v3)
+        {
+            var str = $"{v3.x:F4},{v3.y:F4},{v3.z:F4}";
+            Debug.Log(str);
+            EditorGUIUtility.systemCopyBuffer = str;
         }
     }
 }
