@@ -122,6 +122,15 @@
     <Compile Include="src\FSM\TriggerCondition.cs" />
     <Compile Include="src\FSM\TrueFalseCondition.cs" />
     <Compile Include="src\FSM\Util.cs" />
+    <Compile Include="src\GAssets\GAssetsUtils.cs" />
+    <Compile Include="src\GAssets\IAssetItem.cs" />
+    <Compile Include="src\GAssets\ISceneItem.cs" />
+    <Compile Include="src\GAssets\Local\LocalAssetItem.cs" />
+    <Compile Include="src\GAssets\Local\LocalAssetItemAwaitable.cs" />
+    <Compile Include="src\GAssets\Local\LocalAssetItemAwaiter.cs" />
+    <Compile Include="src\GAssets\Streaming\StreamingAssetItem.cs" />
+    <Compile Include="src\GAssets\Streaming\StreamingAssetItemAwaitable.cs" />
+    <Compile Include="src\GAssets\Streaming\StreamingAssetItemAwaiter.cs" />
     <Compile Include="src\GCoroutine.cs" />
     <Compile Include="src\GEC\GEntityExtensions.cs" />
     <Compile Include="src\GEC\GEntityLife.cs" />
