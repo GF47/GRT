@@ -8,7 +8,7 @@ using UObject = UnityEngine.Object;
 
 namespace GRT.GAssets
 {
-    public static class GAssetsUtils<TA, TS> where TA : IAssetItem where TS : ISceneItem
+    public abstract class GAssetsUtils<TA, TS> where TA : IAssetItem where TS : ISceneItem
     {
         public static IAssetItem CreateAssetItem() => AssetItemExtensions<TA>.Constructor();
 
