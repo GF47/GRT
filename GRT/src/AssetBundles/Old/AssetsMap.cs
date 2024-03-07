@@ -39,7 +39,7 @@ namespace GRT.AssetBundles_Old
                 IsStreamingAssets = true;
 
                 nativePath = $"{ABConfig.RootPath_WebStreaming}/{ABConfig.NAME_ASSETSMAP}"; // 尝试读取StreamingAssets文件夹
-                Coroutines.StartACoroutine(GetJson(nativePath));
+                GCoroutine.Yield(GetJson(nativePath));
             }
         }
 

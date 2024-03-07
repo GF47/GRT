@@ -10,6 +10,15 @@ namespace GRT.GEC.Unity
             return puppet != null;
         }
 
+        public static GameObject FindPuppet(this UEntity entity)
+        {
+            if (entity == null) return null;
+
+            entity.Puppet = GameObjectExtension.FindByLocation(entity.Location);
+
+            return entity.Puppet;
+        }
+
         public static void ProvideToComponents(this IProvider<UEntity> provider)
         {
             foreach (var com in provider.Ware.Components)

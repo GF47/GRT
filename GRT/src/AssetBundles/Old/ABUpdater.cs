@@ -62,7 +62,7 @@ namespace GRT.AssetBundles_Old
         public ABUpdater(bool need2Connect2Server = true)
         {
             _need2Connect2Server = need2Connect2Server;
-            Coroutines.StartACoroutine(__Init());
+            GCoroutine.Yield(__Init());
         }
 
         private IEnumerator __Init()

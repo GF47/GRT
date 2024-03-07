@@ -1,21 +1,10 @@
-﻿/***************************************************************
- * @File Name       : Coroutines
- * @Author          : GF47
- * @Description     : 统一的协同程序调用入口
- * @Date            : 2017/7/25/星期二 15:26:51
- * @Edit            : none
- **************************************************************/
-
-using System;
+﻿using System;
 using System.Collections;
-using UnityEngine;
 using System.Threading;
+using UnityEngine;
 
 namespace GRT
 {
-    /// <summary>
-    /// 执行Unity携程的公共类
-    /// </summary>
     public class GCoroutine : MonoBehaviour
     {
         private static GCoroutine _instance;
@@ -24,50 +13,53 @@ namespace GRT
 
         public static SynchronizationContext UnityContext => _context;
 
+        public static void Init(GameObject root)
+        {
+            _instance = root.AddComponent<GCoroutine>();
+            _context = SynchronizationContext.Current;
+
+            Debug.Log($"{nameof(GCoroutine)} loaded on {_instance.name}");
+        }
+
         private void Awake()
         {
             if (_instance != null && _instance != this)
             {
-                Debug.LogWarning("Do not init another Coroutines");
+                Debug.LogWarning($"Do not init another {nameof(GCoroutine)}");
                 Destroy(this);
             }
-
-            _context = SynchronizationContext.Current;
         }
 
-        public static void Init(GameObject root)
+        public static Coroutine YieldThen(YieldInstruction instruction, Action callback) => _instance.StartCoroutine(__YieldThen(instruction, callback));
+
+        public static Coroutine YieldThen(IEnumerator enumerator, Action callback) => _instance.StartCoroutine(__YieldThen(enumerator, callback));
+
+        public static Coroutine Yield(YieldInstruction instruction) => _instance.StartCoroutine(__Yield(instruction));
+
+        public static Coroutine Yield(IEnumerator enumerator) => _instance.StartCoroutine(enumerator);
+
+        public static Coroutine DelayInvoke(Action action, float t) => _instance.StartCoroutine(__YieldThen(new WaitForSecondsRealtime(t), action));
+
+        public static void Stop(Coroutine coroutine) => _instance.StopCoroutine(coroutine);
+
+        public static void Stop(IEnumerator enumerator) => _instance.StopCoroutine(enumerator);
+
+        public static void StopAll() => _instance.StopAllCoroutines();
+
+        private static IEnumerator __Yield(YieldInstruction instruction)
         {
-            _instance = root.AddComponent<GCoroutine>();
-            Debug.Log($"{nameof(GCoroutine)} loaded on {_instance.name}");
+            yield return instruction;
         }
 
-        /// <summary> 在一段携程执行完成后，执行指定的回调 </summary>
-        public static UnityEngine.Coroutine StartACoroutineWithCallback(IEnumerator routine, Action callback)
-            => _instance.StartCoroutine(__startACoroutineWithCallback(routine, callback));
-
-        /// <summary> 执行一段迭代器 </summary>
-        public static UnityEngine.Coroutine StartACoroutine(IEnumerator routine)
-            => _instance.StartCoroutine(routine);
-
-        /// <summary> 等待指定时间（秒）后，执行指定的回调 </summary>
-        public static UnityEngine.Coroutine DelayInvoke(Action action, float delay)
-            => _instance.StartCoroutine(__startACoroutineWithCallback(new WaitForSecondsRealtime(delay), action));
-
-        /// <summary> 停止一个正在执行的迭代器 </summary>
-        public static void StopACoroutine(IEnumerator routine)
-            => _instance.StopCoroutine(routine);
-
-        /// <summary> 停止一个正在执行的携程 </summary>
-        public static void StopACoroutine(UnityEngine.Coroutine coroutine)
-            => _instance.StopCoroutine(coroutine);
-
-        /// <summary> 停止所有的携程与迭代器 </summary>
-        public static void StopAll()
-            => _instance.StopAllCoroutines();
-
-        private static IEnumerator __startACoroutineWithCallback(IEnumerator routine, Action callback)
+        private static IEnumerator __YieldThen(IEnumerator enumerator, Action callback)
         {
-            yield return routine;
+            yield return enumerator;
+            callback?.Invoke();
+        }
+
+        private static IEnumerator __YieldThen(YieldInstruction instruction, Action callback)
+        {
+            yield return instruction;
             callback?.Invoke();
         }
     }

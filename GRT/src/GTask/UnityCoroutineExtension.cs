@@ -13,13 +13,13 @@ namespace GRT.GTask
 
             if (SynchronizationContext.Current == GCoroutine.UnityContext)
             {
-                GCoroutine.StartACoroutineWithCallback(enumerator, () => awaiter.Complete());
+                GCoroutine.YieldThen(enumerator, () => awaiter.Complete());
             }
             else
             {
                 GCoroutine.UnityContext.Post(_ =>
                 {
-                    GCoroutine.StartACoroutineWithCallback(enumerator, () => awaiter.Complete());
+                    GCoroutine.YieldThen(enumerator, () => awaiter.Complete());
                 }, null);
             }
 
@@ -31,22 +31,17 @@ namespace GRT.GTask
             var awaiter = new IEnumeratorAwaiter();
             if (SynchronizationContext.Current == GCoroutine.UnityContext)
             {
-                GCoroutine.StartACoroutineWithCallback(Execute(instruction), () => awaiter.Complete());
+                GCoroutine.YieldThen(instruction, () => awaiter.Complete());
             }
             else
             {
                 GCoroutine.UnityContext.Post(_ =>
                 {
-                    GCoroutine.StartACoroutineWithCallback(Execute(instruction), () => awaiter.Complete());
+                    GCoroutine.YieldThen(instruction, () => awaiter.Complete());
                 }, null);
             }
 
             return awaiter;
-        }
-
-        private static IEnumerator Execute(YieldInstruction instruction)
-        {
-            yield return instruction;
         }
     }
 

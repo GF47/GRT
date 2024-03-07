@@ -13,6 +13,13 @@ namespace GRT.Data
     {
         // public override string GetAttribute(XmlNode node, string name) => node?.SelectSingleNode($"@{name}")?.Value; // node?.attributes[name]?.Value;
 
+        public override XmlNode Parse(string str)
+        {
+            var doc = new XmlDocument();
+            doc.LoadXml(str);
+            return doc.LastChild;
+        }
+
         public override string NameOf(XmlNode node) => node?.Name;
 
         public override bool HasInnerString(XmlNode node, out string value)

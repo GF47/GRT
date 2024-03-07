@@ -5,6 +5,8 @@ namespace GRT.Data
 {
     public interface IGXML<T>
     {
+        T Parse(string str);
+
         string NameOf(T node);
 
         #region has inner

@@ -231,9 +231,22 @@ namespace GXFactories
             }
             else if (member.HasAttribute<GXAttributeAttribute>(out var ata))
             {
-                return $@"
+                var mType = GetMemberType(member);
+                if (IsNullable(mType, out _))
+                {
+                    return $@"
+            if (obj.{mName} != null)
+            {{
+                xml.SetAttribute(node, {GetDefault(ata?.Name, mName)}, serializer.Stringify(obj.{mName}, {ata?.Decimal ?? 2}, {GetDefault(ata?.Default)}));
+            }}
+";
+                }
+                else
+                {
+                    return $@"
             xml.SetAttribute(node, {GetDefault(ata?.Name, mName)}, serializer.Stringify(obj.{mName}, {ata?.Decimal ?? 2}, {GetDefault(ata?.Default)}));
 ";
+                }
             }
             else
             {
@@ -315,9 +328,22 @@ namespace GXFactories
             }
             else if (member.HasAttribute<GXAttributeAttribute>(out var ata))
             {
-                return $@"
+                if (IsNullable(mType, out var gType))
+                {
+                    mType = gType;
+                    return $@"
+            if (xml.HasAttribute(node, {GetDefault(ata?.Name, mName)}, out var str{mName}))
+            {{
+                obj.{mName} = serializer.Construct<{mType.FULL_NAME()}>(str{mName});
+            }}
+";
+                }
+                else
+                {
+                    return $@"
             obj.{mName} = serializer.Construct<{mType.FULL_NAME()}>(xml.GetAttribute(node, {GetDefault(ata?.Name, mName)}, {GetDefault(ata?.Default)}));
 ";
+                }
             }
             else
             {
@@ -375,6 +401,20 @@ namespace GXFactories
             }
 
             return false;
+        }
+
+        private static bool IsNullable(Type type, out Type gType)
+        {
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                gType = type.GenericTypeArguments[0];
+                return true;
+            }
+            else
+            {
+                gType = null;
+                return false;
+            }
         }
 
         private static bool HasAttribute<T>(this MemberInfo member, out T attr) where T : Attribute

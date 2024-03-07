@@ -3,13 +3,13 @@ using UnityEngine;
 
 namespace GRT.GEC.Unity
 {
-    public abstract class UEntity : IGEntity<GameObject, UEntity>, IProvider<UEntity>
+    public class UEntity : IGEntity<GameObject, UEntity>, IProvider<UEntity>
     {
         private readonly ICollection<IConsumer<UEntity>> _consumer = new List<IConsumer<UEntity>>();
 
         public UEntity Ware => this;
 
-        public GameObject Puppet { get; protected set; }
+        public GameObject Puppet { get; internal set; }
 
         public string Location { get; set; }
 

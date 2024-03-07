@@ -19,7 +19,7 @@ namespace GRT.AssetBundles_Old
 
             if (isAsync)
             {
-                Coroutines.StartACoroutine(__GetABAsync(nativePath));
+                GCoroutine.Yield(__GetABAsync(nativePath));
             }
             else
             {
