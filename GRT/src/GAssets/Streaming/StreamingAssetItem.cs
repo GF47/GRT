@@ -11,9 +11,11 @@ namespace GRT.GAssets.Streaming
 
         public string Location { get; private set; }
 
-        // v2022
-        // public bool IsAlive => _request != null && _request.result == UnityWebRequest.Result.Success;
+#if UNITY_2020_2_OR_NEWER
+        public bool IsAlive => _request != null && _request.result == UnityWebRequest.Result.Success;
+#else
         public bool IsAlive => _request != null && !_request.isHttpError && !_request.isNetworkError;
+#endif
 
         public IGScope Scope { get; set; }
 

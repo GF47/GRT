@@ -15,11 +15,13 @@ namespace GRT.GAssets.Streaming
         {
             if (Request.isDone)
             {
-                // v2022
-                // if (Request.result != UnityWebRequest.Result.Success)
+#if UNITY_2020_2_OR_NEWER
+                if (Request.result != UnityWebRequest.Result.Success)
+#else
                 if (Request.isHttpError || Request.isNetworkError)
+#endif
                 {
-                    throw new UnityException(Request.error);
+                    throw new UnityException($"{Request.uri} load failed, {Request.error}");
                 }
                 else
                 {

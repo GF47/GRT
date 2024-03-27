@@ -7,37 +7,77 @@ namespace GRT.GTask
 {
     public static class UnityCoroutineExtension
     {
-        public static IEnumeratorAwaiter GetAwaiter(this IEnumerator enumerator)
+        public static InternalAwaiter GetAwaiter(this IEnumerator enumerator)
         {
-            var awaiter = new IEnumeratorAwaiter();
+            var awaiter = new InternalAwaiter();
 
             if (SynchronizationContext.Current == GCoroutine.UnityContext)
             {
-                GCoroutine.YieldThen(enumerator, () => awaiter.Complete());
+                GCoroutine.YieldThen(enumerator, () => awaiter.SetComplete());
             }
             else
             {
                 GCoroutine.UnityContext.Post(_ =>
                 {
-                    GCoroutine.YieldThen(enumerator, () => awaiter.Complete());
+                    GCoroutine.YieldThen(enumerator, () => awaiter.SetComplete());
                 }, null);
             }
 
             return awaiter;
         }
 
-        public static IEnumeratorAwaiter GetAwaiter(this YieldInstruction instruction)
+        public static InternalAwaiter GetAwaiter(this YieldInstruction instruction)
         {
-            var awaiter = new IEnumeratorAwaiter();
+            var awaiter = new InternalAwaiter();
             if (SynchronizationContext.Current == GCoroutine.UnityContext)
             {
-                GCoroutine.YieldThen(instruction, () => awaiter.Complete());
+                GCoroutine.YieldThen(instruction, () => awaiter.SetComplete());
             }
             else
             {
                 GCoroutine.UnityContext.Post(_ =>
                 {
-                    GCoroutine.YieldThen(instruction, () => awaiter.Complete());
+                    GCoroutine.YieldThen(instruction, () => awaiter.SetComplete());
+                }, null);
+            }
+
+            return awaiter;
+        }
+
+        public static InternalAwaiter GetAwaiter(this (IEnumerator, Func<bool>) awaitable)
+        {
+            var (enumerator, predicate) = awaitable;
+            var awaiter = new InternalAwaiter();
+
+            if (SynchronizationContext.Current == GCoroutine.UnityContext)
+            {
+                GCoroutine.YieldThen(enumerator, () => awaiter.SetComplete(predicate));
+            }
+            else
+            {
+                GCoroutine.UnityContext.Post(_ =>
+                {
+                    GCoroutine.YieldThen(enumerator, () => awaiter.SetComplete(predicate));
+                }, null);
+            }
+
+            return awaiter;
+        }
+
+        public static InternalAwaiter GetAwaiter(this (YieldInstruction, Func<bool>) awaitable)
+        {
+            var (instruction, predicate) = awaitable;
+            var awaiter = new InternalAwaiter();
+
+            if (SynchronizationContext.Current == GCoroutine.UnityContext)
+            {
+                GCoroutine.YieldThen(instruction, () => awaiter.SetComplete(predicate));
+            }
+            else
+            {
+                GCoroutine.UnityContext.Post(_ =>
+                {
+                    GCoroutine.YieldThen(instruction, () => awaiter.SetComplete(predicate));
                 }, null);
             }
 
@@ -45,7 +85,16 @@ namespace GRT.GTask
         }
     }
 
-    public class IEnumeratorAwaiter : IAwaiter
+    public class InternalAwaitable : IAwaitable<IAwaiter>
+    {
+        private readonly IAwaiter _awaiter;
+
+        public InternalAwaitable(IAwaiter awaiter) => _awaiter = awaiter;
+
+        public IAwaiter GetAwaiter() => _awaiter;
+    }
+
+    public class InternalAwaiter : IAwaiter
     {
         private bool _isCompleted;
 
@@ -53,10 +102,7 @@ namespace GRT.GTask
 
         public bool IsCompleted => _isCompleted;
 
-        public void GetResult()
-        {
-            Debug.Assert(_isCompleted);
-        }
+        public void GetResult() => Debug.Assert(_isCompleted);
 
         public void OnCompleted(Action continuation)
         {
@@ -66,11 +112,22 @@ namespace GRT.GTask
             _continuation = continuation;
         }
 
-        public void Complete()
+        public void SetComplete(Func<bool> predicate = null)
         {
-            _isCompleted = true;
+            _isCompleted = predicate == null || predicate();
 
-            _continuation?.Invoke();
+            if (_isCompleted)
+            {
+                _continuation?.Invoke();
+            }
+            else
+            {
+#if UNITY_EDITOR
+                throw new UnityException($"{predicate.Method.Name} is not true");
+#else
+                throw new UnityException("predicate is not true");
+#endif
+            }
         }
     }
 }

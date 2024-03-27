@@ -11,7 +11,7 @@ namespace GRT.Editor
     public class GF47SelectFromFile : EditorWindow
     {
         private static readonly GUILayoutOption _height = GUILayout.Height(32f);
-        private string _pattern = @"(?<=entity\s+path\s*=\s*"")((.+):)?(.+?)(?="")";
+        private string _pattern = @"(?<=entity\s+path\s*=\s*"")((.+?):)?(.+?)(?="")";
         private int _sceneGroup = 2;
         private int _pathGroup = 3;
         private string _text;
