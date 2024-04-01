@@ -63,9 +63,20 @@ namespace GRT.Editor.GXSerialization
             AssetDatabase.Refresh();
         }
 
+        [MenuItem("Assets/Project/Generate Selected")]
+        private static void GenerateSelected()
+        {
+            foreach (var cs in Selection.GetFiltered<MonoScript>(SelectionMode.DeepAssets))
+            {
+                GenerateCSFile(cs.GetClass(), DIRECTORY_PATH);
+            }
+
+            AssetDatabase.Refresh();
+        }
+
         private static void GenerateCSFile(Type type, string directoryPath)
         {
-            using (var fs = new FileStream(FILE_PATH(type, directoryPath), FileMode.CreateNew, FileAccess.Write))
+            using (var fs = new FileStream(FILE_PATH(type, directoryPath), FileMode.Create, FileAccess.Write))
             {
                 using (var sw = new StreamWriter(fs, Encoding.UTF8))
                 {
