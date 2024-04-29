@@ -61,8 +61,25 @@ namespace GRT.Editor
                         sb.AppendLine($"<track name=\"{signalTrack.name}\" location=\"{location}\"/>");
                         break;
 
-                    case AudioTrack audioTrack:
                     case ControlTrack controlTrack:
+                        var clips = controlTrack.GetClips();
+                        if (clips != null)
+                        {
+                            sb.AppendLine($"<track name=\"{controlTrack.name}\">");
+                            foreach (var clip in clips)
+                            {
+                                if (clip.asset is ControlPlayableAsset control)
+                                {
+                                    var source = director.GetReferenceValue(control.sourceGameObject.exposedName, out bool idValid) as GameObject;
+                                    location = source == null ? string.Empty : $"{source.scene.name}:{source.GetPath()}";
+                                    sb.AppendLine($"\t<clip name=\"{clip.displayName}\" location=\"{location}\"/>");
+                                }
+                            }
+                            sb.AppendLine("</track>");
+                        }
+                        break;
+
+                    case AudioTrack audioTrack:
                     default:
                         break;
                 }

@@ -1,5 +1,6 @@
 namespace GRT
 {
+    using System;
     using System.Collections.Generic;
     using UnityEngine;
 
@@ -61,6 +62,57 @@ namespace GRT
         public static Transform GetChildByIndexList(this Transform root, bool isChildToRoot, params int[] index)
         {
             return root.GetChildByIndexList(index, isChildToRoot);
+        }
+
+        public static Transform[] FindChildren(this Transform root, Predicate<Transform> predicate = null)
+        {
+            var children = new List<Transform>(root.childCount);
+            foreach (Transform child in root)
+            {
+                if (predicate == null || predicate.Invoke(child))
+                {
+                    children.Add(child);
+                }
+            }
+
+            return children.ToArray();
+        }
+
+        public static Transform FindChildExt(this Transform root, string path, char splitChar = '/', char serialChar = ':')
+        {
+            var split = path.Split(splitChar);
+            var child = root;
+            for (int i = 0; i < split.Length; i++)
+            {
+                child = child.FindChildAvoidSameName(split[i], serialChar);
+            }
+            return child;
+        }
+
+        public static Transform FindChildAvoidSameName(this Transform root, string fullName, char serialChar = ':')
+        {
+            var k = fullName.LastIndexOf(serialChar);
+            if (k > -1)
+            {
+                var name = fullName.Substring(0, k);
+                var n = int.Parse(fullName.Substring(k + 1));
+
+                var m = -1;
+                foreach (Transform t in root)
+                {
+                    if (t.name == name)
+                    {
+                        m++;
+                        if (m == n) { return t; }
+                    }
+                }
+            }
+            else
+            {
+                return root.Find(fullName);
+            }
+
+            return null;
         }
     }
 }

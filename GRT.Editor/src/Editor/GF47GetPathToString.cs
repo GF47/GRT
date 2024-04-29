@@ -9,7 +9,9 @@ namespace GRT.Editor
 {
     public class GF47GetPathToString : ScriptableObject
     {
-        private const string EditorPath = @"gvim.bat";
+        private const string EDITOR_PATH_VIM = @"gvim.bat";
+        private const string EDITOR_PATH_NPP = @"notepad++.exe";
+        private const string EDITOR_PATH_NOTEPAD = "notepad.exe";
 
         [MenuItem("Assets/GF47 Editor/OpenSelectedByGivenTool &o", false, 0)]
         private static void OpenSelectedByGivenTool()
@@ -17,7 +19,7 @@ namespace GRT.Editor
             CopyAbsolutePath();
             try
             {
-                Process.Start("\"" + EditorPath + "\"", "\"" + EditorGUIUtility.systemCopyBuffer + "\"");
+                Process.Start("\"" + EDITOR_PATH_VIM + "\"", "\"" + EditorGUIUtility.systemCopyBuffer + "\"");
                 /*
                 Process p = new Process();
                 p.StartInfo.FileName = "cmd.exe";
@@ -39,9 +41,19 @@ namespace GRT.Editor
                 p.Close();
                 //*/
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                UnityEngine.Debug.Log("error:\n" + e);
+                UnityEngine.Debug.Log("no vim");
+                try
+                {
+                    Process.Start("\"" + EDITOR_PATH_NPP + "\"", "\"" + EditorGUIUtility.systemCopyBuffer + "\"");
+                }
+                catch (Exception)
+                {
+                    UnityEngine.Debug.Log("no notepad++");
+
+                    Process.Start("\"" + EDITOR_PATH_NOTEPAD + "\"", "\"" + EditorGUIUtility.systemCopyBuffer + "\"");
+                }
             }
         }
 
