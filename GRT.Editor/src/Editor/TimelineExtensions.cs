@@ -49,6 +49,12 @@ namespace GRT.Editor
                         sb.AppendLine($"<track name=\"{activationTrack.name}\" location=\"{location}\"/>");
                         break;
 
+                    case AudioTrack audioTrack:
+                        var audioSource = audioTrack.GetBinding<AudioSource>(director);
+                        location = audioSource == null ? string.Empty : $"{audioSource.gameObject.scene.name}:{audioSource.gameObject.GetPath()}";
+                        sb.AppendLine($"<track name=\"{audioTrack.name}\" location=\"{location}\"/>");
+                        break;
+
                     case AnimationTrack animationTrack:
                         var animator = animationTrack.GetBinding<Animator>(director);
                         location = animator == null ? string.Empty : $"{animator.gameObject.scene.name}:{animator.gameObject.GetPath()}";
@@ -79,7 +85,6 @@ namespace GRT.Editor
                         }
                         break;
 
-                    case AudioTrack audioTrack:
                     default:
                         break;
                 }
