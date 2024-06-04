@@ -1,15 +1,15 @@
-﻿using GRT.Events.Triggers;
+﻿using GRT.GEvents.Triggers;
 using UnityEngine;
 
 namespace GRT.GEC.Unity
 {
-    public abstract class UClickable : IGComponent<GameObject, UEntity>, IConsumer<UEntity>
+    public abstract class UClickable<T> : IGComponent<GameObject, UEntity>, IConsumer<UEntity>
     {
         public UEntity Entity { get; set; }
 
         public IProvider<UEntity> Provider { get; private set; }
 
-        private PointerClickTrigger _trigger;
+        private PointerClickTrigger<T> _trigger;
 
         public bool Use(IProvider<UEntity> provider)
         {
@@ -17,8 +17,7 @@ namespace GRT.GEC.Unity
             {
                 Provider = provider;
 
-                _trigger = collider.RawCollider.gameObject.AddComponent<PointerClickTrigger>();
-                _trigger.InnerTrigger = new MouseButtonTrigger() { button = 0 };
+                _trigger = AddTrigger(collider.RawCollider.gameObject);
                 _trigger.Event.AddListener(OnClick);
                 return true;
             }
@@ -30,12 +29,14 @@ namespace GRT.GEC.Unity
             if (_trigger != null)
             {
                 _trigger.Event.RemoveListener(OnClick);
-                PointerClickTrigger.Destroy(_trigger);
+                PointerClickTrigger<T>.Destroy(_trigger);
             }
 
             Provider = null;
         }
 
-        public abstract void OnClick(Camera camera, RaycastHit hit, Vector2 position);
+        public abstract void OnClick(T sender, RaycastHit hit);
+
+        public abstract PointerClickTrigger<T> AddTrigger(GameObject go);
     }
 }

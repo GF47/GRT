@@ -12,7 +12,8 @@ namespace GRT.GAssets
 
         Type AssetType { get; }
 
-        IAwaitable<IAwaiter<T>, T> Get<T>(string location = null) where T : UObject;
+        IAwaitable<IAwaiter<T>, T> Get<T>(string location) where T : UObject;
+        IAwaitable<IAwaiter<T>, T> Get<T>() where T : UObject;
     }
 
     public static class AssetItemExtensions<TI> where TI : IAssetItem

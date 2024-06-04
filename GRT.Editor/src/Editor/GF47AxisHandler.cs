@@ -7,6 +7,7 @@ namespace LK.Assets._3rd.GF47.GRT.Editor
     {
         private static bool isActive;
         private static Vector3 _offset;
+        private static Quaternion _rot;
 
         [MenuItem("Tools/GF47 Editor/Transform/AxisHandler #&h")]
         private static void Init()
@@ -26,7 +27,7 @@ namespace LK.Assets._3rd.GF47.GRT.Editor
 
         private static void DrawHandler(SceneView view)
         {
-            var offset = Handles.PositionHandle(_offset, Quaternion.identity);
+            var offset = Handles.PositionHandle(_offset, _rot);
             var delta = offset - _offset;
             _offset = offset;
 
@@ -39,6 +40,17 @@ namespace LK.Assets._3rd.GF47.GRT.Editor
                     selection[i].position += delta;
                 }
             }
+
+            #region gui
+
+            Handles.BeginGUI();
+            {
+                _offset = EditorGUILayout.Vector3Field("origin", _offset, GUILayout.Width(300f));
+                _rot = Quaternion.Euler(EditorGUILayout.Vector3Field("rotation", _rot.eulerAngles, GUILayout.Width(300f)));
+            }
+            Handles.EndGUI();
+
+            #endregion gui
         }
     }
 }

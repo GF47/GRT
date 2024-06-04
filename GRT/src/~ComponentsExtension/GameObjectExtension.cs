@@ -70,7 +70,7 @@ namespace GRT
 
             while (t != null)
             {
-                path = $"{t.name}/{path}"; 
+                path = $"{t.name}/{path}";
                 t = t.parent;
             }
             return addSceneName ? $"{obj.scene.name}:{path}" : path;
@@ -187,7 +187,7 @@ namespace GRT
             return layer;
         }
 
-        public static Bounds WrapChildren(this GameObject go)
+        public static Bounds WrapChildren(this GameObject go, bool isLocal = true)
         {
             var max = Vector3.negativeInfinity;
             var min = Vector3.positiveInfinity;
@@ -195,20 +195,39 @@ namespace GRT
             var renderers = go.GetComponentsInChildren<Renderer>();
             if (renderers == null || renderers.Length == 0)
             {
-                throw new UnityException($"{go.GetPath(true)} has no renderer, can not be wrapped by a box collider");
+                var colliders = go.GetComponentsInChildren<Collider>();
+                if (colliders == null || colliders.Length == 0)
+                {
+                    throw new UnityException($"{go.GetPath(true)} has no renderer/collider, can not be wrapped");
+                }
+                else
+                {
+                    for (int i = 0; i < colliders.Length; i++)
+                    {
+                        max = Vector3.Max(max, colliders[i].bounds.max);
+                        min = Vector3.Min(min, colliders[i].bounds.min);
+                    }
+                }
             }
-
-            for (int i = 0; i < renderers.Length; i++)
+            else
             {
-                // bounds.Encapsulate(renderers[i].bounds);
-                max = Vector3.Max(max, renderers[i].bounds.max);
-                min = Vector3.Min(min, renderers[i].bounds.min);
+                for (int i = 0; i < renderers.Length; i++)
+                {
+                    // bounds.Encapsulate(renderers[i].bounds);
+                    max = Vector3.Max(max, renderers[i].bounds.max);
+                    min = Vector3.Min(min, renderers[i].bounds.min);
+                }
             }
 
             var matrix = go.transform.worldToLocalMatrix;
 
-            var center = matrix.MultiplyPoint((max + min) / 2f);
-            var size = matrix.MultiplyVector(max - min);
+            var center = (max + min) / 2f;
+            var size = (max - min);
+            if (isLocal)
+            {
+                center = matrix.MultiplyPoint(center);
+                size = matrix.MultiplyVector(size);
+            }
             size = new Vector3(Mathf.Abs(size.x), Mathf.Abs(size.y), Mathf.Abs(size.z));
 
             return new Bounds(center, size);

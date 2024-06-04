@@ -1,10 +1,10 @@
-﻿using GRT.Events;
+﻿using GRT.GEvents;
 using UnityEngine;
 
 namespace GRT.GEC.Unity
 {
-    public class UHoverable<T> : IGComponent<GameObject, UEntity>, IConsumer<UEntity>
-        where T : UHoverTrigger<T>
+    public class UHoverable<T, TS> : IGComponent<GameObject, UEntity>, IConsumer<UEntity>
+        where T : UHoverTrigger<T, TS>
     {
         public UEntity Entity { get; set; }
 
@@ -29,20 +29,20 @@ namespace GRT.GEC.Unity
         {
             if (Trigger != null)
             {
-                UHoverTrigger<T>.Destroy(Trigger);
+                UHoverTrigger<T, TS>.Destroy(Trigger);
             }
 
             Provider = null;
         }
     }
 
-    public abstract class UHoverTrigger<T> : UBehaviour<UHoverable<T>>, IPointerEnter, IPointerExit, IPointerHover
-        where T : UHoverTrigger<T>
+    public abstract class UHoverTrigger<T, TS> : UBehaviour<UHoverable<T, TS>>, IGPointerEnter<TS>, IGPointerExit<TS>, IGPointerStay<TS>
+        where T : UHoverTrigger<T, TS>
     {
-        public abstract void OnPointerEnter(Camera camera, RaycastHit hit, Vector2 pos);
+        public abstract void OnPointerEnter(TS sender, RaycastHit hit);
 
-        public abstract void OnPointerExit(Camera camera, RaycastHit hit, Vector2 pos);
+        public abstract void OnPointerExit(TS sender, RaycastHit hit);
 
-        public abstract void OnPointerHover(Camera camera, RaycastHit hit, Vector2 pos);
+        public abstract void OnPointerStay(TS sender, RaycastHit hit);
     }
 }

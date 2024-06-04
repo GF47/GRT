@@ -17,6 +17,8 @@ namespace GRT.GUpdater.Buffers
 
         public event Action<T> Stopping;
 
+        public event Action<T> StoppingOneShot;
+
         public T Value
         {
             get => _value; set
@@ -103,6 +105,10 @@ namespace GRT.GUpdater.Buffers
             IsAlive = false;
 
             Stopping?.Invoke(Value);
+            StoppingOneShot?.Invoke(Value);
+            StoppingOneShot = null;
         }
+
+        public void ClearOneShotStoppingEvent() => StoppingOneShot = null;
     }
 }

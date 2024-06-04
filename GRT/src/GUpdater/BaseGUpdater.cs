@@ -45,5 +45,7 @@ namespace GRT.GUpdater
         }
 
         public virtual void Update(float delta) => Updating?.Invoke(delta);
+
+        public void ClearOneShotStoppingEvent() => StoppingOneShot = null;
     }
 }
