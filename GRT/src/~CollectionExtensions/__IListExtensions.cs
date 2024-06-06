@@ -14,6 +14,7 @@ namespace GRT
                     return i;
                 }
             }
+
             return -1;
         }
     }

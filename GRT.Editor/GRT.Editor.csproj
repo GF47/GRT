@@ -79,6 +79,7 @@
     <Compile Include="src\Editor\GF47SortArray.cs" />
     <Compile Include="src\Editor\GF47TransfomCopyPanel.cs" />
     <Compile Include="src\Editor\GPie\GPiePanel.cs" />
+    <Compile Include="src\Editor\GXFactoriesCodeGeneratorEditor.cs" />
     <Compile Include="src\Editor\GXSerialization\GXMLCodeGenerator.cs" />
     <Compile Include="src\Editor\Inspectors\BezierSplineInspector.cs" />
     <Compile Include="src\Editor\Inspectors\DraggableAssetPathDrawer.cs" />

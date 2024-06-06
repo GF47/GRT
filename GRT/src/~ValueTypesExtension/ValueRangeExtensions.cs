@@ -32,5 +32,17 @@ namespace GRT
             }
             return r + min;
         }
+
+        public static double Cycle(this double v, double min, double max)
+        {
+            var period = max - min;
+            var r = (v - min) % period;
+            if (r < 0d)
+            {
+                r += period;
+            }
+
+            return r + min;
+        }
     }
 }

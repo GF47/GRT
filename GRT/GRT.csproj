@@ -61,11 +61,12 @@
     <Compile Include="src\Components\RotateTransform.cs" />
     <Compile Include="src\Configuration\Keywords.cs" />
     <Compile Include="src\Coroutine\IdleUntil.cs" />
-    <Compile Include="src\Data\GXML.cs" />
-    <Compile Include="src\Data\GXMLAttributes.cs" />
-    <Compile Include="src\Data\GXMLSerializer.cs" />
-    <Compile Include="src\Data\IGXML.cs" />
-    <Compile Include="src\Data\SystemXmlTools.cs" />
+    <Compile Include="src\Data\GXAttributes.cs" />
+    <Compile Include="src\Data\GXBase.cs" />
+    <Compile Include="src\Data\GXFactoriesCodeCenerator.cs" />
+    <Compile Include="src\Data\GXSerializer.cs" />
+    <Compile Include="src\Data\GXSystemXmlImpl.cs" />
+    <Compile Include="src\Data\IGX.cs" />
     <Compile Include="src\FSM\ActionChain.cs" />
     <Compile Include="src\FSM\ActionList.cs" />
     <Compile Include="src\FSM\ActionState.cs" />
