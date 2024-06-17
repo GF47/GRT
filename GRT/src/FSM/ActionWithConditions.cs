@@ -4,15 +4,37 @@ namespace GRT.FSM
 {
     public class ActionWithConditions : IAction
     {
-        protected bool completed;
-
         public ICollection<ICondition> Conditions { get; }
 
         public ICollection<IAction> Actions { get; }
 
-        public bool RepeatConditionIfFailed { get; set; } = false;
+        public bool Repeat { get; set; } = true;
 
-        public bool Completed => completed;
+        public bool Completed
+        {
+            get
+            {
+                if (_conditionIsOK > 0) // 已验证并正确
+                {
+                    foreach (var action in Actions)
+                    {
+                        if (!action.Completed) { return false; }
+                    }
+
+                    return true;
+                }
+                else if (_conditionIsOK == 0) // 已验证但错误
+                {
+                    return !Repeat;
+                }
+                else // 未验证
+                {
+                    return false;
+                }
+            }
+        }
+
+        private int _conditionIsOK = -1;
 
         public ActionWithConditions(ICollection<ICondition> conditions, ICollection<IAction> actions)
         {
@@ -22,27 +44,35 @@ namespace GRT.FSM
 
         public void Invoke()
         {
-            if (Conditions != null)
+            if (_conditionIsOK < 1)
             {
-                foreach (var condition in Conditions)
+                if (Repeat)
                 {
-                    if (!condition.OK)
-                    {
-                        if (!RepeatConditionIfFailed) { completed = true; }
-                        return;
-                    }
+                    Check();
                 }
             }
-
-            completed = true;
-            if (Actions != null)
+            else if (_conditionIsOK == 1)
             {
-                foreach (var action in Actions)
+                if (Actions != null)
                 {
-                    if (!action.Completed)
+                    foreach (var action in Actions)
                     {
-                        completed = false;
-                        action.Invoke();
+                        action.Start();
+                    }
+                }
+
+                _conditionIsOK = 2;
+            }
+            else if (_conditionIsOK > 1)
+            {
+                if (Actions != null)
+                {
+                    foreach (var action in Actions)
+                    {
+                        if (!action.Completed)
+                        {
+                            action.Invoke();
+                        }
                     }
                 }
             }
@@ -50,7 +80,7 @@ namespace GRT.FSM
 
         public void Reset()
         {
-            completed = false;
+            _conditionIsOK = -1; // 未验证状态
 
             if (Actions != null)
             {
@@ -72,13 +102,19 @@ namespace GRT.FSM
             }
         }
 
-        public void Start()
+        public void Start() => Check();
+
+        /// <summary>
+        /// check 后一定会有 _conditionIsOk = 0 或 = 1
+        /// </summary>
+        private void Check()
         {
-            if (Actions != null)
+            _conditionIsOK = 1; // 已验证并正确
+            if (Conditions != null)
             {
-                foreach (var action in Actions)
+                foreach (var condition in Conditions)
                 {
-                    action.Start();
+                    if (!condition.OK) { _conditionIsOK = 0; } //已验证并错误
                 }
             }
         }
