@@ -14,7 +14,8 @@ namespace GRT.FSM
         public Action<int, int> Transiting;
 
         private IState _currentState;
-        public IState CurrentState => _currentState.ID == ExitStateID ? this : _currentState;
+        public IState CurrentOrSelf => _currentState.ID == ExitStateID ? this : _currentState;
+        public IState CurrentOrEntry => _currentState == this ? States[EntryStateID] : _currentState;
 
         /// <summary>
         /// Are you sure?

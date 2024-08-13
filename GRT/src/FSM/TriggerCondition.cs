@@ -30,7 +30,7 @@ namespace GRT.FSM
     {
         public static void Trigger<T>(this FiniteStateMachine fsm, T trigger) where T : IEquatable<T>
         {
-            fsm.CurrentState.Trigger(trigger);
+            fsm.CurrentOrSelf.Trigger(trigger);
         }
 
         internal static void Trigger<T>(this IState state, T trigger) where T : IEquatable<T>
