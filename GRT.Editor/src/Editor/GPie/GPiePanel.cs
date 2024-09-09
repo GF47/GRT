@@ -235,6 +235,8 @@ namespace GRT.Editor.GPie
 
         public void OpenScene(string path) => UnityEditor.SceneManagement.EditorSceneManager.OpenScene(path);
 
+        public void AddScene(string path) => UnityEditor.SceneManagement.EditorSceneManager.OpenScene(path, UnityEditor.SceneManagement.OpenSceneMode.Additive);
+
         /***************示例：打开发布设置中的第一个场景*******************************/
 
         #region examples

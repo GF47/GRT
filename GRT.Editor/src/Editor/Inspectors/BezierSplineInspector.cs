@@ -37,6 +37,8 @@ namespace GRT.Editor.Inspectors
         private BezierPoint _selected;
 
         private BezierSpline _target;
+
+        private float _length;
         // private readonly Vector3[] _points = new Vector3[DRAW_POINTS_COUNT + 1];
 
         // private float _minMaxThreshold = 1f;
@@ -82,9 +84,21 @@ namespace GRT.Editor.Inspectors
             //     RepaintSceneView();
             // }
             // GUILayout.Space(10f);
+            float length = 0f;
+
             Color bg = GUI.backgroundColor;
             for (int i = 0; i < _target.Count; i++)
             {
+                // length
+
+                if (i > 0)
+                {
+                    length += Vector3.Distance(_target[i - 1].Position, _target[i].Position);
+                    EditorGUILayout.SelectableLabel($"Straight Line Length Percent: {length / _length}");
+                }
+
+                // length end
+
                 var selected = _target[i] == _selected;
                 GUI.backgroundColor = selected ? Color.yellow : Color.cyan;
                 EditorGUILayout.BeginVertical(EditorStyles.textField);
@@ -226,6 +240,8 @@ namespace GRT.Editor.Inspectors
 
         private void Draw(SceneView sv)
         {
+            _length = 0f;
+
             for (int i = 0; i < _target.Count - 1; i++)
             {
                 DrawPoint(i);
@@ -234,6 +250,7 @@ namespace GRT.Editor.Inspectors
                 // {
                 //     Handles.DrawBezier(_target[i].Point, _target[i + 1].Point, _target[i].HandleR, _target[i + 1].HandleL, Color.green, null, 2f);
                 // }
+                _length += Vector3.Distance(_target[i].Position, _target[i + 1].Position);
             }
             DrawPoint(_target.Count - 1);
             // if (!_smooth)
