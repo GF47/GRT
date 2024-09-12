@@ -65,6 +65,7 @@
     <Compile Include="src\Data\GXBase.cs" />
     <Compile Include="src\Data\GXFactoriesCodeCenerator.cs" />
     <Compile Include="src\Data\GXSerializer.cs" />
+    <Compile Include="src\Data\GXSimpleJSONImpl.cs" />
     <Compile Include="src\Data\GXSystemXmlImpl.cs" />
     <Compile Include="src\Data\IGX.cs" />
     <Compile Include="src\FSM\ActionChain.cs" />

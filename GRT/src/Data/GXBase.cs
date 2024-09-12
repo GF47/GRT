@@ -55,7 +55,7 @@ namespace GRT.Data
 
         public abstract IEnumerable<T> GetChildren(T node);
 
-        public IEnumerable<T> GetChildren(T node, string name)
+        public virtual IEnumerable<T> GetChildren(T node, string name)
         {
             var children = GetChildren(node);
             if (children != null)
@@ -74,7 +74,7 @@ namespace GRT.Data
             }
         }
 
-        public IEnumerable<T> GetChildren(T node, Predicate<T> predicate)
+        public virtual IEnumerable<T> GetChildren(T node, Predicate<T> predicate)
         {
             var children = GetChildren(node);
             if (children != null)
