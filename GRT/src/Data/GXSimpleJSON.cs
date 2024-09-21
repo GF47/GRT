@@ -453,7 +453,7 @@ namespace GRT.Data
 
         public void SetIntegerValue(JSONNode node, int value) => node[JVALUE] = value;
 
-        public void SetFloatValue(JSONNode node, float value, int @decimal = 2) => node[JVALUE] = (float)Math.Round(value, @decimal);
+        public void SetFloatValue(JSONNode node, float value, int @decimal = 2) => node[JVALUE] = Math.Round(value, @decimal);
 
         public void SetValue<V>(JSONNode node, V value, Func<V, string> stringifier = null) => node[JVALUE] = stringifier?.Invoke(value) ?? value.ToString();
 
@@ -463,7 +463,7 @@ namespace GRT.Data
 
         public void SetIntegerKVPair(JSONNode node, string name, int value) => node[name] = value;
 
-        public void SetFloatKVPair(JSONNode node, string name, float value, int @decimal = 2) => node[name] = (float)Math.Round(value, @decimal);
+        public void SetFloatKVPair(JSONNode node, string name, float value, int @decimal = 2) => node[name] = Math.Round(value, @decimal);
 
         public void SetKVPair<V>(JSONNode node, string name, V value, Func<V, string> stringifier = null) => node[name] = stringifier?.Invoke(value) ?? value.ToString();
     }
