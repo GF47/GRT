@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using UnityEditor;
 using UnityEditor.ShortcutManagement;
 using UnityEngine;
@@ -225,6 +226,7 @@ namespace GRT.Editor.GPie
             }
         }
 
+        [SerializeField] private MonoScript[] _scripts;
         [SerializeField] private BranchedItem[] _items;
 
         #endregion items
@@ -256,6 +258,29 @@ namespace GRT.Editor.GPie
             }
 
             EditorApplication.EnterPlaymode();
+        }
+
+        /***************示例：静态类方法***************************************/
+
+        public void InvokeMonoScriptMethod(string arg)
+        {
+            if (arg.CanBeSplitBy('.', out var cName, out var mCall))
+            {
+                var script = _scripts?.FindExt(s => s.GetClass().Name == cName);
+                if (script != null)
+                {
+                    var mName = mCall.Substring(0, mCall.IndexOf('('));
+                    var mArg = mCall.SubStringInBrackets();
+                    if (mArg[0] == '"')
+                    {
+                        mArg = mArg.SubStringInBrackets('"', '"');
+                    }
+                    var class_ = script.GetClass();
+                    var method = class_.GetMethod(mName, BindingFlags.Static | BindingFlags.Public);
+                    Debug.LogWarning($"call method {cName}.{mName}(\"{mArg}\")");
+                    method?.Invoke(null, new object[] { mArg });
+                }
+            }
         }
 
         #endregion examples
