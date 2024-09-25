@@ -62,30 +62,58 @@ namespace GRT.Data
 
         public static (string, string, string) Names(this IGXAttribute attribute)
         {
-            var slices = attribute.Name.Split(SEPARATOR);
-            return (slices.Length > 0 ? slices[0] : default,
-                slices.Length > 1 ? slices[1] : default,
-                slices.Length > 2 ? slices[2] : default);
+            if (string.IsNullOrWhiteSpace(attribute.Name))
+            {
+                return default;
+            }
+            else
+            {
+                var slices = attribute.Name.Split(SEPARATOR);
+                return (slices.Length > 0 ? slices[0] : default,
+                    slices.Length > 1 ? slices[1] : default,
+                    slices.Length > 2 ? slices[2] : default);
+            }
         }
 
         public static string DefaultName(this IGXAttribute attribute)
         {
-            var slices = attribute.Name.Split(SEPARATOR);
-            return slices.Length > 0 ? slices[0] : default;
+            if (string.IsNullOrWhiteSpace(attribute.Name))
+            {
+                return default;
+            }
+            else
+            {
+                var slices = attribute.Name.Split(SEPARATOR);
+                return slices.Length > 0 ? slices[0] : default;
+            }
         }
 
         public static (string, string, string) Names(this GXArrayAttribute attribute)
         {
-            var slices = attribute.Container.Split(SEPARATOR);
-            return (slices.Length > 0 ? slices[0] : default,
-                slices.Length > 1 ? slices[1] : default,
-                slices.Length > 2 ? slices[2] : default);
+            if (string.IsNullOrWhiteSpace(attribute.Container))
+            {
+                return default;
+            }
+            else
+            {
+                var slices = attribute.Container.Split(SEPARATOR);
+                return (slices.Length > 0 ? slices[0] : default,
+                    slices.Length > 1 ? slices[1] : default,
+                    slices.Length > 2 ? slices[2] : default);
+            }
         }
 
         public static string DefaultName(this GXArrayAttribute attribute)
         {
-            var slices = attribute.Container.Split(SEPARATOR);
-            return slices.Length > 0 ? slices[0] : default;
+            if (string.IsNullOrWhiteSpace(attribute.Container))
+            {
+                return default;
+            }
+            else
+            {
+                var slices = attribute.Container.Split(SEPARATOR);
+                return slices.Length > 0 ? slices[0] : default;
+            }
         }
 
         public static string GetValidName(params string[] names)
