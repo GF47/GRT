@@ -2,11 +2,13 @@
 
 namespace GRT.FSM
 {
-    public class ActionChain : IAction
+    public class ActionChain : IAction, IActionEnumerable
     {
         private int _indicator;
 
         public IList<IAction> Chain { get; }
+
+        IEnumerable<IAction> IActionEnumerable.AEnumerable => Chain;
 
         public bool Completed => Chain.Count == 0 || Chain[Chain.Count - 1].Completed;
 

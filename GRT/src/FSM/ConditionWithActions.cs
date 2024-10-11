@@ -2,8 +2,23 @@
 
 namespace GRT.FSM
 {
-    public abstract class ConditionWithActions : ICondition, IResetable
+    public abstract class ConditionWithActions : ICondition, IResetable, IActionEnumerable
     {
+        IEnumerable<IAction> IActionEnumerable.AEnumerable
+        {
+            get
+            {
+                foreach (var a in SucceedActions)
+                {
+                    yield return a;
+                }
+                foreach (var a in FailedActions)
+                {
+                    yield return a;
+                }
+            }
+        }
+
         public ICollection<IAction> SucceedActions { get; protected set; }
 
         public ICollection<IAction> FailedActions { get; protected set; }
@@ -50,7 +65,7 @@ namespace GRT.FSM
         {
             if (InnerConditions != null)
             {
-                foreach(var condition in InnerConditions)
+                foreach (var condition in InnerConditions)
                 {
                     if (condition is IResetable resetable)
                     {

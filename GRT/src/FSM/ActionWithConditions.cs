@@ -2,11 +2,13 @@
 
 namespace GRT.FSM
 {
-    public class ActionWithConditions : IAction
+    public class ActionWithConditions : IAction, IActionEnumerable
     {
         public ICollection<ICondition> Conditions { get; }
 
         public ICollection<IAction> Actions { get; }
+
+        IEnumerable<IAction> IActionEnumerable.AEnumerable => Actions;
 
         public bool Repeat { get; set; } = true;
 

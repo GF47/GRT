@@ -2,9 +2,11 @@
 
 namespace GRT.FSM
 {
-    public class ActionList : IAction
+    public class ActionList : IAction, IActionEnumerable
     {
         public IList<IAction> List { get; }
+
+        IEnumerable<IAction> IActionEnumerable.AEnumerable => List;
 
         public bool Completed
         {

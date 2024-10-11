@@ -2,8 +2,10 @@
 
 namespace GRT.FSM
 {
-    public class ActionState : BaseState
+    public class ActionState : BaseState, IActionEnumerable
     {
+        IEnumerable<IAction> IActionEnumerable.AEnumerable => Actions;
+
         public ICollection<IAction> Actions { get; private set; }
 
         public ActionState(int id, string info = "") : base(id, info)

@@ -1,8 +1,15 @@
-﻿namespace GRT.FSM
+﻿using System.Collections.Generic;
+
+namespace GRT.FSM
 {
     public interface IResetable
     {
         void Reset();
+    }
+
+    public interface IActionEnumerable
+    {
+        IEnumerable<IAction> AEnumerable { get; }
     }
 
     public interface IAction : IResetable
