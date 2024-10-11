@@ -30,6 +30,7 @@ namespace GRT.Editor.Inspectors
         private const float PICK_SIZE = 0.06f;
 
         private bool _showHandles = false;
+        private bool _showLine = true;
 
         // private bool _smooth;
 
@@ -202,14 +203,13 @@ namespace GRT.Editor.Inspectors
                     EditorUtility.SetDirty(_target);
                     RepaintSceneView();
                 }
-                if (GUILayout.Button("Move To View" , EditorStyles.miniButtonMid, GUILayout.MinWidth(20)))
+                if (GUILayout.Button("Move To View", EditorStyles.miniButtonMid, GUILayout.MinWidth(20)))
                 {
                     Undo.RecordObject(_target, "change pos");
                     _selected.Position = SceneView.lastActiveSceneView.pivot;
                     EditorUtility.SetDirty(_target);
                     RepaintSceneView();
                 }
-
             }
             EditorGUILayout.EndHorizontal();
 
@@ -217,6 +217,13 @@ namespace GRT.Editor.Inspectors
             if (_showHandles != showHandles)
             {
                 _showHandles = showHandles;
+                RepaintSceneView();
+            }
+
+            var showLine = GUILayout.Toggle(_showLine, _showLine ? "Hide Bezier Line" : "Show Beizer Line", EditorStyles.toolbarButton);
+            if (_showLine != showLine)
+            {
+                _showLine = showLine;
                 RepaintSceneView();
             }
 
@@ -245,7 +252,10 @@ namespace GRT.Editor.Inspectors
             for (int i = 0; i < _target.Count - 1; i++)
             {
                 DrawPoint(i);
-                Handles.DrawBezier(_target[i].Position, _target[i + 1].Position, _target[i].HandleR, _target[i + 1].HandleL, Color.green, null, 2f);
+                if (_showLine)
+                {
+                    Handles.DrawBezier(_target[i].Position, _target[i + 1].Position, _target[i].HandleR, _target[i + 1].HandleL, Color.green, null, 2f);
+                }
                 // if (_smooth)
                 // {
                 //     Handles.DrawBezier(_target[i].Point, _target[i + 1].Point, _target[i].HandleR, _target[i + 1].HandleL, Color.green, null, 2f);

@@ -8,14 +8,14 @@ namespace Assets.Scripts.Editor
     {
         private static readonly string DIRECTORY_PATH = $"{Application.dataPath}/Scripts/GXFactories";
 
-        [MenuItem("Assets/GX Code Gen/Generate GXFactories")]
+        [MenuItem("Assets/GX/Generate GXFactories")]
         private static void GenerateAll()
         {
             GXFactoriesCodeCenerator.GenerateAll(DIRECTORY_PATH);
             AssetDatabase.Refresh();
         }
 
-        [MenuItem("Assets/GX Code Gen/Generate Selected GXFactories")]
+        [MenuItem("Assets/GX/Generate Selected GXFactories")]
         private static void GenerateSelected()
         {
             foreach (var cs in Selection.GetFiltered<MonoScript>(SelectionMode.DeepAssets))

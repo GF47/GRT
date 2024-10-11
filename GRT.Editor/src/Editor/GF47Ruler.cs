@@ -46,6 +46,8 @@ namespace GRT.Editor
             if (GUILayout.Button("Paste", GUILayout.Width(100f))) { a = CopyFromSystemBuffer(a); }
             GUILayout.EndHorizontal();
 
+            if (GUILayout.Button("U Copy", GUILayout.Width(200f))) { WriteToSystemBufferU(a); }
+
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("View Target", GUILayout.Width(100f))) { a = view.pivot; }
             if (GUILayout.Button("Object Pivot", GUILayout.Width(100f))) { a = Selection.activeTransform.position; }
@@ -62,6 +64,8 @@ namespace GRT.Editor
             if (GUILayout.Button("Copy", GUILayout.Width(100f))) { WriteToSystemBuffer(b); }
             if (GUILayout.Button("Paste", GUILayout.Width(100f))) { b = CopyFromSystemBuffer(b); }
             GUILayout.EndHorizontal();
+
+            if (GUILayout.Button("U Copy", GUILayout.Width(200f))) { WriteToSystemBufferU(b); }
 
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("View Target", GUILayout.Width(100f))) { b = view.pivot; }
@@ -111,6 +115,13 @@ namespace GRT.Editor
         private static void WriteToSystemBuffer(Vector3 v3)
         {
             var str = $"{v3.x:F4},{v3.y:F4},{v3.z:F4}";
+            Debug.Log(str);
+            EditorGUIUtility.systemCopyBuffer = str;
+        }
+        
+        private static void WriteToSystemBufferU(Vector3 v3)
+        {
+            var str = $"Vector3({v3.x:F4},{v3.y:F4},{v3.z:F4})";
             Debug.Log(str);
             EditorGUIUtility.systemCopyBuffer = str;
         }
