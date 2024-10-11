@@ -164,6 +164,7 @@
     <Compile Include="src\GLifecycle.cs" />
     <Compile Include="src\GLogic\ICell.cs" />
     <Compile Include="src\GLogic\ICondition.cs" />
+    <Compile Include="src\GLogic\IFunction.cs" />
     <Compile Include="src\GLogic\MiniFSM.cs" />
     <Compile Include="src\GRandom.cs" />
     <Compile Include="src\GString.cs" />
