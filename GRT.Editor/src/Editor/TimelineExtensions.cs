@@ -16,7 +16,7 @@ namespace GRT.Editor
     {
         public static event Action<PlayableBinding, PlayableDirector, StringBuilder> Serializing;
 
-        [MenuItem("GameObject/GRT/Get Playable Director Bindings Data", false, 1)]
+        [MenuItem("GameObject/GF47 Editor/Get Playable Director Bindings Data", false, 1)]
         public static string GetBindingsData()
         {
             var selectedGO = Selection.activeGameObject;

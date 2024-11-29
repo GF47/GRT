@@ -271,14 +271,22 @@ namespace GRT.Editor.GPie
                 {
                     var mName = mCall.Substring(0, mCall.IndexOf('('));
                     var mArg = mCall.SubStringInBrackets();
-                    if (mArg[0] == '"')
+                    if (mArg.Length > 0 && mArg[0] == '"')
                     {
                         mArg = mArg.SubStringInBrackets('"', '"');
                     }
                     var class_ = script.GetClass();
-                    var method = class_.GetMethod(mName, BindingFlags.Static | BindingFlags.Public);
-                    Debug.LogWarning($"call method {cName}.{mName}(\"{mArg}\")");
-                    method?.Invoke(null, new object[] { mArg });
+                    var method = class_.GetMethod(mName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                    if (string.IsNullOrEmpty(mArg))
+                    {
+                        Debug.LogWarning($"call method {cName}.{mName}()");
+                        method?.Invoke(null, null);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"call method {cName}.{mName}(\"{mArg}\")");
+                        method?.Invoke(null, new object[] { mArg });
+                    }
                 }
             }
         }

@@ -126,7 +126,7 @@ namespace GRT.Editor
         /**
          * 获取场景物体的层级
          */
-        [MenuItem("GameObject/GRT/Get Transform Hierarchy", false, 0)]
+        [MenuItem("GameObject/GF47 Editor/Get Transform Hierarchy", false, 0)]
         private static void GetTransformHierarchy()
         {
             var trans = Selection.activeTransform;
@@ -149,7 +149,7 @@ namespace GRT.Editor
         /**
          * 获取场景物体的 [场景名:层级]
          */
-        [MenuItem("GameObject/GRT/Get Transform Hierarchy With Scene Name", false, 0)]
+        [MenuItem("GameObject/GF47 Editor/Get Transform Hierarchy With Scene Name", false, 0)]
         private static void GetTransformHierarchyWithSceneName()
         {
             var trans = Selection.activeTransform;
