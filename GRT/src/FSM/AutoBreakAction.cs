@@ -3,30 +3,28 @@ using System.Collections.Generic;
 
 namespace GRT.FSM
 {
-    public class ActionWithConditions : IAction, IEnumerable<IResetable>
+    public class AutoBreakAction : IAction, IEnumerable<IResetable>
     {
+        private int _conditionsIsOK = -1;
+
         public ICollection<ICondition> Conditions { get; }
-
         public ICollection<IAction> Actions { get; }
-
-        public bool Repeat { get; set; } = true;
 
         public bool Completed
         {
             get
             {
-                if (_conditionIsOK > 0) // 已验证并正确
+                if (_conditionsIsOK > 0) // 已验证且正确
                 {
                     foreach (var action in Actions)
                     {
                         if (!action.Completed) { return false; }
                     }
-
                     return true;
                 }
-                else if (_conditionIsOK == 0) // 已验证但错误
+                else if (_conditionsIsOK == 0) // 已验证但错误
                 {
-                    return !Repeat;
+                    return true;
                 }
                 else // 未验证
                 {
@@ -35,9 +33,7 @@ namespace GRT.FSM
             }
         }
 
-        private int _conditionIsOK = -1;
-
-        public ActionWithConditions(ICollection<ICondition> conditions, ICollection<IAction> actions)
+        public AutoBreakAction(ICollection<ICondition> conditions, ICollection<IAction> actions)
         {
             Conditions = conditions;
             Actions = actions;
@@ -45,14 +41,13 @@ namespace GRT.FSM
 
         public void Invoke()
         {
-            if (_conditionIsOK < 1)
+            Check();
+
+            if (_conditionsIsOK < 1)
             {
-                if (Repeat)
-                {
-                    Check();
-                }
+                return;
             }
-            else if (_conditionIsOK == 1)
+            else if (_conditionsIsOK == 1)
             {
                 if (Actions != null)
                 {
@@ -61,10 +56,9 @@ namespace GRT.FSM
                         action.Start();
                     }
                 }
-
-                _conditionIsOK = 2;
+                _conditionsIsOK = 2;
             }
-            else if (_conditionIsOK > 1)
+            else if (_conditionsIsOK > 1)
             {
                 if (Actions != null)
                 {
@@ -81,24 +75,28 @@ namespace GRT.FSM
 
         public void Reset()
         {
-            _conditionIsOK = -1; // 未验证状态
+            _conditionsIsOK = -1;
 
             this.DeepReset(false);
         }
 
-        public void Start() => Check();
+        public void Start() { }
 
         /// <summary>
-        /// check 后一定会有 _conditionIsOk = 0 或 = 1
+        /// check 后一定会有 _conditionsIsOK = 0 或 = 1 或 = 2
         /// </summary>
         private void Check()
         {
-            _conditionIsOK = 1; // 已验证并正确
+            if (_conditionsIsOK == -1)
+            {
+                _conditionsIsOK = 1; // 已验证且正确
+            }
+
             if (Conditions != null)
             {
                 foreach (var condition in Conditions)
                 {
-                    if (!condition.OK) { _conditionIsOK = 0; } //已验证并错误
+                    if (condition != null && !condition.OK) { _conditionsIsOK = 0; } // 已验证且不正确
                 }
             }
         }

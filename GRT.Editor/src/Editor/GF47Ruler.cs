@@ -42,15 +42,19 @@ namespace GRT.Editor
             a = EditorGUILayout.Vector3Field("A", a, GUILayout.Width(200f));
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Copy", GUILayout.Width(100f))) { WriteToSystemBuffer(a); }
-            if (GUILayout.Button("Paste", GUILayout.Width(100f))) { a = CopyFromSystemBuffer(a); }
+            if (GUILayout.Button("Copy", GUILayout.Width(65f))) { WriteToSystemBuffer(a); }
+            if (GUILayout.Button("U Copy", GUILayout.Width(65f))) { WriteToSystemBufferU(a); }
+            if (GUILayout.Button("Paste", GUILayout.Width(64f))) { a = CopyFromSystemBuffer(a); }
             GUILayout.EndHorizontal();
 
-            if (GUILayout.Button("U Copy", GUILayout.Width(200f))) { WriteToSystemBufferU(a); }
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("View Target", GUILayout.Width(133f))) { a = view.pivot; }
+            if (GUILayout.Button("Set VT", GUILayout.Width(64f))) { view.pivot = a; }
+            GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("View Target", GUILayout.Width(100f))) { a = view.pivot; }
-            if (GUILayout.Button("Object Pivot", GUILayout.Width(100f))) { a = Selection.activeTransform.position; }
+            if (GUILayout.Button("Object Pivot", GUILayout.Width(133f))) { a = Selection.activeTransform.position; }
+            if (GUILayout.Button("Set OP", GUILayout.Width(64f))) { Selection.activeTransform.position = a; }
             GUILayout.EndHorizontal();
 
             GUILayout.EndVertical();
@@ -61,15 +65,19 @@ namespace GRT.Editor
             b = EditorGUILayout.Vector3Field("B", b, GUILayout.Width(200f));
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Copy", GUILayout.Width(100f))) { WriteToSystemBuffer(b); }
-            if (GUILayout.Button("Paste", GUILayout.Width(100f))) { b = CopyFromSystemBuffer(b); }
+            if (GUILayout.Button("Copy", GUILayout.Width(65f))) { WriteToSystemBuffer(b); }
+            if (GUILayout.Button("U Copy", GUILayout.Width(65f))) { WriteToSystemBufferU(b); }
+            if (GUILayout.Button("Paste", GUILayout.Width(64f))) { b = CopyFromSystemBuffer(b); }
             GUILayout.EndHorizontal();
 
-            if (GUILayout.Button("U Copy", GUILayout.Width(200f))) { WriteToSystemBufferU(b); }
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("View Target", GUILayout.Width(133f))) { b = view.pivot; }
+            if (GUILayout.Button("Set VT", GUILayout.Width(64f))) { view.pivot = b; }
+            GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("View Target", GUILayout.Width(100f))) { b = view.pivot; }
-            if (GUILayout.Button("Object Pivot", GUILayout.Width(100f))) { b = Selection.activeTransform.position; }
+            if (GUILayout.Button("Object Pivot", GUILayout.Width(133f))) { b = Selection.activeTransform.position; }
+            if (GUILayout.Button("Set OP", GUILayout.Width(64f))) { Selection.activeTransform.position = b; }
             GUILayout.EndHorizontal();
 
             GUILayout.EndVertical();
@@ -77,25 +85,31 @@ namespace GRT.Editor
 
             EditorGUIUtility.labelWidth = defaultLabelWidth;
 
-            GUILayout.Space(5);
-            if (GUILayout.Button("A = View Camera\nB = View Camera Target", GUILayout.Width(200f)))
+            GUILayout.BeginVertical(EditorStyles.textArea, GUILayout.Width(200f));
+            if (GUILayout.Button("A = View Camera\nB = View Target", GUILayout.Width(200f)))
             {
                 a = view.camera.transform.position;
                 b = view.pivot;
             }
-            GUILayout.Space(5);
-
+            if (GUILayout.Button("print camera=\"A\" target=\"B\"", GUILayout.Width(200f)))
+            {
+                var xmlAttributes = $"camera=\"{a.x:F4},{a.y:F4},{a.z:F4}\" target=\"{b.x:F4},{b.y:F4},{b.z:F4}\"";
+                Debug.Log(xmlAttributes);
+                EditorGUIUtility.systemCopyBuffer = xmlAttributes;
+            }
+            GUILayout.Space(10);
             if (GUILayout.Button("Get Length", GUILayout.Width(200f)))
             {
                 var length = (b - a).magnitude.ToString();
                 Debug.Log(length);
                 EditorGUIUtility.systemCopyBuffer = length;
             }
-
             if (GUILayout.Button("Get A -> B Offset", GUILayout.Width(200f)))
             {
                 WriteToSystemBuffer(b - a);
             }
+
+            GUILayout.EndVertical();
 
             Handles.EndGUI();
 
@@ -104,9 +118,11 @@ namespace GRT.Editor
 
             Handles.color = Color.green;
             Handles.DrawLine(a, b);
-            Handles.color = Color.white;
 
+            Handles.color= Color.red;
             Handles.Label(0.5f * (a + b), $"a:{a}\nb:{b}\nLenght:{(b - a).magnitude}");
+
+            Handles.color = Color.white;
         }
 
         private static Vector3 CopyFromSystemBuffer(Vector3 @default) =>

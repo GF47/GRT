@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace GRT.FSM
 {
-    public class ActionList : IAction, IActionEnumerable
+    public class ActionList : IAction, IEnumerable<IResetable>
     {
         public IList<IAction> List { get; }
-
-        IEnumerable<IAction> IActionEnumerable.AEnumerable => List;
 
         public bool Completed
         {
@@ -36,13 +35,7 @@ namespace GRT.FSM
             }
         }
 
-        public void Reset()
-        {
-            foreach (var action in List)
-            {
-                action.Reset();
-            }
-        }
+        public void Reset() => this.DeepReset(false);
 
         public void Start()
         {
@@ -51,5 +44,9 @@ namespace GRT.FSM
                 action.Start();
             }
         }
+
+        public IEnumerator<IResetable> GetEnumerator() => List.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => List.GetEnumerator();
     }
 }

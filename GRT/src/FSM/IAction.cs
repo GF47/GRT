@@ -7,11 +7,6 @@ namespace GRT.FSM
         void Reset();
     }
 
-    public interface IActionEnumerable
-    {
-        IEnumerable<IAction> AEnumerable { get; }
-    }
-
     public interface IAction : IResetable
     {
         bool Completed { get; }

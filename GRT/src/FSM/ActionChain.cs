@@ -1,14 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace GRT.FSM
 {
-    public class ActionChain : IAction, IActionEnumerable
+    public class ActionChain : IAction, IEnumerable<IResetable>
     {
         private int _indicator;
 
         public IList<IAction> Chain { get; }
-
-        IEnumerable<IAction> IActionEnumerable.AEnumerable => Chain;
 
         public bool Completed => Chain.Count == 0 || Chain[Chain.Count - 1].Completed;
 
@@ -34,10 +33,8 @@ namespace GRT.FSM
         public void Reset()
         {
             _indicator = 0;
-            foreach (var acton in Chain)
-            {
-                acton.Reset();
-            }
+
+            this.DeepReset(false);
         }
 
         public void Start()
@@ -47,5 +44,9 @@ namespace GRT.FSM
                 Chain[_indicator].Start();
             }
         }
+
+        public IEnumerator<IResetable> GetEnumerator() => Chain.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => Chain.GetEnumerator();
     }
 }

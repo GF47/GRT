@@ -1,5 +1,6 @@
 ﻿using GRT.GEvents.Triggers;
 using UnityEngine;
+using UComponent = UnityEngine.Component;
 
 namespace GRT.GEC.Unity
 {
@@ -9,7 +10,7 @@ namespace GRT.GEC.Unity
 
         public IProvider<UEntity> Provider { get; private set; }
 
-        private PointerClickTrigger<T> _trigger;
+        private ITrigger<T> _trigger;
 
         public bool Use(IProvider<UEntity> provider)
         {
@@ -29,7 +30,10 @@ namespace GRT.GEC.Unity
             if (_trigger != null)
             {
                 _trigger.Event.RemoveListener(OnClick);
-                PointerClickTrigger<T>.Destroy(_trigger);
+                if (_trigger is UComponent com)
+                {
+                    UComponent.Destroy(com);
+                }
             }
 
             Provider = null;
@@ -37,6 +41,6 @@ namespace GRT.GEC.Unity
 
         public abstract void OnClick(T sender, RaycastHit hit);
 
-        public abstract PointerClickTrigger<T> AddTrigger(GameObject go);
+        public abstract ITrigger<T> AddTrigger(GameObject go);
     }
 }

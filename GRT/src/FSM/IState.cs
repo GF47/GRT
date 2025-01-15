@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 namespace GRT.FSM
 {
-    public interface IState
+    public interface IState : IResetable
     {
         int ID { get; }
 
@@ -16,8 +16,6 @@ namespace GRT.FSM
         void OnExit(int nextID);
 
         void Update();
-
-        void Reset();
 
         void AddTransition(ITransition transition);
 

@@ -73,6 +73,8 @@
     <Compile Include="src\FSM\ActionState.cs" />
     <Compile Include="src\FSM\ActionWithConditions.cs" />
     <Compile Include="src\FSM\ApproximatelyEqualCondition.cs" />
+    <Compile Include="src\FSM\AutoBreakAction.cs" />
+    <Compile Include="src\FSM\AutoPauseAction.cs" />
     <Compile Include="src\FSM\BaseAction.cs" />
     <Compile Include="src\FSM\BaseState.cs" />
     <Compile Include="src\FSM\BaseTransition.cs" />

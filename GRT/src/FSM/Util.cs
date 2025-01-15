@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace GRT.FSM
 {
@@ -17,15 +19,39 @@ namespace GRT.FSM
         /// </summary>
         public static bool IsValid(int anyID) => anyID != NullStateID;
 
-        public static void DeepProcess(this IAction action, Action<IAction> process)
+        public static void DeepReset(this IResetable resetable, bool resetSelf = false, Action<IResetable> extraAction = null)
         {
-            process.Invoke(action);
-
-            if (action is IActionEnumerable enumerable)
+            if (resetSelf)
             {
-                foreach (var a in enumerable.AEnumerable)
+                resetable.Reset();
+                extraAction?.Invoke(resetable);
+            }
+
+            if (resetable is IEnumerable<IResetable> enumerable)
+            {
+                foreach (var a in enumerable)
                 {
-                    DeepProcess(a, process);
+                    if (a != null)
+                    {
+                        DeepReset(a, true, extraAction);
+                    }
+                }
+            }
+        }
+
+        public static IEnumerator<IResetable> CombineIResetables(params IEnumerable[] collections)
+        {
+            foreach (var enumerable in collections)
+            {
+                if (enumerable != null)
+                {
+                    foreach (var a in enumerable)
+                    {
+                        if (a is IResetable resetable)
+                        {
+                            yield return resetable;
+                        }
+                    }
                 }
             }
         }

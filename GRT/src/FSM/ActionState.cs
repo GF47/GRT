@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace GRT.FSM
 {
-    public class ActionState : BaseState, IActionEnumerable
+    public class ActionState : BaseState, IEnumerable<IResetable>
     {
-        IEnumerable<IAction> IActionEnumerable.AEnumerable => Actions;
-
         public ICollection<IAction> Actions { get; private set; }
 
         public ActionState(int id, string info = "") : base(id, info)
@@ -23,13 +22,7 @@ namespace GRT.FSM
 
         public override void OnExit(int nextID) { }
 
-        public override void Reset()
-        {
-            foreach (var action in Actions)
-            {
-                action.Reset();
-            }
-        }
+        public override void Reset() => this.DeepReset(false);
 
         public override void Update()
         {
@@ -41,5 +34,9 @@ namespace GRT.FSM
                 }
             }
         }
+
+        public IEnumerator<IResetable> GetEnumerator() => Actions.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => Actions.GetEnumerator();
     }
 }

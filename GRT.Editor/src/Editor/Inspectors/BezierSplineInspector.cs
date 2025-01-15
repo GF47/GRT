@@ -95,7 +95,7 @@ namespace GRT.Editor.Inspectors
                 if (i > 0)
                 {
                     length += Vector3.Distance(_target[i - 1].Position, _target[i].Position);
-                    EditorGUILayout.SelectableLabel($"Straight Line Length Percent: {length / _length}");
+                    EditorGUILayout.SelectableLabel($"Straight Line Length Percent: {length / _length}, Length: {length:F3} / {_length:F3}");
                 }
 
                 // length end
