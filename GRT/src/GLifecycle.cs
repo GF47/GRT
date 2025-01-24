@@ -105,7 +105,7 @@ namespace GRT
         public override IGTickable AsGTickable => this;
 #endif
 
-        public void GTick(float delta)
+        public virtual void GTick(float delta)
         {
             Ticking?.Invoke(this, delta);
         }
@@ -141,7 +141,7 @@ namespace GRT
 
         protected IDictionary<IGLife, bool> PendingLives { get; set; } = new Dictionary<IGLife, bool>();
 
-        public void GTick(float delta)
+        public virtual void GTick(float delta)
         {
             Ticking?.Invoke(this, delta);
         }
@@ -204,7 +204,7 @@ namespace GRT
         {
         }
 
-        public void GTick(float delta)
+        public virtual void GTick(float delta)
         {
             Ticking?.Invoke(this, delta);
         }
@@ -248,7 +248,7 @@ namespace GRT
         {
         }
 
-        public void GTick(float delta)
+        public virtual void GTick(float delta)
         {
             Ticking?.Invoke(this, delta);
         }
@@ -348,9 +348,9 @@ namespace GRT
                 }
             }
 
-            if (life is IDisposable disposeable)
+            if (life is IGDisposable disposable)
             {
-                disposeable.Dispose();
+                disposable.GDispose();
             }
 #endif
         }

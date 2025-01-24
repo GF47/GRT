@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GRT.Tween
+namespace GRT.GTween
 {
     internal interface ITweenPercent
     {
@@ -276,8 +276,6 @@ namespace GRT.Tween
     internal interface ITweenPercentLoop : ITweenPercent
     {
         bool IsStopped(float percent);
-
-        void Reset();
     }
 
     internal struct TweenOnce : ITweenPercentLoop
@@ -290,10 +288,6 @@ namespace GRT.Tween
         public bool IsStopped(float percent)
         {
             return percent >= 1f;
-        }
-
-        public void Reset()
-        {
         }
     }
 
@@ -308,64 +302,38 @@ namespace GRT.Tween
         {
             return false;
         }
-
-        public void Reset()
-        {
-        }
     }
 
     internal struct TweenPingPong : ITweenPercentLoop
     {
-        private bool _isForward;
-
         public float Calculate(float percent)
         {
-            if (percent > 1f)
-            {
-                _isForward = !_isForward;
-                percent -= (float)Math.Floor(percent);
-            }
-            return _isForward ? percent : 1f - percent;
+            return Calculate_(percent);
+        }
+
+        internal static float Calculate_(float percent)
+        {
+            percent %= 2f;
+            if (percent < 0f) { percent += 2f; }
+            return percent < 1f ? percent : 2f - percent;
         }
 
         public bool IsStopped(float percent)
         {
             return false;
         }
-
-        public void Reset()
-        {
-            _isForward = true;
-        }
     }
 
     internal struct TweenPingPongOnce : ITweenPercentLoop
     {
-        private bool _isForward;
-
         public float Calculate(float percent)
         {
-            if (percent > 1f)
-            {
-                _isForward = true;
-                percent -= (float)Math.Floor(percent);
-            }
-            else if (percent > 0.5f)
-            {
-                _isForward = false;
-                percent -= (float)Math.Floor(percent / 0.5f) * 0.5f;
-            }
-            return _isForward ? 2f * percent : 1f - 2f * percent;
+            return TweenPingPong.Calculate_(2f * percent);
         }
 
         public bool IsStopped(float percent)
         {
             return percent >= 1f;
-        }
-
-        public void Reset()
-        {
-            _isForward = true;
         }
     }
 

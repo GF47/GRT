@@ -2,57 +2,27 @@
 
 namespace GRT.GUpdater
 {
-    public class PerFrameGUpdater : BaseGUpdater
-    {
-        public override UpdateMode UpdateMode => UpdateMode.PerFrame;
-
-        public PerFrameGUpdater(Action<float> updating) : base(updating)
-        {
-        }
-    }
-
-    public class PerFixedFrameGUpdater : BaseGUpdater
-    {
-        public override UpdateMode UpdateMode => UpdateMode.PerFixedFrame;
-
-        public PerFixedFrameGUpdater(Action<float> updating) : base(updating)
-        {
-        }
-    }
-
-    public class PerAfterFrameGUpdater : BaseGUpdater
-    {
-        public override UpdateMode UpdateMode => UpdateMode.PerAfterFrame;
-
-        public PerAfterFrameGUpdater(Action<float> updating) : base(updating)
-        {
-        }
-    }
-
-    public class CustomIntervalGUpdater : BaseGUpdater
+    public class CustomIntervalGUpdater : CommonGUpdater
     {
         private float _delta;
         private float _interval;
 
         public float Interval { get => _interval; set => _interval = Math.Max(0.02f, value); }
 
-        public override UpdateMode UpdateMode => UpdateMode.CustomInterval;
+        public CustomIntervalGUpdater(float interval = 1f) => _interval = interval;
 
-        public CustomIntervalGUpdater(Action<float> updating, float delta = 1f) : base(updating) => Interval = delta;
-
-        public override void Start()
+        public override void GStart()
         {
-            base.Start();
-            _delta = 0f;
+            base.GStart();
+            ResetDelta();
         }
 
-        public override void Update(float delta)
+        public override void GTick(float delta)
         {
             _delta += delta;
-
             if (_delta > _interval)
             {
-                base.Update(_delta);
+                base.GTick(_delta);
                 _delta -= _interval;
             }
         }

@@ -2,37 +2,30 @@
 
 namespace GRT.GUpdater.Buffers
 {
-    public abstract class BaseBuffer<T> : IBuffer<T>
+    public abstract class BaseBuffer<T> : MiniGLifecycleWithTick<T>, IInterpolable<T>, IPercent
     {
         private float _duration;
 
-        private T _value;
         private T _to;
 
         private float _percent;
 
-        public event Action<T> Starting;
-
         public event Action<T> Updating;
 
-        public event Action<T> Stopping;
+        public event Action<IGStartable<T>> StartingOneShot;
 
-        public event Action<T> StoppingOneShot;
+        public event Action<IGDisposable<T>> DisposingOneShot;
 
         public T Value
         {
-            get => _value; set
+            get => Object; set
             {
-                _value = value;
-                Updating?.Invoke(_value);
+                Object = value;
+                GTick(0f);
             }
         }
 
         public float Duration { get => _duration; set => _duration = Math.Max(0.02f, value); }
-
-        public UpdateMode UpdateMode => UpdateMode.PerFrame;
-
-        public bool IsAlive { get; protected set; }
 
         public T From { get; set; }
 
@@ -40,19 +33,10 @@ namespace GRT.GUpdater.Buffers
         {
             get => _to; set
             {
-                From = _value;
+                From = Object;
                 _to = value;
 
-                if (IsEqual(_to, From))
-                {
-                    Percent = 1f;
-                    // if (IsAlive) { Stop(); }
-                }
-                else
-                {
-                    Percent = 0f;
-                    if (!IsAlive) { Start(); }
-                }
+                Percent = IsEqual(_to, From) ? 1f : 0f;
             }
         }
 
@@ -63,15 +47,14 @@ namespace GRT.GUpdater.Buffers
                 _percent = Math.Max(Math.Min(value, 1f), 0f);
                 Value = Interpolate(_percent);
 
-                if (value >= 1f) { Stop(); }
+                if (value >= 1f) { this.DetachFromScope(true); }
             }
         }
 
-        protected BaseBuffer(T from, Action<T> updating, float duration = 1f)
+        protected BaseBuffer(T from, Action<T> updating, float duration = 1f) : base(from)
         {
             From = from;
             _to = from;
-            _value = from;
 
             Updating = updating;
 
@@ -82,33 +65,32 @@ namespace GRT.GUpdater.Buffers
 
         protected abstract bool IsEqual(T a, T b);
 
-        public void Start()
+        public override void GStart()
         {
-            if (IsAlive) { return; }
-
-            GUpdaterDriver.Add(this);
-            IsAlive = true;
-
-            Starting?.Invoke(Value);
+            base.GStart();
+            StartingOneShot?.Invoke(this);
+            StartingOneShot = null;
         }
 
-        public void Update(float delta)
+        public override void GTick(float delta)
         {
             Percent += delta / Duration;
+
+            base.GTick(delta);
+            Updating?.Invoke(Value);
         }
 
-        public void Stop()
+        public override void GDispose()
         {
-            if (!IsAlive) { return; }
-
-            GUpdaterDriver.Remove(this);
-            IsAlive = false;
-
-            Stopping?.Invoke(Value);
-            StoppingOneShot?.Invoke(Value);
-            StoppingOneShot = null;
+            base.GDispose();
+            DisposingOneShot?.Invoke(this);
+            DisposingOneShot = null;
         }
 
-        public void ClearOneShotStoppingEvent() => StoppingOneShot = null;
+        public void ClearOneShotEvents()
+        {
+            StartingOneShot = null;
+            DisposingOneShot = null;
+        }
     }
 }

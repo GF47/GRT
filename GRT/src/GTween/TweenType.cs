@@ -1,4 +1,4 @@
-﻿namespace GRT.Tween
+﻿namespace GRT.GTween
 {
     public enum Ease
     {
