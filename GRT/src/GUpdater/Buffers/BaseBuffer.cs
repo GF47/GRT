@@ -21,7 +21,7 @@ namespace GRT.GUpdater.Buffers
             get => Object; set
             {
                 Object = value;
-                GTick(0f);
+                Updating?.Invoke(Object);
             }
         }
 
@@ -36,7 +36,7 @@ namespace GRT.GUpdater.Buffers
                 From = Object;
                 _to = value;
 
-                Percent = IsEqual(_to, From) ? 1f : 0f;
+                Percent = 0f;
             }
         }
 
@@ -77,7 +77,6 @@ namespace GRT.GUpdater.Buffers
             Percent += delta / Duration;
 
             base.GTick(delta);
-            Updating?.Invoke(Value);
         }
 
         public override void GDispose()
