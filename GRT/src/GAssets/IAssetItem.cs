@@ -13,6 +13,7 @@ namespace GRT.GAssets
         Type AssetType { get; }
 
         IAwaitable<IAwaiter<T>, T> Get<T>(string location) where T : UObject;
+
         IAwaitable<IAwaiter<T>, T> Get<T>() where T : UObject;
     }
 
@@ -63,7 +64,7 @@ namespace GRT.GAssets
 
         public static TI LoadAssetItem(IGScope scope, string location)
         {
-            var item = scope.Find<TI>(i => i.AssetType == typeof(GameObject) && i.Location == location);
+            var item = scope.Find<TI>(i => i.Location == location);
             if (item == null)
             {
                 item = Constructor == null ? Activator.CreateInstance<TI>() : Constructor.Invoke();

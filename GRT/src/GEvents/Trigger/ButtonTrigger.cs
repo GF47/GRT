@@ -1,12 +1,11 @@
 ﻿using System;
-using UnityEngine;
 
 namespace GRT.GEvents.Triggers
 {
     [Serializable]
     public class ButtonTrigger<T> : ITrigger<T>
     {
-        [SerializeField] private GnityEvent<T> _event;
+        private GnityEvent<T> _event;
         public string buttonName;
 
         public GnityEvent<T> Event
@@ -15,7 +14,7 @@ namespace GRT.GEvents.Triggers
             {
                 if (_event == null)
                 {
-                    _event = new GnityEvent<T>();
+                    _event = GnityEvent<T>.Constructor();
                 }
                 return _event;
             }

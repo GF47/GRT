@@ -4,9 +4,10 @@ using UnityEngine.Events;
 
 namespace GRT.GEvents
 {
-    [Serializable]
-    public class GnityEvent<T> : UnityEvent<T, RaycastHit>
+    public abstract class GnityEvent<T> : UnityEvent<T, RaycastHit>
     {
+        public static Func<GnityEvent<T>> Constructor;
+
         public static UnityAction<T, RaycastHit> Convert(GnityEventHandler<T> handler) => new UnityAction<T, RaycastHit>(handler);
 
         public static GnityEventHandler<T> Convert(UnityAction<T, RaycastHit> action) => new GnityEventHandler<T>(action);

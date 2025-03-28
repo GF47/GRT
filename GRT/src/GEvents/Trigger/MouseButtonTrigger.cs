@@ -6,7 +6,7 @@ namespace GRT.GEvents.Triggers
     [Serializable]
     public class MouseButtonTrigger<T> : ITrigger<T>
     {
-        [SerializeField] private GnityEvent<T> _event;
+        private GnityEvent<T> _event;
 
         // 5个键的鼠标已经属实离谱了
         [Range(0, 5)]
@@ -18,7 +18,7 @@ namespace GRT.GEvents.Triggers
             {
                 if (_event == null)
                 {
-                    _event = new GnityEvent<T>();
+                    _event = GnityEvent<T>.Constructor();
                 }
                 return _event;
             }

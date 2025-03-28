@@ -26,7 +26,34 @@ namespace GRT.GAssets
 
         public static async Task<string> LoadText(string location)
         {
-            return await AssetItemExtensions<TA>.LoadText(location);
+            if (location.StartsWith(StreamingAssetItem.STREAMING_ASSETS_PLACEHOLDER))
+            {
+                return await LoadTextFromStreamingAssets(location);
+            }
+            else if (location.StartsWith(LocalAssetItem.LOCAL_ASSETS_PLACEHOLDER))
+            {
+                return await LoadTextFromLocalFile(location);
+            }
+            else
+            {
+                return await AssetItemExtensions<TA>.LoadText(location);
+            }
+        }
+
+        public static async Task<Texture2D> LoadTexture(IGScope scope, string location)
+        {
+            if (location.StartsWith(StreamingAssetItem.STREAMING_ASSETS_PLACEHOLDER))
+            {
+                return await LoadTextureFromStreamingAssets(location);
+            }
+            else if (location.StartsWith(LocalAssetItem.LOCAL_ASSETS_PLACEHOLDER))
+            {
+                return await LoadTextureFromLocalFile(location);
+            }
+            else
+            {
+                return await AssetItemExtensions<TA>.Load<Texture2D>(scope, location);
+            }
         }
 
         public static async Task<Scene> LoadScene(IGScope scope, string location)

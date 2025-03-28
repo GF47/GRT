@@ -14,7 +14,7 @@ namespace GRT.GEC.Unity
 
         public IProvider<UEntity> Provider { get; private set; }
 
-        public bool Use(IProvider<UEntity> provider)
+        public virtual bool Use(IProvider<UEntity> provider)
         {
             bool ratify;
             GameObject go;

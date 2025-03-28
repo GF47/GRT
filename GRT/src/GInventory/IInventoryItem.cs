@@ -6,4 +6,9 @@
 
         void SetStack(IStack stack);
     }
+
+    public enum InventoryItemOperator
+    {
+        In, Out, Destroy, Changed
+    }
 }
