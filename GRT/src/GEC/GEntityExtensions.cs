@@ -1,4 +1,6 @@
-﻿namespace GRT.GEC
+﻿using System;
+
+namespace GRT.GEC
 {
     public static class GEntityExtensions
     {
@@ -44,6 +46,22 @@
             }
             component = default;
             return false;
+        }
+
+        public static bool TryGetComponent<T, TE, TC>(this IGEntity<T, TE> entity, Predicate<TC> predicate, out TC component)
+            where T : class
+            where TE : IGEntity<T, TE>
+            where TC : IGComponent<T, TE>
+        {
+            foreach (var com in entity.Components)
+            {
+                if (com is TC t && predicate(t))
+                {
+                    component = t; return true;
+                }
+            }
+
+            component = default; return false;
         }
     }
 }
