@@ -64,7 +64,7 @@ namespace GRT
             return @default;
         }
 
-        public void Set<T>(string name, T value)
+        public virtual void Set<T>(string name, T value)
         {
             if (items.ContainsKey(name)) { items[name] = value; }
             else { items.Add(name, value); }

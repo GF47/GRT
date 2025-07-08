@@ -38,7 +38,7 @@ namespace GRT.Editor
                 GUILayout.Label("Create Collider To Wrap Selected");
                 GUILayout.BeginHorizontal();
                 {
-                    if (GUILayout.Button("On Selected", GUILayout.Width(120f)))
+                    if (GUILayout.Button("On Selected", GUILayout.Width(80)))
                     {
                         if (Selection.activeGameObject != null)
                         {
@@ -66,7 +66,7 @@ namespace GRT.Editor
                             Undo.FlushUndoRecordObjects();
                         }
                     }
-                    if (GUILayout.Button("After Selected", GUILayout.Width(120f)))
+                    if (GUILayout.Button("Behind", GUILayout.Width(80)))
                     {
                         if (Selection.activeGameObject != null)
                         {
@@ -100,6 +100,46 @@ namespace GRT.Editor
                             collider.size = mesh.bounds.size;
 
                             Undo.FlushUndoRecordObjects();
+
+                            Selection.activeGameObject = go;
+                        }
+                    }
+                    if (GUILayout.Button("End", GUILayout.Width(80)))
+                    {
+                        if (Selection.activeGameObject != null)
+                        {
+                            var selected = Selection.activeGameObject.transform;
+
+                            var go = new GameObject($"{selected.name}_collider");
+                            Undo.RegisterCreatedObjectUndo(go, "Create Collider");
+                            Undo.RecordObject(go, "Add Collider");
+
+                            Mesh mesh;
+                            if (selected.gameObject.TryGetComponent<MeshFilter>(out var mf))
+                            {
+                                mesh = mf.sharedMesh;
+                            }
+                            else if (selected.gameObject.TryGetComponent<MeshCollider>(out var mc))
+                            {
+                                mesh = mc.sharedMesh;
+                            }
+                            else
+                            {
+                                throw new Exception($"{go.name} does not have a mesh");
+                            }
+
+                            var collider = go.AddComponent<BoxCollider>();
+                            var transform = collider.transform;
+                            // transform.SetParent(selected.parent);
+                            // transform.SetSiblingIndex(selected.GetSiblingIndex() + 1);
+                            transform.localScale = selected.lossyScale;
+                            transform.SetPositionAndRotation(selected.position, selected.rotation);
+                            collider.center = mesh.bounds.center;
+                            collider.size = mesh.bounds.size;
+
+                            Undo.FlushUndoRecordObjects();
+
+                            Selection.activeGameObject = go;
                         }
                     }
                 }

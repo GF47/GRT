@@ -112,6 +112,7 @@
     <Compile Include="src\GEC\IGEntity.cs" />
     <Compile Include="src\GEC\Unity\UClickable.cs" />
     <Compile Include="src\GEC\Unity\UCollider.cs" />
+    <Compile Include="src\GEC\Unity\UDraggable.cs" />
     <Compile Include="src\GEC\Unity\UHoverable.cs" />
     <Compile Include="src\GEC\Unity\UBehaviour.cs" />
     <Compile Include="src\GEC\Unity\UEntity.cs" />

@@ -86,7 +86,7 @@ namespace GRT
             return isLinked;
         }
 
-        public static void Bind<T>(this ILinkable<T> self, ILinkable<T> other) where T : struct
+        public static void Link<T>(this ILinkable<T> self, ILinkable<T> other) where T : struct
         {
             if (self.IsLinked(other)) { return; }
 
@@ -96,7 +96,7 @@ namespace GRT
             leftEnd.Left = rightEnd;
         }
 
-        public static void Unbind<T>(this ILinkable<T> self) where T : struct
+        public static void Unlink<T>(this ILinkable<T> self) where T : struct
         {
             var left = self.Left;
             var right = self.Right;

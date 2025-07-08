@@ -43,7 +43,7 @@ namespace GRT
                     break;
 
                 case OverstepMode.PingPong:
-                    _value = (int)Mathf.PingPong(i, _b - _a);
+                    _value = (int)Mathf.PingPong(i - _a, _b - _a) + _a;
                     break;
 
                 case OverstepMode.Clamp:
@@ -116,7 +116,7 @@ namespace GRT
                     break;
 
                 case OverstepMode.PingPong:
-                    _value = Mathf.PingPong(i, _b - _a);
+                    _value = Mathf.PingPong(i - _a, _b - _a) + _a;
                     break;
 
                 case OverstepMode.Clamp:
