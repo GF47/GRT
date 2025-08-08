@@ -160,12 +160,21 @@ namespace GRT.Editor.GPie
 
         private static Vector2 GetMousePosition(bool shit)
         {
-            var pos = Event.current.mousePosition;
-            if (shit)
+            if (EditorWindow.focusedWindow is SceneView view)
             {
-                pos.y -= 64f; // 40 for editor top menu and 24 for center box
+                var pos = Event.current.mousePosition;
+                if (shit)
+                {
+                    pos.y -= 64f; // 40 for editor top menu and 24 for center box
+                }
+                return pos;
             }
-            return pos;
+            else
+            {
+                view = SceneView.lastActiveSceneView;
+                view.Focus();
+                return view.position.size / 2f;
+            }
         }
 
         #region items
