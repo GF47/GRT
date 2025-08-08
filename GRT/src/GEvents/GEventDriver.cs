@@ -6,9 +6,7 @@ namespace GRT.GEvents
 {
     public abstract class GEventDriver<T> : MonoBehaviour
     {
-        private T _raycaster;
-
-        public T Raycaster => _raycaster;
+        public abstract T Raycaster { get; }
 
         // public float rayLength = 100f;
         // public LayerMask layer = 1 << 0;
@@ -22,14 +20,10 @@ namespace GRT.GEvents
         public RaycastHit LastHit { get; private set; }
         public Collider LastCollider { get; private set; }
 
-        protected abstract T GetRaycaster();
-
         protected abstract bool Cast(out RaycastHit hit);
 
         protected virtual void Awake()
         {
-            if (_raycaster == null) { _raycaster = GetRaycaster(); }
-
             _pointers = new PointersLinkedList<T>();
         }
 
@@ -49,23 +43,23 @@ namespace GRT.GEvents
                 {
                     if (LastCollider != null)
                     {
-                        SendPointerExitEvent(LastCollider.gameObject, null, _raycaster, hit);
+                        SendPointerExitEvent(LastCollider.gameObject, null, Raycaster, hit);
                     }
                     else
                     {
                         // 有可能是上一个物体直接被销毁了，需要自行处理
                     }
                     LastCollider = collider;
-                    SendPointerEnterEvent(LastCollider.gameObject, null, _raycaster, hit);
+                    SendPointerEnterEvent(LastCollider.gameObject, null, Raycaster, hit);
                 }
 
-                SendPointerStayEvent(LastCollider.gameObject, null, _raycaster, hit);
+                SendPointerStayEvent(LastCollider.gameObject, null, Raycaster, hit);
             }
             else
             {
                 if (LastCollider != null)
                 {
-                    SendPointerExitEvent(LastCollider.gameObject, null, _raycaster, hit);
+                    SendPointerExitEvent(LastCollider.gameObject, null, Raycaster, hit);
                     LastCollider = null;
                 }
             }

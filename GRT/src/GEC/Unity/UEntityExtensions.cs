@@ -18,16 +18,5 @@ namespace GRT.GEC.Unity
 
             return entity.Puppet;
         }
-
-        public static void ProvideToComponents(this IProvider<UEntity> provider)
-        {
-            foreach (var com in provider.Ware.Components)
-            {
-                if (com is IConsumer<UEntity> consumer)
-                {
-                    Contract<UEntity>.Notarize(provider, consumer);
-                }
-            }
-        }
     }
 }

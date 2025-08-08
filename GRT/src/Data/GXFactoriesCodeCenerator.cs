@@ -38,11 +38,15 @@ namespace GXFactories
             }
             Directory.CreateDirectory(dirPath);
 
+#if UNITY_STANDALONE_WIN
             var types = from assembly in AppDomain.CurrentDomain.GetAssemblies()
                         where !(assembly.ManifestModule is ModuleBuilder)
                         from type in assembly.GetTypes()
                         where type.IsDefined(typeof(GXNodeAttribute), false)
                         select type;
+#else
+            var types = new Type[0];
+#endif
 
             var filePath = $"{dirPath}/GXRegister.cs".Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
             using (var fs = new FileStream(filePath, FileMode.CreateNew, FileAccess.Write))

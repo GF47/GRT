@@ -34,7 +34,7 @@ namespace GRT.GEC.Unity
 
             if (go.isStatic)
             {
-                throw new UnityException($"{CustomLocation ?? entity.Location} is static, you can not use the static collider");
+                throw new UEntityException(CustomLocation ?? entity.Location, "target gameObject is static, static collider can not be an entity collider");
             }
 
             RawCollider = go.GetComponent<Collider>();

@@ -60,14 +60,14 @@ namespace GRT
             return null;
         }
 
-        public static void UpdateImpl(this IGFormattable formattable, Action<string> callback)
+        public static void UpdateImpl(this IGFormattable formattable, Action<string> callback = null, Func<string, IGStringifiable, string> processor = null)
         {
             var template = formattable.Template;
             if (template != null)
             {
                 foreach (var pair in formattable.Tags)
                 {
-                    formattable.SetValue(pair.Key, pair.Value.Stringify());
+                    formattable.SetValue(pair.Key, processor?.Invoke(pair.Key, pair.Value) ?? pair.Value.Stringify());
                 }
             }
 

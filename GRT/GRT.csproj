@@ -105,6 +105,7 @@
     <Compile Include="src\GAssets\Streaming\StreamingAssetItemAwaitable.cs" />
     <Compile Include="src\GAssets\Streaming\StreamingAssetItemAwaiter.cs" />
     <Compile Include="src\GCoroutine.cs" />
+    <Compile Include="src\GEC\GEntityException.cs" />
     <Compile Include="src\GEC\GEntityExtensions.cs" />
     <Compile Include="src\GEC\GEntityLife.cs" />
     <Compile Include="src\GEC\GFSM.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="src\GEC\Unity\UClickable.cs" />
     <Compile Include="src\GEC\Unity\UCollider.cs" />
     <Compile Include="src\GEC\Unity\UDraggable.cs" />
+    <Compile Include="src\GEC\Unity\UEntityException.cs" />
     <Compile Include="src\GEC\Unity\UHoverable.cs" />
     <Compile Include="src\GEC\Unity\UBehaviour.cs" />
     <Compile Include="src\GEC\Unity\UEntity.cs" />

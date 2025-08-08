@@ -1,5 +1,4 @@
 ﻿using GRT.FSM;
-using System;
 
 namespace GRT.GEC
 {
@@ -17,7 +16,7 @@ namespace GRT.GEC
             {
                 if (_fsm != null)
                 {
-                    throw new InvalidOperationException($"{Entity.Location}: There is already has a fsm component, assign repeatedly is not allowed");
+                    throw new GEntityException<T, TE>(Entity, "an fsm is already exists, repeated setting is not allowed");
                 }
 
                 _fsm = value;

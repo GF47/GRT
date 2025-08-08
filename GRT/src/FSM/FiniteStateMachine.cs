@@ -36,7 +36,7 @@ namespace GRT.FSM
                 }
                 else
                 {
-                    throw new Exception($"id {targetID} is not included in the fsm");
+                    throw new ArgumentException($"id {targetID} is not included in the fsm", nameof(targetID));
                 }
             }
         }
@@ -108,7 +108,7 @@ namespace GRT.FSM
             if (EntryStateID == id)
             {
 #if UNITY_EDITOR
-                UnityEngine.Debug.Log($"fsm {id} enter id is itself");
+                UnityEngine.Debug.LogWarning($"fsm {id} entry id is itself");
 #endif
             }
             else if (States.TryGetValue(EntryStateID, out var state))
@@ -118,7 +118,7 @@ namespace GRT.FSM
             }
             else
             {
-                throw new Exception("EntryStateID is not included in the fsm");
+                throw new Exception($"state {EntryStateID} is not included in the fsm {id}");
             }
         }
 

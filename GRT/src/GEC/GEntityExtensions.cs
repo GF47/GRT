@@ -63,5 +63,18 @@ namespace GRT.GEC
 
             component = default; return false;
         }
+
+        public static void ProvideToComponents<T, TE>(this IProvider<TE> provider)
+            where T : class
+            where TE : IGEntity<T, TE>
+        {
+            foreach (var com in provider.Ware.Components)
+            {
+                if (com is IConsumer<TE> consumer)
+                {
+                    Contract<TE>.Notarize(provider, consumer);
+                }
+            }
+        }
     }
 }
