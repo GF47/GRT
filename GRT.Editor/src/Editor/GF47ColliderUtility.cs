@@ -8,6 +8,8 @@ namespace GRT.Editor
     {
         private static bool _isActive;
 
+        private static Collider _collider;
+
         [MenuItem("Tools/GF47 Editor/Collider Utility")]
         private static void Init()
         {
@@ -22,7 +24,7 @@ namespace GRT.Editor
         private static void SceneView_duringSceneGui(SceneView view)
         {
             Handles.BeginGUI();
-            GUILayout.BeginArea(new Rect(0f, 0f, 256f, 160), EditorStyles.textArea);
+            GUILayout.BeginArea(new Rect(0f, 0f, 256f, 200f), EditorStyles.textArea);
             {
                 GUILayout.BeginHorizontal();
                 {
@@ -261,10 +263,38 @@ namespace GRT.Editor
                         go.transform.localScale = Vector3.one;
                     }
                 }
+
+                GUILayout.Label("Collider Center");
+                GUILayout.BeginHorizontal();
+                {
+                    _collider = EditorGUILayout.ObjectField(_collider, typeof(Collider), true) as Collider;
+                    if (GUILayout.Button("Focus", GUILayout.Width(64f)))
+                    {
+                        view.LookAt(_collider.bounds.center, view.camera.transform.rotation, _collider.bounds.size.magnitude);
+                    }
+                }
+                GUILayout.EndHorizontal();
             }
             GUILayout.EndArea();
 
             Handles.EndGUI();
+
+            if (_collider != null)
+            {
+                Handles.matrix = _collider.gameObject.transform.localToWorldMatrix;
+                if (_collider is BoxCollider box)
+                {
+                    box.center = Handles.PositionHandle(box.center, Quaternion.identity);
+                }
+                else if (_collider is SphereCollider sphere)
+                {
+                    sphere.center = Handles.PositionHandle(sphere.center, Quaternion.identity);
+                }
+                else if (_collider is CapsuleCollider capsule)
+                {
+                    capsule.center = Handles.PositionHandle(capsule.center, Quaternion.identity);
+                }
+            }
         }
     }
 }
