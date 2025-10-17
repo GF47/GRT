@@ -4,9 +4,9 @@ namespace GRT
 {
     public static class GString
     {
-        public static bool CanBeSplitBy(this string str, char c, out string left, out string right, bool asLeft = false)
+        public static bool CanBeSplitBy(this string str, char c, out string left, out string right, bool asLeft = false, bool last = false)
         {
-            var i = str.IndexOf(c);
+            var i = last ? str.LastIndexOf(c) : str.IndexOf(c);
             if (i > -1)
             {
                 left = str.Substring(0, i);

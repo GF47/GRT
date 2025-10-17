@@ -57,11 +57,24 @@ namespace GRT.Editor
             EditorGUIUtility.systemCopyBuffer = str;
         }
 
-        [MenuItem("Tools/GF47 Editor/Transform Copy/Copy View Camera Target")]
+        [MenuItem("Tools/GF47 Editor/Transform Copy/Copy View Target")]
         private static void GetViewCameraTarget()
         {
             _position = SceneView.lastActiveSceneView.pivot;
             string str = string.Format("target={0}", _position.ToString("F4"));
+            Debug.Log(str);
+            EditorGUIUtility.systemCopyBuffer = str;
+        }
+
+        [MenuItem("Tools/GF47 Editor/Transform Copy/Copy View Camera And Target")]
+        private static void GetView()
+        {
+            var camerar = SceneView.lastActiveSceneView.camera.transform;
+            _position = camerar.position;
+            _rotation = camerar.rotation;
+            _scale = camerar.lossyScale;
+            var target = SceneView.lastActiveSceneView.pivot;
+            var str = $"camera=\"{_position.x:F4},{_position.y:F4},{_position.z:F4}\" target=\"{target.x:F4},{target.y:F4},{target.z:F4}\"";
             Debug.Log(str);
             EditorGUIUtility.systemCopyBuffer = str;
         }

@@ -120,6 +120,7 @@
     <Compile Include="src\GEC\Unity\UEntity.cs" />
     <Compile Include="src\GEC\Unity\UEntityExtensions.cs" />
     <Compile Include="src\Geometry\Point.cs" />
+    <Compile Include="src\GEvents\ColliderProxy.cs" />
     <Compile Include="src\GEvents\GEventArgs.cs" />
     <Compile Include="src\GEvents\GEventDriver.cs" />
     <Compile Include="src\GEvents\GnityEvent.cs" />

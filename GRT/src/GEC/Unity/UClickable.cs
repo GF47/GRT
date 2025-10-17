@@ -1,4 +1,5 @@
-﻿using GRT.GEvents.Triggers;
+﻿using GRT.GEvents;
+using GRT.GEvents.Triggers;
 using UnityEngine;
 using UComponent = UnityEngine.Component;
 
@@ -18,7 +19,7 @@ namespace GRT.GEC.Unity
             {
                 Provider = provider;
 
-                _trigger = AddTrigger(collider.RawCollider.gameObject);
+                _trigger = AddTrigger(collider.RawCollider.GetRealGameObject());
                 _trigger.Event.AddListener(OnClick);
                 return true;
             }

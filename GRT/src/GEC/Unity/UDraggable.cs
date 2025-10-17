@@ -1,4 +1,5 @@
-﻿using GRT.GEvents.Triggers;
+﻿using GRT.GEvents;
+using GRT.GEvents.Triggers;
 using UnityEngine;
 using UComponent = UnityEngine.Component;
 
@@ -20,7 +21,7 @@ namespace GRT.GEC.Unity
             {
                 Provider = provider;
 
-                (_dragTrigger, _dragStartTrigger, _dragStopTrigger) = AddTriggers(collider.RawCollider.gameObject);
+                (_dragTrigger, _dragStartTrigger, _dragStopTrigger) = AddTriggers(collider.RawCollider.GetRealGameObject());
                 if (_dragTrigger != null) { _dragTrigger.Event.AddListener(OnDrag); }
                 if (_dragStartTrigger != null) { _dragStartTrigger.Event.AddListener(OnDragStart); }
                 if (_dragStopTrigger != null) { _dragStopTrigger.Event.AddListener(OnDragStop); }

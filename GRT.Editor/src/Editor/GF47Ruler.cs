@@ -38,6 +38,7 @@ namespace GRT.Editor
             EditorGUIUtility.labelWidth = 22f;
 
             #region A
+
             GUILayout.BeginVertical(EditorStyles.textArea, GUILayout.Width(200f));
             a = EditorGUILayout.Vector3Field("A", a, GUILayout.Width(200f));
 
@@ -58,9 +59,11 @@ namespace GRT.Editor
             GUILayout.EndHorizontal();
 
             GUILayout.EndVertical();
-            #endregion
+
+            #endregion A
 
             #region B
+
             GUILayout.BeginVertical(EditorStyles.textArea, GUILayout.Width(200f));
             b = EditorGUILayout.Vector3Field("B", b, GUILayout.Width(200f));
 
@@ -81,7 +84,35 @@ namespace GRT.Editor
             GUILayout.EndHorizontal();
 
             GUILayout.EndVertical();
-            #endregion
+
+            #endregion B
+
+            #region Center
+
+            var center = (a + b) / 2f;
+
+            GUILayout.BeginVertical(EditorStyles.textArea, GUILayout.Width(200f));
+            GUILayout.Label($"C X:{center.x}, Y:{center.y}, Z:{center.z}");
+
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Copy", GUILayout.Width(65f))) { WriteToSystemBuffer(center); }
+            if (GUILayout.Button("U Copy", GUILayout.Width(65f))) { WriteToSystemBufferU(center); }
+            if (GUILayout.Button("Paste", GUILayout.Width(64f))) { b = CopyFromSystemBuffer(center) * 2f - a; }
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("View Target", GUILayout.Width(133f))) { b = view.pivot * 2f - a; }
+            if (GUILayout.Button("Set VT", GUILayout.Width(64f))) { view.pivot = center; }
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Object Pivot", GUILayout.Width(133f))) { b = Selection.activeTransform.position * 2f - a; }
+            if (GUILayout.Button("Set OP", GUILayout.Width(64f))) { Selection.activeTransform.position = center; }
+            GUILayout.EndHorizontal();
+
+            GUILayout.EndVertical();
+
+            #endregion Center
 
             EditorGUIUtility.labelWidth = defaultLabelWidth;
 
@@ -119,7 +150,7 @@ namespace GRT.Editor
             Handles.color = Color.green;
             Handles.DrawLine(a, b);
 
-            Handles.color= Color.red;
+            Handles.color = Color.red;
             Handles.Label(0.5f * (a + b), $"a:{a}\nb:{b}\nLenght:{(b - a).magnitude}");
 
             Handles.color = Color.white;
@@ -134,7 +165,7 @@ namespace GRT.Editor
             Debug.Log(str);
             EditorGUIUtility.systemCopyBuffer = str;
         }
-        
+
         private static void WriteToSystemBufferU(Vector3 v3)
         {
             var str = $"Vector3({v3.x:F4},{v3.y:F4},{v3.z:F4})";

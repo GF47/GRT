@@ -43,23 +43,23 @@ namespace GRT.GEvents
                 {
                     if (LastCollider != null)
                     {
-                        SendPointerExitEvent(LastCollider.gameObject, null, Raycaster, hit);
+                        SendPointerExitEvent(LastCollider.GetRealGameObject(), null, Raycaster, hit);
                     }
                     else
                     {
                         // 有可能是上一个物体直接被销毁了，需要自行处理
                     }
                     LastCollider = collider;
-                    SendPointerEnterEvent(LastCollider.gameObject, null, Raycaster, hit);
+                    SendPointerEnterEvent(LastCollider.GetRealGameObject(), null, Raycaster, hit);
                 }
 
-                SendPointerStayEvent(LastCollider.gameObject, null, Raycaster, hit);
+                SendPointerStayEvent(LastCollider.GetRealGameObject(), null, Raycaster, hit);
             }
             else
             {
                 if (LastCollider != null)
                 {
-                    SendPointerExitEvent(LastCollider.gameObject, null, Raycaster, hit);
+                    SendPointerExitEvent(LastCollider.GetRealGameObject(), null, Raycaster, hit);
                     LastCollider = null;
                 }
             }

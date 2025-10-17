@@ -18,7 +18,7 @@ namespace GRT.GEC.Unity
             {
                 Provider = provider;
 
-                Trigger = collider.RawCollider.gameObject.AddComponent<T>();
+                Trigger = collider.RawCollider.GetRealGameObject().AddComponent<T>();
                 Trigger.Connect(this);
                 return true;
             }
