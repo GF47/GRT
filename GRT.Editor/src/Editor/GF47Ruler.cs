@@ -49,13 +49,18 @@ namespace GRT.Editor
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("View Target", GUILayout.Width(133f))) { a = view.pivot; }
-            if (GUILayout.Button("Set VT", GUILayout.Width(64f))) { view.pivot = a; }
+            if (GUILayout.Button("As ViewTarget", GUILayout.Width(99f))) { view.pivot = a; }
+            if (GUILayout.Button("As ViewCamera", GUILayout.Width(98f))) { view.camera.transform.position = a; }
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Object Pivot", GUILayout.Width(133f))) { a = Selection.activeTransform.position; }
-            if (GUILayout.Button("Set OP", GUILayout.Width(64f))) { Selection.activeTransform.position = a; }
+            if (GUILayout.Button("As GO_Pivot", GUILayout.Width(99f))) { Selection.activeTransform.position = a; }
+            if (GUILayout.Button("As GO_Center", GUILayout.Width(98f)))
+            {
+                var go = Selection.activeGameObject;
+                var objectCenter = CalculateGameObjectCenter(go).center;
+                go.transform.position = a - objectCenter + go.transform.position;
+            }
             GUILayout.EndHorizontal();
 
             GUILayout.EndVertical();
@@ -74,13 +79,18 @@ namespace GRT.Editor
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("View Target", GUILayout.Width(133f))) { b = view.pivot; }
-            if (GUILayout.Button("Set VT", GUILayout.Width(64f))) { view.pivot = b; }
+            if (GUILayout.Button("As ViewTarget", GUILayout.Width(99f))) { view.pivot = b; }
+            if (GUILayout.Button("As ViewCamera", GUILayout.Width(98f))) { view.camera.transform.position = b; }
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Object Pivot", GUILayout.Width(133f))) { b = Selection.activeTransform.position; }
-            if (GUILayout.Button("Set OP", GUILayout.Width(64f))) { Selection.activeTransform.position = b; }
+            if (GUILayout.Button("As GO_Pivot", GUILayout.Width(99f))) { Selection.activeTransform.position = b; }
+            if (GUILayout.Button("As GO_Center", GUILayout.Width(98f)))
+            {
+                var go = Selection.activeGameObject;
+                var objectCenter = CalculateGameObjectCenter(go).center;
+                go.transform.position = b - objectCenter + go.transform.position;
+            }
             GUILayout.EndHorizontal();
 
             GUILayout.EndVertical();
@@ -92,7 +102,7 @@ namespace GRT.Editor
             var center = (a + b) / 2f;
 
             GUILayout.BeginVertical(EditorStyles.textArea, GUILayout.Width(200f));
-            GUILayout.Label($"C X:{center.x}, Y:{center.y}, Z:{center.z}");
+            GUILayout.Label($"Center X:{center.x:F3}, Y:{center.y:F3}, Z:{center.z:F3}");
 
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Copy", GUILayout.Width(65f))) { WriteToSystemBuffer(center); }
@@ -101,18 +111,88 @@ namespace GRT.Editor
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("View Target", GUILayout.Width(133f))) { b = view.pivot * 2f - a; }
-            if (GUILayout.Button("Set VT", GUILayout.Width(64f))) { view.pivot = center; }
+            if (GUILayout.Button("As ViewTarget", GUILayout.Width(99f))) { view.pivot = center; }
+            if (GUILayout.Button("As ViewCamera", GUILayout.Width(98f))) { view.camera.transform.position = center; }
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Object Pivot", GUILayout.Width(133f))) { b = Selection.activeTransform.position * 2f - a; }
-            if (GUILayout.Button("Set OP", GUILayout.Width(64f))) { Selection.activeTransform.position = center; }
+            if (GUILayout.Button("As GO_Pivot", GUILayout.Width(99f))) { Selection.activeTransform.position = center; }
+            if (GUILayout.Button("As GO_Center", GUILayout.Width(98f)))
+            {
+                var go = Selection.activeGameObject;
+                var objectCenter = CalculateGameObjectCenter(go).center;
+                go.transform.position = center - objectCenter + go.transform.position;
+            }
             GUILayout.EndHorizontal();
 
             GUILayout.EndVertical();
 
             #endregion Center
+
+            Vector3 position;
+
+            #region View Target
+
+            GUILayout.BeginVertical(EditorStyles.textArea, GUILayout.Width(200f));
+            position = view.pivot;
+            GUILayout.Label("View Target");
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Copy", GUILayout.Width(48f))) { WriteToSystemBuffer(position); }
+            if (GUILayout.Button("As A", GUILayout.Width(48f))) { a = position; }
+            if (GUILayout.Button("As B", GUILayout.Width(48f))) { b = position; }
+            if (GUILayout.Button("As C", GUILayout.Width(47f))) { b = position * 2f - a; }
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+
+            #endregion View Target
+
+            #region View Camera
+
+            GUILayout.BeginVertical(EditorStyles.textArea, GUILayout.Width(200f));
+            position = view.camera.transform.position;
+            GUILayout.Label("View Camera");
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Copy", GUILayout.Width(48f))) { WriteToSystemBuffer(position); }
+            if (GUILayout.Button("As A", GUILayout.Width(48f))) { a = position; }
+            if (GUILayout.Button("As B", GUILayout.Width(48f))) { b = position; }
+            if (GUILayout.Button("As C", GUILayout.Width(47f))) { b = position * 2f - a; }
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+
+            #endregion View Camera
+
+            if (Selection.activeGameObject != null)
+            {
+                #region Object Pivot
+
+                GUILayout.BeginVertical(EditorStyles.textArea, GUILayout.Width(200f));
+                position = Selection.activeTransform.position;
+                GUILayout.Label("Object Pivot");
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Copy", GUILayout.Width(48f))) { WriteToSystemBuffer(position); }
+                if (GUILayout.Button("As A", GUILayout.Width(48f))) { a = position; }
+                if (GUILayout.Button("As B", GUILayout.Width(48f))) { b = position; }
+                if (GUILayout.Button("As C", GUILayout.Width(47f))) { b = position * 2f - a; }
+                GUILayout.EndHorizontal();
+                GUILayout.EndVertical();
+
+                #endregion Object Pivot
+
+                #region Object Center
+
+                GUILayout.BeginVertical(EditorStyles.textArea, GUILayout.Width(200f));
+                position = CalculateGameObjectCenter(Selection.activeGameObject).center;
+                GUILayout.Label("Object Center");
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Copy", GUILayout.Width(48f))) { WriteToSystemBuffer(position); }
+                if (GUILayout.Button("As A", GUILayout.Width(48f))) { a = position; }
+                if (GUILayout.Button("As B", GUILayout.Width(48f))) { b = position; }
+                if (GUILayout.Button("As C", GUILayout.Width(47f))) { b = position * 2f - a; }
+                GUILayout.EndHorizontal();
+                GUILayout.EndVertical();
+
+                #endregion Object Center
+            }
 
             EditorGUIUtility.labelWidth = defaultLabelWidth;
 
@@ -171,6 +251,50 @@ namespace GRT.Editor
             var str = $"Vector3({v3.x:F4},{v3.y:F4},{v3.z:F4})";
             Debug.Log(str);
             EditorGUIUtility.systemCopyBuffer = str;
+        }
+
+        private static Bounds CalculateGameObjectCenter(GameObject go)
+        {
+            var max = Vector3.negativeInfinity;
+            var min = Vector3.positiveInfinity;
+
+            var hasRenderer = false;
+            var hasCollider = false;
+
+            var renderers = go.GetComponentsInChildren<Renderer>();
+            if (renderers != null && renderers.Length > 0)
+            {
+                hasRenderer = true;
+                for (int i = 0; i < renderers.Length; i++)
+                {
+                    max = Vector3.Max(max, renderers[i].bounds.max);
+                    min = Vector3.Min(min, renderers[i].bounds.min);
+                }
+            }
+
+            var colliders = go.GetComponentsInChildren<Collider>();
+            if (colliders != null && colliders.Length > 0)
+            {
+                hasCollider = true;
+                for (int i = 0; i < colliders.Length; i++)
+                {
+                    max = Vector3.Max(max, colliders[i].bounds.max);
+                    min = Vector3.Min(min, colliders[i].bounds.min);
+                }
+            }
+
+            if (hasRenderer || hasCollider)
+            {
+                var center = (max + min) / 2f;
+                var size = max - min;
+                size = new Vector3(Mathf.Abs(size.x), Mathf.Abs(size.y), Mathf.Abs(size.z));
+
+                return new Bounds(center, size);
+            }
+            else
+            {
+                return new Bounds(go.transform.position, Vector3.zero);
+            }
         }
     }
 }

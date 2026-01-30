@@ -7,6 +7,8 @@ namespace GRT.Data
     {
         T Parse(string str);
 
+        string Stringify(T node);
+
         string NameOf(T node);
 
         #region child
@@ -98,6 +100,9 @@ namespace GRT.Data
         T CreateRoot(string name);
 
         T CreateChild(T node, string childName);
+
+        void Add(T parent, T child);
+        void Remove(T parent, T child);
 
         void SetValue(T node, string value);
 

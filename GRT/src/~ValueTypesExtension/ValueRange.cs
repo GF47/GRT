@@ -78,6 +78,18 @@ namespace GRT
 
         public static implicit operator int(Int32Range range) => range._value;
 
+        public static Int32Range operator +(Int32Range a, int b)
+        {
+            a.Set(a.Value + b);
+            return a;
+        }
+
+        public static Int32Range operator -(Int32Range a, int b)
+        {
+            a.Set(a.Value - b);
+            return a;
+        }
+
         public static bool operator ==(Int32Range a, Int32Range b) => a.Equals(b);
 
         public static bool operator !=(Int32Range a, Int32Range b) => !a.Equals(b);

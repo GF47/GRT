@@ -19,6 +19,8 @@ namespace GRT
         {
             if (items.TryGetValue(name, out object obj))
             {
+                obj = GetItemValue(obj);
+
                 return obj is T tValue ? tValue : @default;
             }
             else
@@ -31,6 +33,8 @@ namespace GRT
         {
             if (items.TryGetValue(name, out object obj))
             {
+                obj = GetItemValue(obj);
+
                 if (obj is T tValue)
                 {
                     value = tValue;
@@ -55,6 +59,8 @@ namespace GRT
             {
                 if (items.TryGetValue(name, out var obj))
                 {
+                    obj = GetItemValue(obj);
+
                     if (obj is T tValue)
                     {
                         return tValue;
@@ -64,11 +70,21 @@ namespace GRT
             return @default;
         }
 
-        public virtual void Set<T>(string name, T value)
+        public void Set<T>(string name, T value)
         {
-            if (items.ContainsKey(name)) { items[name] = value; }
-            else { items.Add(name, value); }
+            if (items.TryGetValue(name, out var item))
+            {
+                SetItemValue(name, item, value);
+            }
+            else
+            {
+                items.Add(name, value);
+            }
         }
+
+        protected virtual object GetItemValue(object item) => item;
+
+        protected virtual void SetItemValue<T>(string name, object item, T value) => items[name] = value;
 
         public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
         {

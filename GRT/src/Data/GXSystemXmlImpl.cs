@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Xml;
 
 namespace GRT.Data
@@ -11,6 +12,25 @@ namespace GRT.Data
             var doc = new XmlDocument();
             doc.LoadXml(str);
             return doc.LastChild;
+        }
+
+        public override string Stringify(XmlNode node)
+        {
+            if (node is XmlDocument doc)
+            {
+                using (StringWriter sw = new StringWriter())
+                {
+                    using (var tx = XmlWriter.Create(sw))
+                    {
+                        doc.WriteTo(tx);
+                        return tx.ToString();
+                    }
+                }
+            }
+            else
+            {
+                return node.OuterXml;
+            }
         }
 
         public override string NameOf(XmlNode node)
@@ -111,6 +131,16 @@ namespace GRT.Data
             var child = node.OwnerDocument.CreateElement(childName);
             node.AppendChild(child);
             return child;
+        }
+
+        public override void Add(XmlNode parent, XmlNode child)
+        {
+            parent.AppendChild(child);
+        }
+
+        public override void Remove(XmlNode parent, XmlNode child)
+        {
+            parent.RemoveChild(child);
         }
 
         public override void SetValue(XmlNode node, string value)

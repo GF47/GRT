@@ -78,7 +78,6 @@
     <Compile Include="src\Editor\GF47SnapSettings.cs" />
     <Compile Include="src\Editor\GF47SortArray.cs" />
     <Compile Include="src\Editor\GF47TransfomCopyPanel.cs" />
-    <Compile Include="src\Editor\GPie\GPiePanel.cs" />
     <Compile Include="src\Editor\GXFactoriesCodeGeneratorEditor.cs" />
     <Compile Include="src\Editor\Inspectors\BezierSplineInspector.cs" />
     <Compile Include="src\Editor\Inspectors\DraggableAssetPathDrawer.cs" />
@@ -87,9 +86,6 @@
     <Compile Include="src\Editor\Inspectors\InspectorAliasDrawer.cs" />
     <Compile Include="src\Editor\TextureCompresser.cs" />
     <Compile Include="src\Editor\TimelineExtensions.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="src\Editor\GPie\README.md" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GRT\GRT.csproj">

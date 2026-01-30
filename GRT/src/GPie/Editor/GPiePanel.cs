@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEditor.ShortcutManagement;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
-namespace GRT.Editor.GPie
+namespace GRT.GPie.Editor
 {
     [CreateAssetMenu(fileName = "GPie")]
     public class GPiePanel : ScriptableObject
@@ -54,7 +58,7 @@ namespace GRT.Editor.GPie
 
         private static IItem _current;
 
-        private static BranchedItem _origin;
+        private static IEnumerable<IItem> _origin;
 
         private static Vector2 _originPosition;
 
@@ -70,10 +74,7 @@ namespace GRT.Editor.GPie
             }
             else if (args.stage == ShortcutStage.End)
             {
-                if (_current != null && _current.UEvent != null)
-                {
-                    _current.UEvent.Invoke(_current.Argument);
-                }
+                _current?.Invoke();
 
                 Clear();
             }
@@ -90,8 +91,8 @@ namespace GRT.Editor.GPie
 
                 if (_origin != null)
                 {
-                    DrawItem(new Rect(_originPosition.x - 64f, _originPosition.y - halfh, 128f, h), _origin);
-                    DrawItems(_origin.Submenu);
+                    DrawItem(new Rect(_originPosition.x - 64f, _originPosition.y - halfh, 128f, h), _origin as IItem);
+                    DrawItems(_origin);
                 }
                 else
                 {
@@ -102,10 +103,47 @@ namespace GRT.Editor.GPie
             Handles.EndGUI();
         }
 
-        private static void DrawItems(IItem[] items)
+        private static void DrawItem(Rect rect, IItem item)
+        {
+            if (item == null)
+            {
+                GUI.Label(rect, string.Empty, EditorStyles.toggle);
+            }
+            else
+            {
+                if (rect.Contains(GetMousePosition(false)))
+                {
+                    var defaultColor = GUI.color;
+                    GUI.color = Color.yellow;
+                    {
+                        GUI.Label(rect, item.Name, EditorStyles.miniButton);
+                    }
+                    GUI.color = defaultColor;
+
+                    _current = item;
+
+                    if (_current != _origin && _current is IEnumerable<IItem> subItems && subItems.FirstOrDefault() != null)
+                    {
+                        _origin = subItems;
+                        _originPosition = new Vector2(rect.x + rect.width / 2f, rect.y + rect.height / 2f);
+                    }
+                }
+                else
+                {
+                    GUI.Label(rect, item.Name, EditorStyles.miniButton);
+                }
+            }
+        }
+
+        private static void DrawItems(IEnumerable<IItem> items)
         {
             var rot = 0f;
-            var delta = 2f * Mathf.PI / Mathf.Max(items.Length, 1f);
+            var count = 0;
+            foreach (var item in items)
+            {
+                count++;
+            }
+            var delta = 2f * Mathf.PI / Mathf.Max(count, 1f);
 
             foreach (var item in items)
             {
@@ -118,35 +156,6 @@ namespace GRT.Editor.GPie
                 DrawItem(rect, item);
 
                 rot += delta;
-            }
-        }
-
-        private static void DrawItem(Rect rect, IItem item)
-        {
-            if (item == null)
-            {
-                GUI.Label(rect, string.Empty, EditorStyles.toggle);
-            }
-            else if (rect.Contains(GetMousePosition(false)))
-            {
-                var defaultColor = GUI.color;
-                GUI.color = Color.yellow;
-                {
-                    GUI.Label(rect, item.Name, EditorStyles.miniButton);
-                }
-                GUI.color = defaultColor;
-
-                _current = item;
-
-                if (_current != _origin && _current is BranchedItem branchedItem && branchedItem.Submenu != null && branchedItem.Submenu.Length > 0)
-                {
-                    _origin = branchedItem;
-                    _originPosition = new Vector2(rect.x + rect.width / 2f, rect.y + rect.height / 2f);
-                }
-            }
-            else
-            {
-                GUI.Label(rect, item.Name, EditorStyles.miniButton);
             }
         }
 
@@ -180,6 +189,40 @@ namespace GRT.Editor.GPie
         #region items
 
         [Serializable]
+        private class BranchedItem : SealedItem, IEnumerable<IItem>
+        {
+            [FormerlySerializedAs("instance")]
+            [SerializeField] private ScriptableObject _target;
+
+            [SerializeField] private SealedItem[] _submenu;
+
+            public BranchedItem(string name, StringUEvent uEvent, string argument = null, SealedItem[] submenu = null) : base(name, uEvent, argument)
+            {
+                _submenu = submenu;
+            }
+
+            public IEnumerator<IItem> GetEnumerator()
+            {
+                if (_target is IEnumerable<IItem> submenu)
+                {
+                    foreach (var item in submenu)
+                    {
+                        yield return item;
+                    }
+                }
+                foreach (var item in _submenu)
+                {
+                    yield return item;
+                }
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
+        }
+
+        [Serializable]
         private class StringUEvent : UnityEvent<string>
         {
             public StringUEvent(UnityAction<string> action)
@@ -194,28 +237,6 @@ namespace GRT.Editor.GPie
             { }
         }
 
-        private interface IItem
-        {
-            string Name { get; }
-
-            StringUEvent UEvent { get; }
-
-            string Argument { get; }
-        }
-
-        [Serializable]
-        private class BranchedItem : SealedItem
-        {
-            [SerializeField] private SealedItem[] _submenu;
-
-            public SealedItem[] Submenu => _submenu;
-
-            public BranchedItem(string name, StringUEvent uEvent, string argument = null, SealedItem[] submenu = null) : base(name, uEvent, argument)
-            {
-                _submenu = submenu;
-            }
-        }
-
         [Serializable]
         private class SealedItem : IItem
         {
@@ -224,8 +245,6 @@ namespace GRT.Editor.GPie
             [SerializeField] private StringUEvent _uEvent;
 
             public string Name => _name;
-            public string Argument => _argument;
-            public StringUEvent UEvent => _uEvent;
 
             public SealedItem(string name, StringUEvent uEvent, string argument = null)
             {
@@ -233,12 +252,16 @@ namespace GRT.Editor.GPie
                 _uEvent = uEvent;
                 _argument = argument;
             }
+
+            public void Invoke() => _uEvent?.Invoke(_argument);
         }
 
         [SerializeField] private MonoScript[] _scripts;
         [SerializeField] private BranchedItem[] _items;
 
         #endregion items
+
+        #region examples
 
         /***************示例：执行菜单项*******************************/
 
@@ -249,8 +272,6 @@ namespace GRT.Editor.GPie
         public void AddScene(string path) => UnityEditor.SceneManagement.EditorSceneManager.OpenScene(path, UnityEditor.SceneManagement.OpenSceneMode.Additive);
 
         /***************示例：打开发布设置中的第一个场景*******************************/
-
-        #region examples
 
         public void PlayDefaultScene(string path)
         {

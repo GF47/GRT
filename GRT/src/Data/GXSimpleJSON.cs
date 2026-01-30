@@ -195,6 +195,8 @@ namespace GRT.Data
 
         public JSONNode Parse(string str) => JSONNode.Parse(str);
 
+        public string Stringify(JSONNode node) => node.ToString(2);
+
         public string NameOf(JSONNode node) => node[JNAME]?.Value;
 
         public bool HasChild(JSONNode node, string name, out JSONNode child) => node.Has(name, out child);
@@ -445,6 +447,16 @@ namespace GRT.Data
             }
 
             return child;
+        }
+
+        public void Add(JSONNode parent, JSONNode child)
+        {
+            parent.Add(child);
+        }
+
+        public void Remove(JSONNode parent, JSONNode child)
+        {
+            parent.Remove(child);
         }
 
         public void SetValue(JSONNode node, string value) => node[JVALUE] = value;

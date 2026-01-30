@@ -13,8 +13,11 @@ namespace GRT
         private Func<T> _constructor;
 
         public event Action<T> Creating;
+
         public event Action<T> Getting;
+
         public event Action<T> Releasing;
+
         public event Action<T> Disposing;
 
         /// <summary>
@@ -126,8 +129,11 @@ namespace GRT
         private Func<T> _constructor;
 
         public event Action<T> Creating;
+
         public event Action<T> Getting;
+
         public event Action<T> Releasing;
+
         public event Action<T> Disposing;
 
         public void Initialize(int count, Func<T> constructor)
@@ -211,6 +217,14 @@ namespace GRT
 
             itemAlive = default;
             return false;
+        }
+
+        public void EachAlive(Action<T> callback)
+        {
+            foreach (var item in _cache)
+            {
+                callback?.Invoke(item);
+            }
         }
     }
 }

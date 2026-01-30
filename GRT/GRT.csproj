@@ -171,6 +171,7 @@
     <Compile Include="src\GLogic\ICell.cs" />
     <Compile Include="src\GLogic\ICondition.cs" />
     <Compile Include="src\GLogic\MiniFSM.cs" />
+    <Compile Include="src\GPie\IItem.cs" />
     <Compile Include="src\GRandom.cs" />
     <Compile Include="src\GString.cs" />
     <Compile Include="src\GTask\Interfaces.cs" />
@@ -240,6 +241,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="src\GPie\README.md" />
     <None Include="src\Ioc\LICENSE" />
     <None Include="src\Ioc\README.md" />
     <None Include="src\SimpleJSON\LICENSE" />

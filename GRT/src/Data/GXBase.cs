@@ -7,6 +7,8 @@ namespace GRT.Data
     {
         public abstract T Parse(string str);
 
+        public abstract string Stringify(T node);
+
         public abstract string NameOf(T node);
 
         #region child
@@ -271,6 +273,10 @@ namespace GRT.Data
         public abstract T CreateRoot(string name);
 
         public abstract T CreateChild(T node, string childName);
+
+        public abstract void Add(T parent, T child);
+
+        public abstract void Remove(T parent, T child);
 
         public abstract void SetValue(T node, string value);
 
