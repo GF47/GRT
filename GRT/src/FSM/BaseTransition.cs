@@ -18,7 +18,7 @@ namespace GRT.FSM
                 {
                     foreach (var condition in conditions)
                     {
-                        if (!condition.OK)
+                        if (!condition.NullOrOK())
                         {
                             return false;
                         }

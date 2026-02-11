@@ -13,7 +13,7 @@ namespace GRT.FSM
         {
             get
             {
-                var ok = InnerCondition == null || InnerCondition.OK;
+                var ok = InnerCondition.NullOrOK();
 
                 if (!ok)
                 {

@@ -69,7 +69,7 @@ namespace GRT.FSM
             {
                 foreach (var condition in InnerConditions)
                 {
-                    if (condition != null && !condition.OK) return false;
+                    if (!condition.NullOrOK()) return false;
                 }
                 return true;
             }
@@ -88,7 +88,7 @@ namespace GRT.FSM
             {
                 foreach (var condition in InnerConditions)
                 {
-                    if (condition == null || condition.OK) return true;
+                    if (condition.NullOrOK()) return true;
                 }
                 return false;
             }
@@ -101,7 +101,7 @@ namespace GRT.FSM
     {
         public ICondition InnerCondition { get; private set; }
 
-        public bool OK => InnerCondition != null && !InnerCondition.OK;
+        public bool OK => !InnerCondition.NullOrOK();
 
         public LogicalNotCondition(ICondition condition) => InnerCondition = condition;
     }

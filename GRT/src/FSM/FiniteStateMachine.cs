@@ -20,7 +20,7 @@ namespace GRT.FSM
         /// <summary>
         /// Are you sure?
         /// </summary>
-        public void ___SetCurrentState(int targetID)
+        public void ___SetCurrentState(int targetID, bool asTransiting = false, Action<int, int> setting = null)
         {
             if (_currentState.ID != targetID)
             {
@@ -33,6 +33,13 @@ namespace GRT.FSM
 
                     _currentState = state;
                     _currentState.OnEnter(lastID);
+
+                    if (asTransiting)
+                    {
+                        Transiting?.Invoke(lastID, _currentState.ID);
+                    }
+
+                    setting?.Invoke(lastID, _currentState.ID);
                 }
                 else
                 {
@@ -90,13 +97,13 @@ namespace GRT.FSM
                         _currentState.OnExit(transition.TargetID);
                         _currentState.Reset();
 
-                        var temp = _currentState.ID;
+                        var lastID = _currentState.ID;
 
                         _currentState = state;
-                        _currentState.OnEnter(temp);
+                        _currentState.OnEnter(lastID);
 
                         transition.Go();
-                        Transiting?.Invoke(temp, state.ID);
+                        Transiting?.Invoke(lastID, _currentState.ID);
                     }
                 }
             }

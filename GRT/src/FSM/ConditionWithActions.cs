@@ -36,7 +36,7 @@ namespace GRT.FSM
             {
                 foreach (var condition in InnerConditions)
                 {
-                    if (condition != null && !condition.OK)
+                    if (!condition.NullOrOK())
                     {
                         return false;
                     }

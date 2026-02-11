@@ -80,7 +80,8 @@ namespace GRT.FSM
             this.DeepReset(false);
         }
 
-        public void Start() { }
+        public void Start()
+        { }
 
         /// <summary>
         /// check 后一定会有 _conditionsIsOK = 0 或 = 1 或 = 2
@@ -96,7 +97,7 @@ namespace GRT.FSM
             {
                 foreach (var condition in Conditions)
                 {
-                    if (condition != null && !condition.OK) { _conditionsIsOK = 0; } // 已验证且不正确
+                    if (!condition.NullOrOK()) { _conditionsIsOK = 0; } // 已验证且不正确
                 }
             }
         }

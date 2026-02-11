@@ -87,7 +87,7 @@ namespace GRT.FSM
             {
                 foreach (var condition in Conditions)
                 {
-                    if (condition != null && !condition.OK) { _conditionsIsOK = 0; } // 已验证且不正确
+                    if (!condition.NullOrOK()) { _conditionsIsOK = 0; } // 已验证且不正确
                 }
             }
         }

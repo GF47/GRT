@@ -11,7 +11,7 @@ namespace GRT.GEvents
         // public float rayLength = 100f;
         // public LayerMask layer = 1 << 0;
 
-        public float dragThreshold = 0.1f;
+        public float dragThreshold = 0.3f;
         public float doubleClickThreshold = 0.5f;
 
         private PointersLinkedList<T> _pointers;
