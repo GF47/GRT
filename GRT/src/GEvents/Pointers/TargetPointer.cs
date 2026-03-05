@@ -19,8 +19,6 @@ namespace GRT.GEvents.Pointers
 
         public void Cast(GEventDriver<T> driver, bool casted, RaycastHit hit)
         {
-            var raycaster = driver.Raycaster;
-
             //  |            | down  | hold  | up    | free  |                    |
             //  +------------+-------+-------+-------+-------+--------------------+
             //  | casted     | --2-- | PHOLD | PUP   | --1-- | cached collider    |
@@ -44,26 +42,26 @@ namespace GRT.GEvents.Pointers
 
                     _collider = hit.collider;
 
-                    GEventDriver<T>.SendPointerDownEvent(_collider.GetRealGameObject(), IsInterestedIn, raycaster, hit);
+                    GEventDriver<T>.SendPointerDownEvent(_collider, IsInterestedIn, driver, hit);
                 }
             }
             else if (Upping)
             {
                 if (_collider != null)
                 {
-                    GEventDriver<T>.SendPointerUpEvent(_collider.GetRealGameObject(), IsInterestedIn, raycaster, hit);
+                    GEventDriver<T>.SendPointerUpEvent(_collider, IsInterestedIn, driver, hit);
 
                     if (_dragging)
                     {
-                        GEventDriver<T>.SendPointerDragStopEvent(_collider.GetRealGameObject(), IsInterestedIn, raycaster, hit);
+                        GEventDriver<T>.SendPointerDragStopEvent(_collider, IsInterestedIn, driver, hit);
                     }
                     else
                     {
-                        GEventDriver<T>.SendPointerClickEvent(_collider.GetRealGameObject(), IsInterestedIn, raycaster, hit);
+                        GEventDriver<T>.SendPointerClickEvent(_collider, IsInterestedIn, driver, hit);
 
                         if (Time.time - _doubleClickTimeStamp < driver.doubleClickThreshold)
                         {
-                            GEventDriver<T>.SendPointerDoubleClickEvent(_collider.GetRealGameObject(), IsInterestedIn, raycaster, hit);
+                            GEventDriver<T>.SendPointerDoubleClickEvent(_collider, IsInterestedIn, driver, hit);
                         }
 
                         _doubleClickTimeStamp = Time.time;
@@ -82,12 +80,12 @@ namespace GRT.GEvents.Pointers
                     {
                         if (_dragging)
                         {
-                            GEventDriver<T>.SendPointerDragEvent(_collider.GetRealGameObject(), IsInterestedIn, raycaster, hit);
+                            GEventDriver<T>.SendPointerDragEvent(_collider, IsInterestedIn, driver, hit);
                         }
                         else
                         {
                             _dragging = true;
-                            GEventDriver<T>.SendPointerDragStartEvent(_collider.GetRealGameObject(), IsInterestedIn, raycaster, hit);
+                            GEventDriver<T>.SendPointerDragStartEvent(_collider, IsInterestedIn, driver, hit);
                         }
                     }
                 }
@@ -103,10 +101,10 @@ namespace GRT.GEvents.Pointers
             {
                 var raycaster = driver.Raycaster;
 
-                GEventDriver<T>.SendPointerUpEvent(_collider.GetRealGameObject(), IsInterestedIn, raycaster, default);
+                GEventDriver<T>.SendPointerUpEvent(_collider, IsInterestedIn, driver, default);
                 if (_dragging)
                 {
-                    GEventDriver<T>.SendPointerDragStopEvent(_collider.GetRealGameObject(), IsInterestedIn, raycaster, default);
+                    GEventDriver<T>.SendPointerDragStopEvent(_collider, IsInterestedIn, driver, default);
                 }
             }
 

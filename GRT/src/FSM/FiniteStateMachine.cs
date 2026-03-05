@@ -8,26 +8,58 @@ namespace GRT.FSM
 {
     public class FiniteStateMachine : BaseState, IState
     {
-        public Action<int> Entering;
-        public Action<int> Exiting;
-        public Action<int> Updating;
         public Action<int, int> Transiting;
 
+        public int EntryStateID { get; set; } = Util.EntryStateID;
+
+        public int ExitStateID { get; set; } = Util.ExitStateID;
+
         private IState _currentState;
-        public IState CurrentOrSelf => _currentState.ID == ExitStateID ? this : _currentState;
-        public IState CurrentOrEntry => _currentState == this ? States[EntryStateID] : _currentState;
+
+        public IState CurrentOrSelf => IsExiting ? this : _currentState;
+
+        public IState CurrentOrEntry => IsUpdating ? _currentState : States[EntryStateID];
+
+        public bool IsExiting => _currentState.ID == ExitStateID;
+
+        public bool IsUpdating => _currentState != this;
+
+        public Dictionary<int, IState> States { get; private set; }
+
+        public FiniteStateMachine(int id = 0, string info = "") : base(id, info)
+        {
+            States = new Dictionary<int, IState>();
+
+            _currentState = this;
+        }
+
+        public void Add(IState state) => States.Add(state.ID, state);
+
+        public void Remove(int id) => States.Remove(id);
+
+        public void Remove(IState state) => States.Remove(state.ID);
+
+        public void Start()
+        {
+            (this as IState).OnEnter(Util.EntryStateID);
+        }
 
         /// <summary>
         /// Are you sure?
         /// </summary>
         public void ___SetCurrentState(int targetID, bool asTransiting = false, Action<int, int> setting = null)
         {
-            if (_currentState.ID != targetID)
+            var isUpdating = IsUpdating;
+
+            if (!isUpdating || _currentState.ID != targetID)
             {
                 if (States.TryGetValue(targetID, out var state))
                 {
-                    _currentState.OnExit(targetID);
-                    _currentState.Reset();
+                    if (isUpdating)
+                    {
+                        _currentState.OnExit(targetID);
+                        _currentState.Reset();
+                    }
 
                     var lastID = _currentState.ID;
 
@@ -48,23 +80,15 @@ namespace GRT.FSM
             }
         }
 
-        public int EntryStateID { get; set; } = Util.EntryStateID;
-        public int ExitStateID { get; set; } = Util.ExitStateID;
-
-        public Dictionary<int, IState> States { get; private set; }
-
-        public FiniteStateMachine(int id = 0, string info = "") : base(id, info)
-        {
-            States = new Dictionary<int, IState>();
-
-            _currentState = this;
-        }
-
         #region IState
+
+        public Action<int> Entering;
+        public Action<int> Exiting;
+        public Action<int> Updating;
 
         ITransition IState.GetNext()
         {
-            if (_currentState.ID == ExitStateID)
+            if (IsExiting)
             {
                 foreach (var transition in transitions)
                 {
@@ -80,11 +104,11 @@ namespace GRT.FSM
         public override void Update()
         {
             Updating?.Invoke(id);
-            if (_currentState != this)
+            if (IsUpdating)
             {
                 _currentState.Update();
 
-                if (_currentState.ID == ExitStateID)
+                if (IsExiting)
                 {
                     return;
                 }
@@ -132,7 +156,7 @@ namespace GRT.FSM
         public override void OnExit(int nextID)
         {
             Exiting?.Invoke(nextID);
-            if (_currentState.ID == ExitStateID)
+            if (IsUpdating && IsExiting)
             {
                 _currentState.OnExit(id);
                 _currentState.Reset();
@@ -149,23 +173,5 @@ namespace GRT.FSM
         }
 
         #endregion IState
-
-        #region FSM
-
-        public void Add(IState state) => States.Add(state.ID, state);
-
-        public void Remove(int id) => States.Remove(id);
-
-        public void Remove(IState state) => States.Remove(state.ID);
-
-        public void Start()
-        {
-            (this as IState).OnEnter(Util.EntryStateID);
-        }
-
-        public bool IsExiting => _currentState.ID == ExitStateID;
-        public bool IsUpdating => _currentState != this;
-
-        #endregion FSM
     }
 }

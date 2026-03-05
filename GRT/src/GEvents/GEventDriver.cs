@@ -43,23 +43,23 @@ namespace GRT.GEvents
                 {
                     if (LastCollider != null)
                     {
-                        SendPointerExitEvent(LastCollider.GetRealGameObject(), null, Raycaster, hit);
+                        SendPointerExitEvent(LastCollider, null, this, hit);
                     }
                     else
                     {
                         // 有可能是上一个物体直接被销毁了，需要自行处理
                     }
                     LastCollider = collider;
-                    SendPointerEnterEvent(LastCollider.GetRealGameObject(), null, Raycaster, hit);
+                    SendPointerEnterEvent(LastCollider, null, this, hit);
                 }
 
-                SendPointerStayEvent(LastCollider.GetRealGameObject(), null, Raycaster, hit);
+                SendPointerStayEvent(LastCollider, null, this, hit);
             }
             else
             {
                 if (LastCollider != null)
                 {
-                    SendPointerExitEvent(LastCollider.GetRealGameObject(), null, Raycaster, hit);
+                    SendPointerExitEvent(LastCollider, null, this, hit);
                     LastCollider = null;
                 }
             }
@@ -69,175 +69,224 @@ namespace GRT.GEvents
             LastHit = hit;
         }
 
-        public static void SendPointerEnterEvent(GameObject go, Predicate<Component> predicate, T raycaster, RaycastHit hit)
+        protected virtual bool PointerEnterOverride(Collider collider, T raycaster, RaycastHit hit) => true;
+
+        public static void SendPointerEnterEvent(Collider collider, Predicate<Component> predicate, GEventDriver<T> driver, RaycastHit hit)
         {
-            var coms = GetComponents(go);
-            for (int i = 0; i < coms.Count; i++)
+            if (driver.PointerEnterOverride(collider, driver.Raycaster, hit))
             {
-                var com = coms[i];
-                if (predicate == null || predicate(com))
+                var coms = GetComponents(collider);
+                for (int i = 0; i < coms.Count; i++)
                 {
-                    if (com is IGPointerEnter<T> p)
+                    var com = coms[i];
+                    if (predicate == null || predicate(com))
                     {
-                        p.OnPointerEnter(raycaster, hit);
+                        if (com is IGPointerEnter<T> p)
+                        {
+                            p.OnPointerEnter(driver.Raycaster, hit);
+                        }
                     }
                 }
             }
         }
 
-        public static void SendPointerExitEvent(GameObject go, Predicate<Component> predicate, T raycaster, RaycastHit hit)
+        protected virtual bool PointerExitOverride(Collider collider, T raycaster, RaycastHit hit) => true;
+
+        public static void SendPointerExitEvent(Collider collider, Predicate<Component> predicate, GEventDriver<T> driver, RaycastHit hit)
         {
-            var coms = GetComponents(go);
-            for (int i = 0; i < coms.Count; i++)
+            if (driver.PointerExitOverride(collider, driver.Raycaster, hit))
             {
-                var com = coms[i];
-                if (predicate == null || predicate(com))
+                var coms = GetComponents(collider);
+                for (int i = 0; i < coms.Count; i++)
                 {
-                    if (com is IGPointerExit<T> p)
+                    var com = coms[i];
+                    if (predicate == null || predicate(com))
                     {
-                        p.OnPointerExit(raycaster, hit);
+                        if (com is IGPointerExit<T> p)
+                        {
+                            p.OnPointerExit(driver.Raycaster, hit);
+                        }
                     }
                 }
             }
         }
 
-        public static void SendPointerStayEvent(GameObject go, Predicate<Component> predicate, T raycaster, RaycastHit hit)
+        protected virtual bool PointerStayOverride(Collider collider, T raycaster, RaycastHit hit) => true;
+
+        public static void SendPointerStayEvent(Collider collider, Predicate<Component> predicate, GEventDriver<T> driver, RaycastHit hit)
         {
-            var coms = GetComponents(go);
-            for (int i = 0; i < coms.Count; i++)
+            if (driver.PointerStayOverride(collider, driver.Raycaster, hit))
             {
-                var com = coms[i];
-                if (predicate == null || predicate(com))
+                var coms = GetComponents(collider);
+                for (int i = 0; i < coms.Count; i++)
                 {
-                    if (com is IGPointerStay<T> p)
+                    var com = coms[i];
+                    if (predicate == null || predicate(com))
                     {
-                        p.OnPointerStay(raycaster, hit);
+                        if (com is IGPointerStay<T> p)
+                        {
+                            p.OnPointerStay(driver.Raycaster, hit);
+                        }
                     }
                 }
             }
         }
 
-        public static void SendPointerDownEvent(GameObject go, Predicate<Component> predicate, T raycaster, RaycastHit hit)
+        protected virtual bool PointerDownOverride(Collider collider, T raycaster, RaycastHit hit) => true;
+
+        public static void SendPointerDownEvent(Collider collider, Predicate<Component> predicate, GEventDriver<T> driver, RaycastHit hit)
         {
-            var coms = GetComponents(go);
-            for (int i = 0; i < coms.Count; i++)
+            if (driver.PointerDownOverride(collider, driver.Raycaster, hit))
             {
-                var com = coms[i];
-                if (predicate == null || predicate(com))
+                var coms = GetComponents(collider);
+                for (int i = 0; i < coms.Count; i++)
                 {
-                    if (com is IGPointerDown<T> p)
+                    var com = coms[i];
+                    if (predicate == null || predicate(com))
                     {
-                        p.OnPointerDown(raycaster, hit);
+                        if (com is IGPointerDown<T> p)
+                        {
+                            p.OnPointerDown(driver.Raycaster, hit);
+                        }
                     }
                 }
             }
         }
 
-        public static void SendPointerUpEvent(GameObject go, Predicate<Component> predicate, T raycaster, RaycastHit hit)
+        protected virtual bool PointerUpOverride(Collider collider, T raycaster, RaycastHit hit) => true;
+
+        public static void SendPointerUpEvent(Collider collider, Predicate<Component> predicate, GEventDriver<T> driver, RaycastHit hit)
         {
-            var coms = GetComponents(go);
-            for (int i = 0; i < coms.Count; i++)
+            if (driver.PointerUpOverride(collider, driver.Raycaster, hit))
             {
-                var com = coms[i];
-                if (predicate == null || predicate(com))
+                var coms = GetComponents(collider);
+                for (int i = 0; i < coms.Count; i++)
                 {
-                    if (com is IGPointerUp<T> p)
+                    var com = coms[i];
+                    if (predicate == null || predicate(com))
                     {
-                        p.OnPointerUp(raycaster, hit);
+                        if (com is IGPointerUp<T> p)
+                        {
+                            p.OnPointerUp(driver.Raycaster, hit);
+                        }
                     }
                 }
             }
         }
 
-        public static void SendPointerClickEvent(GameObject go, Predicate<Component> predicate, T raycaster, RaycastHit hit)
+        protected virtual bool PointerClickOverride(Collider collider, T raycaster, RaycastHit hit) => true;
+
+        public static void SendPointerClickEvent(Collider collider, Predicate<Component> predicate, GEventDriver<T> driver, RaycastHit hit)
         {
-            var coms = GetComponents(go);
-            for (int i = 0; i < coms.Count; i++)
+            if (driver.PointerClickOverride(collider, driver.Raycaster, hit))
             {
-                var com = coms[i];
-                if (predicate == null || predicate(com))
+                var coms = GetComponents(collider);
+                for (int i = 0; i < coms.Count; i++)
                 {
-                    if (com is IGPointerClick<T> p)
+                    var com = coms[i];
+                    if (predicate == null || predicate(com))
                     {
-                        p.OnPointerClick(raycaster, hit);
+                        if (com is IGPointerClick<T> p)
+                        {
+                            p.OnPointerClick(driver.Raycaster, hit);
+                        }
                     }
                 }
             }
         }
 
-        public static void SendPointerDoubleClickEvent(GameObject go, Predicate<Component> predicate, T raycaster, RaycastHit hit)
+        protected virtual bool PointerDoubleClickOverride(Collider collider, T raycaster, RaycastHit hit) => true;
+
+        public static void SendPointerDoubleClickEvent(Collider collider, Predicate<Component> predicate, GEventDriver<T> driver, RaycastHit hit)
         {
-            var coms = GetComponents(go);
-            for (int i = 0; i < coms.Count; i++)
+            if (driver.PointerDoubleClickOverride(collider, driver.Raycaster, hit))
             {
-                var com = coms[i];
-                if (predicate == null || predicate(com))
+                var coms = GetComponents(collider);
+                for (int i = 0; i < coms.Count; i++)
                 {
-                    if (com is IGPointerDoubleClick<T> p)
+                    var com = coms[i];
+                    if (predicate == null || predicate(com))
                     {
-                        p.OnPointerDoubleClick(raycaster, hit);
+                        if (com is IGPointerDoubleClick<T> p)
+                        {
+                            p.OnPointerDoubleClick(driver.Raycaster, hit);
+                        }
                     }
                 }
             }
         }
 
-        public static void SendPointerDragStartEvent(GameObject go, Predicate<Component> predicate, T raycaster, RaycastHit hit)
+        protected virtual bool PointerDragStartOverride(Collider collider, T raycaster, RaycastHit hit) => true;
+
+        public static void SendPointerDragStartEvent(Collider collider, Predicate<Component> predicate, GEventDriver<T> driver, RaycastHit hit)
         {
-            var coms = GetComponents(go);
-            for (int i = 0; i < coms.Count; i++)
+            if (driver.PointerDragStartOverride(collider, driver.Raycaster, hit))
             {
-                var com = coms[i];
-                if (predicate == null || predicate(com))
+                var coms = GetComponents(collider);
+                for (int i = 0; i < coms.Count; i++)
                 {
-                    if (com is IGPointerDragStart<T> p)
+                    var com = coms[i];
+                    if (predicate == null || predicate(com))
                     {
-                        p.OnPointerDragStart(raycaster, hit);
+                        if (com is IGPointerDragStart<T> p)
+                        {
+                            p.OnPointerDragStart(driver.Raycaster, hit);
+                        }
                     }
                 }
             }
         }
 
-        public static void SendPointerDragStopEvent(GameObject go, Predicate<Component> predicate, T raycaster, RaycastHit hit)
+        protected virtual bool PointerDragStopOverride(Collider collider, T raycaster, RaycastHit hit) => true;
+
+        public static void SendPointerDragStopEvent(Collider collider, Predicate<Component> predicate, GEventDriver<T> driver, RaycastHit hit)
         {
-            var coms = GetComponents(go);
-            for (int i = 0; i < coms.Count; i++)
+            if (driver.PointerDragStopOverride(collider, driver.Raycaster, hit))
             {
-                var com = coms[i];
-                if (predicate == null || predicate(com))
+                var coms = GetComponents(collider);
+                for (int i = 0; i < coms.Count; i++)
                 {
-                    if (com is IGPointerDragStop<T> p)
+                    var com = coms[i];
+                    if (predicate == null || predicate(com))
                     {
-                        p.OnPointerDragStop(raycaster, hit);
+                        if (com is IGPointerDragStop<T> p)
+                        {
+                            p.OnPointerDragStop(driver.Raycaster, hit);
+                        }
                     }
                 }
             }
         }
 
-        public static void SendPointerDragEvent(GameObject go, Predicate<Component> predicate, T raycaster, RaycastHit hit)
+        protected virtual bool PointerDragOverride(Collider collider, T raycaster, RaycastHit hit) => true;
+
+        public static void SendPointerDragEvent(Collider collider, Predicate<Component> predicate, GEventDriver<T> driver, RaycastHit hit)
         {
-            var coms = GetComponents(go);
-            for (int i = 0; i < coms.Count; i++)
+            if (driver.PointerDragOverride(collider, driver.Raycaster, hit))
             {
-                var com = coms[i];
-                if (predicate == null || predicate(com))
+                var coms = GetComponents(collider);
+                for (int i = 0; i < coms.Count; i++)
                 {
-                    if (com is IGPointerDrag<T> p)
+                    var com = coms[i];
+                    if (predicate == null || predicate(com))
                     {
-                        p.OnPointerDrag(raycaster, hit);
+                        if (com is IGPointerDrag<T> p)
+                        {
+                            p.OnPointerDrag(driver.Raycaster, hit);
+                        }
                     }
                 }
             }
         }
 
-        private static IList<Component> GetComponents(GameObject go)
+        private static IList<Component> GetComponents(Collider collider)
         {
-            if (go == _goCache)
+            var go = collider.GetRealGameObject();
+            if (go != _goCache)
             {
-                return _comCache;
+                _goCache = go;
+                _comCache = go.GetComponents<Component>();
             }
-
-            _goCache = go;
-            _comCache = go.GetComponents<Component>();
 
             return _comCache;
         }

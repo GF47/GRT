@@ -102,6 +102,7 @@ namespace GRT.Data
         T CreateChild(T node, string childName);
 
         void Add(T parent, T child);
+
         void Remove(T parent, T child);
 
         void SetValue(T node, string value);
