@@ -1,4 +1,5 @@
-﻿using GRT.GTask;
+﻿using GRT.GAssets.Local;
+using GRT.GTask;
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -84,6 +85,52 @@ namespace GRT.GAssets
             var text = asset.text;
             item.LifeDispose();
             return text;
+        }
+
+        public static async Task<string> LoadTextModifiable(string location)
+        {
+#if UNITY_STANDALONE
+            const string APP_PATH = "Assets/AssetsRoot/App";
+            if (location.StartsWith(APP_PATH))
+            {
+                var relativeLocation = location.Replace(APP_PATH, Application.streamingAssetsPath);
+
+                if (System.IO.File.Exists(relativeLocation))
+                {
+                    var item = new LocalAssetItem();
+                    var handler = await item.Get(relativeLocation);
+                    var text = handler.text;
+                    item.LifeDispose();
+                    return text;
+                }
+            }
+#endif
+
+            return await LoadText(location);
+        }
+
+        public static async Task<Texture2D> LoadTexture(IGScope scope, string location) => await Load<Texture2D>(scope, location);
+
+        public static async Task<Texture2D> LoadTextureModifiable(IGScope scope, string location)
+        {
+#if UNITY_STANDALONE
+            const string APP_PATH = "Assets/AssetsRoot/App";
+            if (location.StartsWith(APP_PATH))
+            {
+                var relativeLocation = location.Replace(APP_PATH, Application.streamingAssetsPath);
+
+                if (System.IO.File.Exists(relativeLocation))
+                {
+                    var item = new LocalAssetItem();
+                    var handler = await item.Get(relativeLocation);
+                    var texture = new Texture2D(0, 0);
+                    texture.LoadImage(handler.data);
+                    item.LifeDispose();
+                    return texture;
+                }
+            }
+#endif
+            return await Load<Texture2D>(scope, location);
         }
     }
 }

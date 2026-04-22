@@ -24,7 +24,7 @@ namespace GRT.GAssets
             return await AssetItemExtensions<TA>.Load<T>(scope, location);
         }
 
-        public static async Task<string> LoadText(string location)
+        public static async Task<string> LoadText(string location, bool modifiable = false)
         {
             if (location.StartsWith(StreamingAssetItem.STREAMING_ASSETS_PLACEHOLDER))
             {
@@ -34,13 +34,17 @@ namespace GRT.GAssets
             {
                 return await LoadTextFromLocalFile(location);
             }
+            else if (modifiable)
+            {
+                return await AssetItemExtensions<TA>.LoadTextModifiable(location);
+            }
             else
             {
                 return await AssetItemExtensions<TA>.LoadText(location);
             }
         }
 
-        public static async Task<Texture2D> LoadTexture(IGScope scope, string location)
+        public static async Task<Texture2D> LoadTexture(IGScope scope, string location, bool modifiable = false)
         {
             if (location.StartsWith(StreamingAssetItem.STREAMING_ASSETS_PLACEHOLDER))
             {
@@ -50,9 +54,13 @@ namespace GRT.GAssets
             {
                 return await LoadTextureFromLocalFile(location);
             }
+            else if (modifiable)
+            {
+                return await AssetItemExtensions<TA>.LoadTextureModifiable(scope, location);
+            }
             else
             {
-                return await AssetItemExtensions<TA>.Load<Texture2D>(scope, location);
+                return await AssetItemExtensions<TA>.LoadTexture(scope, location);
             }
         }
 

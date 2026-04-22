@@ -216,6 +216,7 @@
     <Compile Include="src\IPercent.cs" />
     <Compile Include="src\IInterpolable.cs" />
     <Compile Include="src\IProvider.cs" />
+    <Compile Include="src\ISubscriber.cs" />
     <Compile Include="src\Net\TcpStringsReceiver.cs" />
     <Compile Include="src\Net\TcpStringsSender.cs" />
     <Compile Include="src\Pool.cs" />

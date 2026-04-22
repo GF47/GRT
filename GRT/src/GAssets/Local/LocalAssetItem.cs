@@ -43,13 +43,8 @@ namespace GRT.GAssets.Local
 
         public const string LOCAL_ASSETS_PLACEHOLDER = "file://";
 
-        public static string GetLocalAssetsPath(string path)
-        {
-            if (path.StartsWith(LOCAL_ASSETS_PLACEHOLDER)) { return path; }
-            else
-            {
-                return $"{LOCAL_ASSETS_PLACEHOLDER}{path}".Replace('\\', '/');
-            }
-        }
+        public static string GetLocalAssetsPath(string path) => (path.StartsWith(LOCAL_ASSETS_PLACEHOLDER)
+            ? path
+            : $"{LOCAL_ASSETS_PLACEHOLDER}{path}").Replace('\\', '/');
     }
 }

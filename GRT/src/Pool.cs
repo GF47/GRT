@@ -226,5 +226,7 @@ namespace GRT
                 callback?.Invoke(item);
             }
         }
+
+        public IList<T> __AliveItems => _cache;
     }
 }
