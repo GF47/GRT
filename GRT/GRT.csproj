@@ -158,6 +158,7 @@
     <Compile Include="src\GInventory\DefaultImpl\DefaultStack.cs" />
     <Compile Include="src\GInventory\IDefinition.cs" />
     <Compile Include="src\GInventory\IDGenerator.cs" />
+    <Compile Include="src\GInventory\IGXParser.cs" />
     <Compile Include="src\GInventory\IInventory.cs" />
     <Compile Include="src\GInventory\IInventoryItem.cs" />
     <Compile Include="src\GInventory\IQuantifiable.cs" />
@@ -210,6 +211,7 @@
     <Compile Include="src\Geometry\Utilities.cs" />
     <Compile Include="src\GMath.cs" />
     <Compile Include="src\IGFormattable.cs" />
+    <Compile Include="src\IGModule.cs" />
     <Compile Include="src\IGProperty.cs" />
     <Compile Include="src\ILinkable.cs" />
     <Compile Include="src\Ioc\Container.cs" />

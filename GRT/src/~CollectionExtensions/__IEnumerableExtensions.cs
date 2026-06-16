@@ -18,6 +18,21 @@ namespace GRT
             return default;
         }
 
+        public static bool HasExt<T>(this IEnumerable<T> collection, Predicate<T> predicate, out T value)
+        {
+            foreach (var item in collection)
+            {
+                if (predicate(item))
+                {
+                    value = item;
+                    return true;
+                }
+            }
+
+            value = default;
+            return false;
+        }
+
         public static T[] GetSpan<T>(this IEnumerable<T> collection, Predicate<T> match, int length, T @default = default)
         {
             var array = new T[length];

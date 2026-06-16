@@ -42,31 +42,90 @@ namespace GRT.GInventory
             else { stack.Properties.Add(name, value); }
         }
 
-        public static object GetProperty(this IStack stack, string name) =>
-            stack.Properties.TryGetValue(name, out var value) ? value : null;
+        public static bool HasProperty(this IStack stack, string name, out object value)
+            => stack.Properties.TryGetValue(name, out value);
 
-        public static void SetSpawn(this IStack stack, bool spawn) =>
-            stack.SetProperty(Keywords.SPAWN, spawn);
+        public static object GetProperty(this IStack stack, string name)
+            => stack.HasProperty(name, out var value) ? value : default;
 
-        public static void SetPosition(this IStack stack, Vector3 pos) =>
-            stack.SetProperty(Keywords.POS, pos);
+        public static void SetSpawn(this IStack stack, bool spawn)
+            => stack.SetProperty(Keywords.SPAWN, spawn);
 
-        public static void SetRotation(this IStack stack, Vector3 rot) =>
-            stack.SetProperty(Keywords.ROT, rot);
+        public static bool HasSpawn(this IStack stack, out bool spawn)
+        {
+            if (stack.Properties.TryGetValue(Keywords.SPAWN, out var value) && value is bool b)
+            {
+                spawn = b;
+                return true;
+            }
+            else
+            {
+                spawn = default;
+                return default;
+            }
+        }
 
-        public static void SetScale(this IStack stack, Vector3 scale) =>
-            stack.SetProperty(Keywords.SCALE, scale);
+        public static bool GetSpawn(this IStack stack)
+            => stack.HasSpawn(out var spawn) && spawn;
 
-        public static bool GetSpawn(this IStack stack) =>
-            stack.Properties.TryGetValue(Keywords.SPAWN, out var value) && value is bool spawn ? spawn : default;
+        public static void SetPosition(this IStack stack, Vector3 pos)
+            => stack.SetProperty(Keywords.POS, pos);
 
-        public static Vector3 GetPosition(this IStack stack, Vector3 @default = default) =>
-            stack.Properties.TryGetValue(Keywords.POS, out var value) && value is Vector3 pos ? pos : @default;
+        public static bool HasPosition(this IStack stack, out Vector3 pos)
+        {
+            if (stack.Properties.TryGetValue(Keywords.POS, out var value) && value is Vector3 v3)
+            {
+                pos = v3;
+                return true;
+            }
+            else
+            {
+                pos = default;
+                return false;
+            }
+        }
 
-        public static Vector3 GetRotation(this IStack stack, Vector3 @default = default) =>
-            stack.Properties.TryGetValue(Keywords.ROT, out var value) && value is Vector3 rot ? rot : @default;
+        public static Vector3 GetPosition(this IStack stack, Vector3 @default = default)
+            => stack.HasPosition(out var pos) ? pos : @default;
 
-        public static Vector3 GetScale(this IStack stack) =>
-            stack.Properties.TryGetValue(Keywords.SCALE, out var value) && value is Vector3 scale ? scale : Vector3.one;
+        public static void SetRotation(this IStack stack, Vector3 rot)
+            => stack.SetProperty(Keywords.ROT, rot);
+
+        public static bool HasRotation(this IStack stack, out Vector3 rot)
+        {
+            if (stack.Properties.TryGetValue(Keywords.ROT, out var value) && value is Vector3 v3)
+            {
+                rot = v3;
+                return true;
+            }
+            else
+            {
+                rot = default;
+                return false;
+            }
+        }
+
+        public static Vector3 GetRotation(this IStack stack, Vector3 @default = default)
+            => stack.HasRotation(out var rot) ? rot : @default;
+
+        public static void SetScale(this IStack stack, Vector3 scale)
+            => stack.SetProperty(Keywords.SCALE, scale);
+
+        public static bool HasScale(this IStack stack, out Vector3 scale)
+        {
+            if (stack.Properties.TryGetValue(Keywords.SCALE, out var value) && value is Vector3 v3)
+            {
+                scale = v3;
+                return true;
+            }
+            else
+            {
+                scale = default;
+                return false;
+            }
+        }
+
+        public static Vector3 GetScale(this IStack stack)
+            => stack.HasScale(out var scale) ? scale : Vector3.one;
     }
 }
