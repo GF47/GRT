@@ -68,6 +68,7 @@
     <Compile Include="src\Editor\GF47GetRelativeTransform.cs" />
     <Compile Include="src\Editor\GF47InstantiateOnTheSurface.cs" />
     <Compile Include="src\Editor\GF47MakeGroup.cs" />
+    <Compile Include="src\Editor\GF47PopupInspector.cs" />
     <Compile Include="src\Editor\GF47RenameObject.cs" />
     <Compile Include="src\Editor\GF47RenderCubeMapEditor.cs" />
     <Compile Include="src\Editor\GF47ReplaceAssetsAccordingToMetaFile.cs" />
