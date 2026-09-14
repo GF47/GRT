@@ -230,6 +230,7 @@
     <Compile Include="src\TContainer.cs" />
     <Compile Include="src\GLog.cs" />
     <Compile Include="src\Unsubscriber.cs" />
+    <Compile Include="src\~CollectionExtensions\__IDictionaryExtensions.cs" />
     <Compile Include="src\~CollectionExtensions\__IEnumerableExtensions.cs" />
     <Compile Include="src\~CollectionExtensions\__IListExtensions.cs" />
     <Compile Include="src\~ComponentsExtension\CameraExtension.cs" />

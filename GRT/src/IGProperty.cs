@@ -339,4 +339,30 @@ namespace GRT
 
         public static implicit operator T(ObservableDecorator<T> property) => property.Get();
     }
+
+    public struct PropertySubscriber<T> : ISubscriber<(IGProperty<T>, T)>, IObserver<(IGProperty<T>, T)>
+    {
+        private IDisposable _disposable;
+
+        public event Action<Exception> Throwing;
+
+        public Action<IGProperty<T>, T> Changing;
+
+        public void OnCompleted() => _disposable?.Dispose();
+
+        public void OnError(Exception error) => Throwing?.Invoke(error);
+
+        public void OnNext((IGProperty<T>, T) tuple)
+        {
+            var (p, v) = tuple;
+            Changing?.Invoke(p, v);
+        }
+
+        public void Subscribe(IObservable<(IGProperty<T>, T)> observable)
+        {
+            _disposable?.Dispose();
+
+            _disposable = observable.Subscribe(this);
+        }
+    }
 }

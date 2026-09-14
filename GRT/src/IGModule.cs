@@ -30,9 +30,9 @@ namespace GRT
                 module = Activator.CreateInstance<T>();
                 initializing?.Invoke(module);
                 module.Init(holder);
-                module.AttachToScope(scope, true);
-
                 _reference.SetTarget(module);
+
+                module.AttachToScope(scope, true);
 
                 return module;
             }
@@ -80,9 +80,31 @@ namespace GRT
                 module = Activator.CreateInstance<T>();
                 initializing?.Invoke(module);
                 await module.InitAsync(holder);
+                _reference.SetTarget(module);
+
                 module.AttachToScope(scope);
 
+                return module;
+            }
+        }
+
+        public static async Task<T> InitAsync(IGScope scope, IGModuleHolderAsync<T> holder, Func<T, Task> initializing)
+        {
+            if (_reference.TryGetTarget(out var module))
+            {
+                throw new InvalidOperationException($"singleton module {nameof(T)} already exist");
+            }
+            else
+            {
+                module = Activator.CreateInstance<T>();
+                if (initializing != null)
+                {
+                    await initializing.Invoke(module);
+                }
+                await module.InitAsync(holder);
                 _reference.SetTarget(module);
+
+                module.AttachToScope(scope);
 
                 return module;
             }

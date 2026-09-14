@@ -9,7 +9,7 @@ namespace GRT.Editor
 {
     public class GF47GetPathToString : ScriptableObject
     {
-        private const string EDITOR_PATH_VIM = @"gvim.bat";
+        private const string EDITOR_PATH_VIM = @"gvim.exe";
         private const string EDITOR_PATH_NPP = @"notepad++.exe";
         private const string EDITOR_PATH_NOTEPAD = "notepad.exe";
 

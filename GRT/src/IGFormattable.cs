@@ -67,7 +67,9 @@ namespace GRT
             {
                 foreach (var pair in formattable.Tags)
                 {
-                    formattable.SetValue(pair.Key, processor?.Invoke(pair.Key, pair.Value) ?? pair.Value.Stringify());
+                    var key = pair.Key;
+                    var stringifiable = pair.Value;
+                    formattable.SetValue(key, processor?.Invoke(key, stringifiable) ?? stringifiable.Stringify());
                 }
             }
 

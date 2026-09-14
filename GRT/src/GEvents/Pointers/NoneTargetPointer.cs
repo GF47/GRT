@@ -69,6 +69,14 @@ namespace GRT.GEvents.Pointers
             }
         }
 
+        public void __DragStart(GEventDriver<T> driver)
+        {
+            if (Holding && !_dragging)
+            {
+                _draggingTimeStamp = Time.time - driver.dragThreshold;
+            }
+        }
+
         public void Reset(GEventDriver<T> driver)
         {
             _draggingTimeStamp = float.PositiveInfinity;
